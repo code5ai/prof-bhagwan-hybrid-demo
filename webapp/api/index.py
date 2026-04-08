@@ -22,11 +22,37 @@ from rank_bm25 import BM25Okapi
 # Wiki persistence layer (inline — Vercel can't resolve sibling imports)
 # ---------------------------------------------------------------------------
 
+
+def _safe_parse_pages(raw):
+    """Unwrap potentially double/triple-encoded JSON from Redis.
+    Returns a list of dicts, or [] on failure."""
+    if raw is None:
+        return []
+    parsed = raw
+    # Keep unwrapping JSON strings until we get a list
+    for _ in range(5):
+        if isinstance(parsed, list):
+            break
+        if isinstance(parsed, str):
+            try:
+                parsed = json.loads(parsed)
+            except (json.JSONDecodeError, TypeError):
+                return []
+        else:
+            break
+    if not isinstance(parsed, list):
+        return []
+    # Ensure every element is a dict with a "content" key
+    return [p for p in parsed if isinstance(p, dict) and "content" in p]
+
+
 class WikiStore:
     def get_all_pages(self):
         raise NotImplementedError
+
     def save_page(self, page):
         raise NotImplementedError
+
     def is_dynamic(self):
         return False
 
@@ -36,11 +62,17 @@ class StaticWikiStore(WikiStore):
         self._pages = []
         p = Path(json_path)
         if p.exists():
-            self._pages = json.loads(p.read_text(encoding="utf-8"))
+            try:
+                self._pages = _safe_parse_pages(p.read_text(encoding="utf-8"))
+            except Exception as exc:
+                print(f"[WikiStore] Failed to load {p}: {exc}")
+
     def get_all_pages(self):
         return list(self._pages)
+
     def save_page(self, page):
         pass
+
     def is_dynamic(self):
         return False
 
@@ -62,6 +94,7 @@ class RedisWikiStore(WikiStore):
         return resp.json().get("result")
 
     def _redis_set(self, key, value):
+        """Store a Python object in Redis. Serializes to JSON internally."""
         resp = http_requests.post(
             f"{self._url}/set/{key}", headers=self._headers,
             json=value, timeout=10)
@@ -73,10 +106,7 @@ class RedisWikiStore(WikiStore):
             return list(self._cache)
         try:
             raw = self._redis_get(self.WIKI_KEY)
-            if raw:
-                self._cache = json.loads(raw) if isinstance(raw, str) else raw
-            else:
-                self._cache = []
+            self._cache = _safe_parse_pages(raw)
             self._cache_time = now
         except Exception as exc:
             print(f"[WikiStore] Redis read failed: {exc}")
@@ -86,6 +116,7 @@ class RedisWikiStore(WikiStore):
         return list(self._cache)
 
     def save_page(self, page):
+        """Add or update a page, then write back to Redis."""
         pages = self.get_all_pages()
         updated = False
         for i, p in enumerate(pages):
@@ -96,7 +127,8 @@ class RedisWikiStore(WikiStore):
         if not updated:
             pages.append(page)
         try:
-            self._redis_set(self.WIKI_KEY, json.dumps(pages))
+            # Pass the Python list directly — _redis_set handles serialization
+            self._redis_set(self.WIKI_KEY, pages)
             self._cache = pages
             self._cache_time = time.time()
         except Exception as exc:
@@ -142,14 +174,21 @@ WIKI_CLOSE = "</wiki_update>"
 # Load knowledge base
 # ---------------------------------------------------------------------------
 
+
 def _load_json(path):
-    if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"[Data] Failed to load {path}: {exc}")
     return []
 
 
 # RAG chunks — static, bundled at deploy time (text only, no embeddings)
-CHUNKS = _load_json(DATA_DIR / "chunks.json")
+_raw_chunks = _load_json(DATA_DIR / "chunks.json")
+# Validate: only keep dicts with a "content" key
+CHUNKS = [c for c in _raw_chunks if isinstance(c, dict) and "content" in c]
+print(f"[Data] Loaded {len(CHUNKS)} RAG chunks")
 
 # Chunk embeddings — stored as numpy binary to avoid 352MB JSON bloat
 _CHUNK_EMB_PATH = DATA_DIR / "chunks_embeddings.npy"
@@ -169,6 +208,7 @@ WIKI_STORE = create_wiki_store(DATA_DIR)
 # ---------------------------------------------------------------------------
 
 _index_lock = threading.Lock()
+
 
 class SearchIndex:
     """Mutable search index that can be rebuilt when wiki pages change."""
@@ -194,19 +234,23 @@ class SearchIndex:
         tokenized = [doc["content"].lower().split() for doc in self.all_docs]
         self.bm25 = BM25Okapi(tokenized)
 
-        # Build embedding matrix: wiki page embeddings (from JSON) +
-        # chunk embeddings (from numpy binary file)
-        wiki_embs = [p["embedding"] for p in wiki_pages if "embedding" in p]
+        # Build embedding matrix
+        wiki_embs = [p["embedding"] for p in wiki_pages
+                     if isinstance(p.get("embedding"), list) and len(p["embedding"]) > 0]
 
         if CHUNK_EMBEDDINGS is not None and len(CHUNK_EMBEDDINGS) == len(CHUNKS):
-            if wiki_embs:
+            if len(wiki_embs) == len(wiki_pages) and wiki_embs:
                 wiki_arr = np.array(wiki_embs, dtype=np.float32)
                 self.embeddings = np.vstack([wiki_arr, CHUNK_EMBEDDINGS])
             else:
-                # Wiki pages have no embeddings (e.g. fresh Redis with no embeddings)
-                # Use chunks only, pad wiki positions with zeros
-                pad = np.zeros((len(wiki_pages), CHUNK_EMBEDDINGS.shape[1]), dtype=np.float32)
-                self.embeddings = np.vstack([pad, CHUNK_EMBEDDINGS]) if wiki_pages else CHUNK_EMBEDDINGS
+                # Wiki pages missing/incomplete embeddings — pad with zeros
+                n_wiki = len(wiki_pages)
+                if n_wiki > 0:
+                    pad = np.zeros((n_wiki, CHUNK_EMBEDDINGS.shape[1]),
+                                   dtype=np.float32)
+                    self.embeddings = np.vstack([pad, CHUNK_EMBEDDINGS])
+                else:
+                    self.embeddings = CHUNK_EMBEDDINGS
             self.has_embeddings = True
         else:
             self.embeddings = None
@@ -214,7 +258,6 @@ class SearchIndex:
 
 
 INDEX = SearchIndex()
-
 
 # ---------------------------------------------------------------------------
 # Gemini query embedding
@@ -226,18 +269,14 @@ QUERY_PREFIX = "Represent this query for retrieval: "
 
 
 def get_query_embedding(query_text):
-    """Get embedding from gemini-embedding-2-preview for a search query."""
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
     if not gemini_key:
         return None
-
     url = (
         "https://generativelanguage.googleapis.com/v1beta/"
         f"models/{EMBED_MODEL}:embedContent?key={gemini_key}"
     )
-    payload = {
-        "content": {"parts": [{"text": QUERY_PREFIX + query_text}]},
-    }
+    payload = {"content": {"parts": [{"text": QUERY_PREFIX + query_text}]}}
     try:
         resp = http_requests.post(url, json=payload, timeout=10)
         resp.raise_for_status()
@@ -247,19 +286,15 @@ def get_query_embedding(query_text):
 
 
 def get_document_embedding(text):
-    """Get embedding for a new wiki page (document-type)."""
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
     if not gemini_key:
         return None
-
     url = (
         "https://generativelanguage.googleapis.com/v1beta/"
         f"models/{EMBED_MODEL}:embedContent?key={gemini_key}"
     )
     truncated = " ".join(text.split()[:2048])
-    payload = {
-        "content": {"parts": [{"text": DOC_PREFIX + truncated}]},
-    }
+    payload = {"content": {"parts": [{"text": DOC_PREFIX + truncated}]}}
     try:
         resp = http_requests.post(url, json=payload, timeout=10)
         resp.raise_for_status()
@@ -269,11 +304,11 @@ def get_document_embedding(text):
 
 
 # ---------------------------------------------------------------------------
-# Hybrid search: 92.4% semantic + 7.6% BM25
+# Hybrid search
 # ---------------------------------------------------------------------------
 
+
 def hybrid_search(query, top_k=15):
-    """Return top-k documents ranked by hybrid score."""
     with _index_lock:
         all_docs = INDEX.all_docs
         bm25 = INDEX.bm25
@@ -285,12 +320,12 @@ def hybrid_search(query, top_k=15):
 
     n = len(all_docs)
 
-    # --- BM25 ---
+    # BM25
     bm25_scores = bm25.get_scores(query.lower().split()) if bm25 else np.zeros(n)
     max_bm25 = bm25_scores.max()
     bm25_norm = bm25_scores / max_bm25 if max_bm25 > 0 else bm25_scores
 
-    # --- Semantic ---
+    # Semantic
     semantic_norm = np.zeros(n)
     if has_embeddings and embeddings is not None:
         query_emb = get_query_embedding(query)
@@ -300,9 +335,10 @@ def hybrid_search(query, top_k=15):
             norms = np.where(norms == 0, 1.0, norms)
             semantic_scores = dot / norms
             max_sem = semantic_scores.max()
-            semantic_norm = semantic_scores / max_sem if max_sem > 0 else semantic_scores
+            semantic_norm = (semantic_scores / max_sem
+                            if max_sem > 0 else semantic_scores)
 
-    # --- Hybrid ---
+    # Hybrid
     hybrid_scores = W_BM25 * bm25_norm + W_SEMANTIC * semantic_norm
     top_indices = np.argsort(hybrid_scores)[::-1][:top_k]
 
@@ -310,11 +346,12 @@ def hybrid_search(query, top_k=15):
     for i in top_indices:
         if hybrid_scores[i] <= 0:
             continue
+        doc = all_docs[i]
         results.append({
-            "title": all_docs[i].get("title", all_docs[i].get("source", "unknown")),
-            "content": all_docs[i]["content"],
-            "type": all_docs[i].get("type", "rag"),
-            "source": all_docs[i].get("source", all_docs[i].get("path", "")),
+            "title": doc.get("title", doc.get("source", "unknown")),
+            "content": doc["content"],
+            "type": doc.get("type", "rag"),
+            "source": doc.get("source", doc.get("path", "")),
             "score": float(hybrid_scores[i]),
         })
 
@@ -325,14 +362,10 @@ def hybrid_search(query, top_k=15):
 # Wiki update processing
 # ---------------------------------------------------------------------------
 
+
 def process_wiki_update(full_text):
-    """
-    Parse <wiki_update> block from Claude's response.
-    Save new wiki page to store with embedding. Rebuild search index.
-    """
     if WIKI_OPEN not in full_text:
         return
-
     try:
         start = full_text.index(WIKI_OPEN) + len(WIKI_OPEN)
         end = full_text.index(WIKI_CLOSE)
@@ -341,13 +374,10 @@ def process_wiki_update(full_text):
 
         title = update.get("title", "").strip()
         content = update.get("content", "").strip()
-
         if not title or not content:
             return
 
-        # Generate embedding for the new page
         embedding = get_document_embedding(content)
-
         page = {
             "title": title,
             "path": f"wiki/{title.lower().replace(' ', '-')}.md",
@@ -358,13 +388,9 @@ def process_wiki_update(full_text):
             page["embedding"] = embedding
 
         WIKI_STORE.save_page(page)
-
-        # Rebuild search index
         with _index_lock:
             INDEX.rebuild()
-
         print(f"[Wiki] Saved new page: {title}")
-
     except (ValueError, json.JSONDecodeError, KeyError) as exc:
         print(f"[Wiki] Failed to parse update: {exc}")
 
@@ -380,20 +406,21 @@ SYSTEM_PROMPT_TEMPLATE = """You are *Prof. Bhagwan Chowdhry*, Finance Professor 
 - Use medium-length sentences (15–25 words) balanced by short, punchy declaratives.
 - Employ em-dashes for clarifying asides—and use rhetorical questions to engage.
 - Explain technical terms naturally; favor active voice and confident phrasing like "completely serious" or "nothing short of revolutionary."
-- **Tone**: Measured optimism with a touch of wit. Acknowledge limitations while asserting expertise.
+- **Tone**: Measured optimism with a touch of wit.
 
 ### Content Focus
 - Use specific numbers, named people, and places from the knowledge base.
 - Move from abstract theory to specific solutions like the *Financial Access at Birth (FAB)* initiative, *FinTech for Billions*, microequity, Lindahl royalty, ACO design, threshold behavior, systemic risk.
-- Always connect financial systems to the welfare of the poor. End with future-focused projections that inspire action.
+- Always connect financial systems to the welfare of the poor.
 
 ### Operational Rules
-- Answer from the provided knowledge base (wiki pages and document excerpts) below. This is your personal knowledge base containing your publications, interviews, research, and theoretical contributions.
-- If the knowledge base does not contain relevant information, say so explicitly: "I haven't written or spoken about that topic in my available records."
-- If you choose to share insight from your general expertise beyond the knowledge base, explicitly flag it: "This is from my broader academic experience, not from my documented portfolio."
+- Answer from the provided knowledge base below.
+- If the knowledge base does not contain relevant information, say so: "I haven't written or spoken about that topic in my available records."
+- If you share insight from general expertise beyond the knowledge base, flag it: "This is from my broader academic experience, not from my documented portfolio."
 - **Never fabricate** specific publications, dates, or quotes.
-- Be concise. If an answer is long, deliver information in digestible pieces rather than a wall of text.
+- Be concise. Deliver information in digestible pieces.
 - Never use the word "context" in your response.
+- When using mathematical notation, use Unicode symbols (e.g. x², Σ, √, ∞, ≥, →, π) rather than LaTeX.
 
 ### Wiki Update Rule
 After your answer, if you synthesised a new insight that combines information from multiple sources or goes beyond what any single wiki page already says, append a wiki update block in this exact format:
@@ -402,16 +429,13 @@ After your answer, if you synthesised a new insight that combines information fr
 {{"title": "Page Title In Title Case", "content": "Full markdown content of the new or updated wiki page. Include cross-references to related topics."}}
 </wiki_update>
 
-Do NOT include this block if your answer merely restates what is already in a single wiki page. Only include it when you have genuinely synthesised or connected ideas in a novel way.
+Do NOT include this block if your answer merely restates what is already in a single wiki page.
 
 ### Knowledge Base
-The following wiki pages and document excerpts are from your personal knowledge base:
-
 {context}"""
 
 
 def build_system_prompt(results):
-    """Build the system prompt with retrieved context."""
     if not results:
         context = "(No relevant content found in the knowledge base.)"
     else:
@@ -425,9 +449,11 @@ def build_system_prompt(results):
                 parts.append(f"\n--- {r['title']} ---\n{r['content'][:3000]}")
 
         if rag_results:
-            parts.append("\n=== DOCUMENT EXCERPTS (from your books, papers, interviews) ===")
+            parts.append(
+                "\n=== DOCUMENT EXCERPTS (from your books, papers, interviews) ===")
             for r in rag_results[:10]:
-                source_name = Path(r["source"]).stem.replace("-", " ").replace("_", " ") if r["source"] else "Unknown"
+                source_name = (Path(r["source"]).stem.replace("-", " ")
+                               .replace("_", " ") if r["source"] else "Unknown")
                 parts.append(f"\n--- From: {source_name} ---\n{r['content'][:2000]}")
 
         context = "\n".join(parts)
@@ -439,13 +465,11 @@ def build_system_prompt(results):
 # Routes
 # ---------------------------------------------------------------------------
 
+MAX_HISTORY = 10  # Keep last 10 messages (5 turns) to stay within limits
+
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
-    """
-    Main chat endpoint — streams Claude's response via SSE.
-    Uses a sliding buffer to intercept <wiki_update> blocks before they
-    reach the client, then saves the update to the wiki store.
-    """
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
         return jsonify({"error": "ANTHROPIC_API_KEY not configured"}), 500
@@ -459,14 +483,16 @@ def chat():
 
     # Hybrid search
     results = hybrid_search(user_message, top_k=15)
-
-    # Build prompt
     system = build_system_prompt(results)
 
-    # Build messages (keep last 10 turns)
+    # Build messages — limit history to prevent context overflow
     messages = []
-    for msg in history[-20:]:
-        messages.append({"role": msg["role"], "content": msg["content"]})
+    for msg in history[-MAX_HISTORY:]:
+        role = msg.get("role", "")
+        content = msg.get("content", "")
+        if role in ("user", "assistant") and content:
+            # Truncate very long messages in history
+            messages.append({"role": role, "content": content[:4000]})
     messages.append({"role": "user", "content": user_message})
 
     client = Anthropic(api_key=api_key)
@@ -489,7 +515,6 @@ def chat():
                     full_text += token
 
                     if in_wiki_block:
-                        # Accumulate wiki content, don't send to client
                         wiki_block_content += token
                         if WIKI_CLOSE in wiki_block_content:
                             in_wiki_block = False
@@ -497,9 +522,7 @@ def chat():
 
                     buffer += token
 
-                    # Check if we've entered a wiki block
                     if WIKI_OPEN in buffer:
-                        # Send everything before the marker
                         pre = buffer.split(WIKI_OPEN, 1)[0]
                         if pre:
                             yield f"data: {json.dumps({'text': pre})}\n\n"
@@ -510,13 +533,11 @@ def chat():
                             in_wiki_block = False
                         continue
 
-                    # Flush safe portion of buffer (keep last marker_len chars)
                     if len(buffer) > marker_len:
                         safe = buffer[:-marker_len]
                         yield f"data: {json.dumps({'text': safe})}\n\n"
                         buffer = buffer[-marker_len:]
 
-            # Flush remaining buffer
             if buffer and not in_wiki_block:
                 yield f"data: {json.dumps({'text': buffer})}\n\n"
 
@@ -525,7 +546,7 @@ def chat():
 
         yield "data: [DONE]\n\n"
 
-        # Process wiki update in background (after response is sent)
+        # Process wiki update after response is sent
         if WIKI_OPEN in full_text and WIKI_STORE.is_dynamic():
             try:
                 process_wiki_update(full_text)
@@ -545,7 +566,6 @@ def chat():
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    """Health check — shows wiki + RAG stats and store type."""
     wiki_pages = WIKI_STORE.get_all_pages()
     return jsonify({
         "status": "ok",
@@ -558,11 +578,9 @@ def health():
 
 
 # ---------------------------------------------------------------------------
-# Static file serving — all requests routed through Flask on Vercel
+# Static file serving — all requests routed through Flask via vercel.json
 # ---------------------------------------------------------------------------
 
-# On Vercel: /var/task/api/index.py → parent.parent = /var/task/
-# Locally:   webapp/api/index.py    → parent.parent = webapp/
 STATIC_DIR = str(Path(__file__).resolve().parent.parent)
 
 
@@ -573,13 +591,12 @@ def serve_index():
 
 @app.route("/<path:path>")
 def serve_static(path):
-    # Only serve frontend assets, not data files
-    allowed = {".html", ".css", ".js", ".ico", ".png", ".svg", ".jpg", ".woff", ".woff2"}
+    allowed = {".html", ".css", ".js", ".ico", ".png", ".svg", ".jpg",
+               ".woff", ".woff2", ".ttf", ".map"}
     ext = Path(path).suffix.lower()
     full = Path(STATIC_DIR) / path
     if ext in allowed and full.is_file():
         return send_from_directory(STATIC_DIR, path)
-    # SPA fallback for unknown paths
     return send_from_directory(STATIC_DIR, "index.html")
 
 

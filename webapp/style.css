@@ -284,6 +284,22 @@ html, body {
   margin: 14px 0;
 }
 
+/* Streaming cursor — blinking block cursor while text is being generated */
+.msg-body.streaming::after {
+  content: "\25A0";
+  display: inline;
+  color: var(--accent);
+  animation: cursorBlink 0.7s steps(2) infinite;
+  font-size: 13px;
+  margin-left: 2px;
+  vertical-align: baseline;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 /* ---- Thinking dots ---- */
 
 .dot-pulse {

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prof. Bhagwan Chowdhry</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
@@ -25,13 +28,12 @@
 
         <main class="chat-container" id="chat-container">
             <div class="welcome-message">
-                <div class="welcome-icon">&#128161;</div>
-                <h2>Welcome</h2>
-                <p>Ask me about my research in financial innovation, FinTech for the underserved, systemic risk, microequity, the FAB initiative, or any of my published work.</p>
+                <h2>Ask Prof. Chowdhry</h2>
+                <p>Questions about financial innovation, FinTech for the underserved, systemic risk, microequity, the FAB initiative, or published work.</p>
                 <div class="suggestion-chips">
                     <button class="chip" onclick="sendSuggestion(this)">What is the FAB initiative?</button>
-                    <button class="chip" onclick="sendSuggestion(this)">Tell me about your work on microequity</button>
-                    <button class="chip" onclick="sendSuggestion(this)">What drives your research agenda?</button>
+                    <button class="chip" onclick="sendSuggestion(this)">Tell me about microequity</button>
+                    <button class="chip" onclick="sendSuggestion(this)">What drives your research?</button>
                 </div>
             </div>
         </main>
@@ -39,7 +41,7 @@
         <footer class="input-area">
             <form id="chat-form" onsubmit="handleSubmit(event)">
                 <div class="input-wrapper">
-                    <textarea id="message-input" placeholder="Ask Prof. Chowdhry a question..." rows="1" autofocus></textarea>
+                    <textarea id="message-input" placeholder="Ask a question..." rows="1" autofocus></textarea>
                     <button type="submit" id="send-btn" title="Send">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="22" y1="2" x2="11" y2="13"></line>

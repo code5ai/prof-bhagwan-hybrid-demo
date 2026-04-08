@@ -1,6 +1,6 @@
 /**
  * Prof. Bhagwan Chowdhry — Knowledge Chatbot
- * Client-side chat logic with SSE streaming
+ * Smooth streaming with token queue, debounced markdown, KaTeX math
  */
 
 const chatContainer = document.getElementById("chat-container");
@@ -12,14 +12,28 @@ const statusDot = document.querySelector(".status-dot");
 let conversationHistory = [];
 let isStreaming = false;
 
-// Configure marked
 marked.setOptions({ breaks: true, gfm: true });
 
 function stripWikiBlocks(text) {
   return text.replace(/<wiki_update>[\s\S]*?<\/wiki_update>/g, "").trimEnd();
 }
 
-// ---- Auto-resize textarea ----
+function renderMarkdown(el, text) {
+  el.innerHTML = marked.parse(text);
+  if (typeof renderMathInElement === "function") {
+    renderMathInElement(el, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true },
+      ],
+      throwOnError: false,
+    });
+  }
+}
+
+// ---- Textarea auto-resize ----
 messageInput.addEventListener("input", () => {
   messageInput.style.height = "auto";
   messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + "px";
@@ -32,7 +46,6 @@ messageInput.addEventListener("keydown", (e) => {
   }
 });
 
-// ---- Suggestion chips ----
 function sendSuggestion(btn) {
   if (isStreaming) return;
   messageInput.value = btn.textContent;
@@ -50,10 +63,8 @@ function handleSubmit(e) {
 
   appendMessage("user", text);
   conversationHistory.push({ role: "user", content: text });
-
   messageInput.value = "";
   messageInput.style.height = "auto";
-
   streamResponse(text);
 }
 
@@ -71,8 +82,8 @@ function appendMessage(role, content) {
 
   if (role === "user") {
     bubble.textContent = content;
-  } else {
-    bubble.innerHTML = content ? marked.parse(content) : "";
+  } else if (content) {
+    renderMarkdown(bubble, content);
   }
 
   msg.appendChild(avatar);
@@ -87,15 +98,13 @@ function showThinking() {
   const msg = document.createElement("div");
   msg.className = "message bot";
   msg.id = "thinking-msg";
-
   const avatar = document.createElement("div");
   avatar.className = "msg-avatar";
   avatar.textContent = "BC";
-
   const bubble = document.createElement("div");
-  bubble.className = "msg-body";
-  bubble.innerHTML = '<span class="dot-pulse"><span></span><span></span><span></span></span>';
-
+  bubble.className = "msg-body thinking";
+  bubble.innerHTML =
+    '<span class="dot-pulse"><span></span><span></span><span></span></span>';
   msg.appendChild(avatar);
   msg.appendChild(bubble);
   chatContainer.appendChild(msg);
@@ -107,15 +116,109 @@ function removeThinking() {
   if (el) el.remove();
 }
 
+// =====================================================
+// Smooth streaming engine
+// =====================================================
+// Tokens arrive from SSE in bursts. Instead of rendering
+// them all at once (chunky), we queue them and drain at
+// a steady rate using requestAnimationFrame. Markdown is
+// re-rendered at most every ~80ms (debounced).
+// =====================================================
+
+function createStreamRenderer(bubble) {
+  let tokenQueue = "";    // Buffered tokens not yet revealed
+  let revealedText = "";  // Text shown so far
+  let drainRAF = null;
+  let renderTimer = null;
+  let finished = false;
+
+  function scheduleRender() {
+    if (renderTimer) return;
+    renderTimer = setTimeout(() => {
+      renderTimer = null;
+      const clean = stripWikiBlocks(revealedText);
+      if (clean) {
+        renderMarkdown(bubble, clean);
+        scrollToBottom();
+      }
+    }, 80);
+  }
+
+  function drain() {
+    if (tokenQueue.length === 0) {
+      drainRAF = null;
+      if (finished) finalRender();
+      return;
+    }
+
+    // Adaptive drain speed:
+    // - Small queue (1-5): show 1 char/frame → smooth typing
+    // - Medium queue (6-40): show 2-5 chars/frame → keeps up
+    // - Large queue (40+): show more to prevent lag
+    const chars = Math.min(
+      Math.max(1, Math.ceil(tokenQueue.length / 8)),
+      12
+    );
+    revealedText += tokenQueue.slice(0, chars);
+    tokenQueue = tokenQueue.slice(chars);
+
+    scheduleRender();
+    drainRAF = requestAnimationFrame(drain);
+  }
+
+  function finalRender() {
+    if (renderTimer) {
+      clearTimeout(renderTimer);
+      renderTimer = null;
+    }
+    bubble.classList.remove("streaming");
+    const clean = stripWikiBlocks(revealedText);
+    if (clean) {
+      renderMarkdown(bubble, clean);
+      scrollToBottom();
+    }
+  }
+
+  return {
+    push(text) {
+      tokenQueue += text;
+      if (!drainRAF) {
+        drainRAF = requestAnimationFrame(drain);
+      }
+    },
+
+    finish() {
+      finished = true;
+      // If queue is already empty, render now
+      if (tokenQueue.length === 0 && !drainRAF) {
+        finalRender();
+      }
+      // Otherwise drain() will call finalRender when queue empties
+    },
+
+    getText() {
+      return revealedText + tokenQueue;
+    },
+
+    getCleanText() {
+      return stripWikiBlocks(revealedText + tokenQueue);
+    },
+
+    destroy() {
+      if (drainRAF) cancelAnimationFrame(drainRAF);
+      if (renderTimer) clearTimeout(renderTimer);
+    },
+  };
+}
+
 // ---- Stream response ----
 async function streamResponse(userMessage) {
   isStreaming = true;
   sendBtn.disabled = true;
-  setStatus("Thinking…", true);
+  setStatus("Thinking...", true);
   showThinking();
 
-  let fullText = "";
-  let bubble = null;
+  let renderer = null;
 
   try {
     const response = await fetch("/api/chat", {
@@ -123,7 +226,7 @@ async function streamResponse(userMessage) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message: userMessage,
-        history: conversationHistory.slice(-20),
+        history: conversationHistory.slice(-10),
       }),
     });
 
@@ -138,7 +241,10 @@ async function streamResponse(userMessage) {
     let streamDone = false;
 
     removeThinking();
-    bubble = appendMessage("bot", "");
+    setStatus("Responding...", true);
+    const bubble = appendMessage("bot", "");
+    bubble.classList.add("streaming");
+    renderer = createStreamRenderer(bubble);
 
     while (!streamDone) {
       const { value, done } = await reader.read();
@@ -160,31 +266,29 @@ async function streamResponse(userMessage) {
         try {
           const parsed = JSON.parse(data);
           if (parsed.error) {
-            fullText += `\n\n**Error:** ${parsed.error}`;
+            renderer.push(`\n\n**Error:** ${parsed.error}`);
           } else if (parsed.text) {
-            fullText += parsed.text;
+            renderer.push(parsed.text);
           }
         } catch {
           // skip malformed
         }
       }
-
-      const clean = stripWikiBlocks(fullText);
-      if (bubble && clean) {
-        bubble.innerHTML = marked.parse(clean);
-        scrollToBottom();
-      }
     }
 
-    // Close reader explicitly (Vercel may not close the connection)
     try { reader.cancel(); } catch {}
 
-    const cleanText = stripWikiBlocks(fullText);
-    if (cleanText.trim()) {
-      conversationHistory.push({ role: "assistant", content: cleanText });
+    // Signal end of stream — renderer will finish draining + do final render
+    if (renderer) {
+      renderer.finish();
+      const cleanText = renderer.getCleanText();
+      if (cleanText.trim()) {
+        conversationHistory.push({ role: "assistant", content: cleanText });
+      }
     }
   } catch (err) {
     removeThinking();
+    if (renderer) renderer.destroy();
     appendMessage("bot", `**Something went wrong:** ${err.message}`);
   } finally {
     isStreaming = false;
