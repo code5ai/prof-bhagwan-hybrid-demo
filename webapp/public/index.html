@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof. Bhagwan Chowdhry</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="avatar">BC</div>
+                <div class="header-text">
+                    <h1>Prof. Bhagwan Chowdhry</h1>
+                    <p>Finance Professor · ISB & UCLA Anderson</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <span class="status-dot"></span>
+                <span id="status-text">Ready</span>
+            </div>
+        </header>
+
+        <!-- Chat area -->
+        <main class="chat-container" id="chat-container">
+            <div class="welcome-message">
+                <div class="welcome-icon">💡</div>
+                <h2>Welcome</h2>
+                <p>Ask me about my research in financial innovation, FinTech for the underserved, systemic risk, microequity, the FAB initiative, or any of my published work and interviews.</p>
+                <div class="suggestion-chips">
+                    <button class="chip" onclick="sendSuggestion(this)">What is the FAB initiative?</button>
+                    <button class="chip" onclick="sendSuggestion(this)">Tell me about your work on microequity</button>
+                    <button class="chip" onclick="sendSuggestion(this)">What drives your research agenda?</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Input area -->
+        <footer class="input-area">
+            <form id="chat-form" onsubmit="handleSubmit(event)">
+                <div class="input-wrapper">
+                    <textarea
+                        id="message-input"
+                        placeholder="Ask Prof. Chowdhry a question…"
+                        rows="1"
+                        autofocus
+                    ></textarea>
+                    <button type="submit" id="send-btn" title="Send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13"></path>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p class="disclaimer">Answers drawn from Prof. Chowdhry's knowledge base. May not cover all topics.</p>
+            </form>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
