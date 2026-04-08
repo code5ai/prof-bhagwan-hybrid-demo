@@ -12,13 +12,9 @@ const statusDot = document.querySelector(".status-dot");
 let conversationHistory = [];
 let isStreaming = false;
 
-// Configure marked for safe rendering
-marked.setOptions({
-  breaks: true,
-  gfm: true,
-});
+// Configure marked
+marked.setOptions({ breaks: true, gfm: true });
 
-// Strip wiki_update blocks from displayed text (safety net — backend buffers these)
 function stripWikiBlocks(text) {
   return text.replace(/<wiki_update>[\s\S]*?<\/wiki_update>/g, "").trimEnd();
 }
@@ -29,7 +25,6 @@ messageInput.addEventListener("input", () => {
   messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + "px";
 });
 
-// Enter to send, Shift+Enter for newline
 messageInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
@@ -44,67 +39,62 @@ function sendSuggestion(btn) {
   handleSubmit();
 }
 
-// ---- Submit handler ----
+// ---- Submit ----
 function handleSubmit(e) {
   if (e) e.preventDefault();
   const text = messageInput.value.trim();
   if (!text || isStreaming) return;
 
-  // Remove welcome message
   const welcome = chatContainer.querySelector(".welcome-message");
   if (welcome) welcome.remove();
 
-  // Add user message
   appendMessage("user", text);
   conversationHistory.push({ role: "user", content: text });
 
-  // Clear input
   messageInput.value = "";
   messageInput.style.height = "auto";
 
-  // Stream response
   streamResponse(text);
 }
 
-// ---- Append a message to chat ----
+// ---- Append message ----
 function appendMessage(role, content) {
   const msg = document.createElement("div");
-  msg.className = `message ${role === "user" ? "user" : "bot"}`;
+  msg.className = `message ${role}`;
 
   const avatar = document.createElement("div");
-  avatar.className = "message-avatar";
+  avatar.className = "msg-avatar";
   avatar.textContent = role === "user" ? "You" : "BC";
 
   const bubble = document.createElement("div");
-  bubble.className = "message-bubble";
+  bubble.className = "msg-body";
 
   if (role === "user") {
     bubble.textContent = content;
   } else {
-    bubble.innerHTML = marked.parse(content);
+    bubble.innerHTML = content ? marked.parse(content) : "";
   }
 
   msg.appendChild(avatar);
   msg.appendChild(bubble);
   chatContainer.appendChild(msg);
   scrollToBottom();
-
   return bubble;
 }
 
-// ---- Show thinking indicator ----
+// ---- Thinking indicator ----
 function showThinking() {
   const msg = document.createElement("div");
   msg.className = "message bot";
   msg.id = "thinking-msg";
 
   const avatar = document.createElement("div");
-  avatar.className = "message-avatar";
+  avatar.className = "msg-avatar";
   avatar.textContent = "BC";
 
   const bubble = document.createElement("div");
-  bubble.className = "message-bubble";
-  bubble.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div>`;
+  bubble.className = "msg-body";
+  bubble.innerHTML = '<span class="dot-pulse"><span></span><span></span><span></span></span>';
 
   msg.appendChild(avatar);
   msg.appendChild(bubble);
@@ -117,7 +107,7 @@ function removeThinking() {
   if (el) el.remove();
 }
 
-// ---- Stream response from backend ----
+// ---- Stream response ----
 async function streamResponse(userMessage) {
   isStreaming = true;
   sendBtn.disabled = true;
@@ -144,52 +134,58 @@ async function streamResponse(userMessage) {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    let buffer = "";
+    let sseBuffer = "";
+    let streamDone = false;
 
     removeThinking();
     bubble = appendMessage("bot", "");
 
-    while (true) {
+    while (!streamDone) {
       const { value, done } = await reader.read();
       if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-
-      // Process complete SSE lines
-      const lines = buffer.split("\n");
-      buffer = lines.pop(); // keep incomplete line in buffer
+      sseBuffer += decoder.decode(value, { stream: true });
+      const lines = sseBuffer.split("\n");
+      sseBuffer = lines.pop();
 
       for (const line of lines) {
         if (!line.startsWith("data: ")) continue;
         const data = line.slice(6).trim();
 
-        if (data === "[DONE]") continue;
+        if (data === "[DONE]") {
+          streamDone = true;
+          break;
+        }
 
         try {
           const parsed = JSON.parse(data);
           if (parsed.error) {
-            fullText += `\n\n*Error: ${parsed.error}*`;
+            fullText += `\n\n**Error:** ${parsed.error}`;
           } else if (parsed.text) {
             fullText += parsed.text;
           }
         } catch {
-          // skip malformed lines
+          // skip malformed
         }
       }
 
-      // Render accumulated markdown (strip wiki blocks)
-      bubble.innerHTML = marked.parse(stripWikiBlocks(fullText));
-      scrollToBottom();
+      const clean = stripWikiBlocks(fullText);
+      if (bubble && clean) {
+        bubble.innerHTML = marked.parse(clean);
+        scrollToBottom();
+      }
     }
 
-    // Save assistant response to history (strip wiki blocks)
+    // Close reader explicitly (Vercel may not close the connection)
+    try { reader.cancel(); } catch {}
+
     const cleanText = stripWikiBlocks(fullText);
     if (cleanText.trim()) {
       conversationHistory.push({ role: "assistant", content: cleanText });
     }
   } catch (err) {
     removeThinking();
-    appendMessage("bot", `*Something went wrong: ${err.message}*`);
+    appendMessage("bot", `**Something went wrong:** ${err.message}`);
   } finally {
     isStreaming = false;
     sendBtn.disabled = false;
@@ -207,14 +203,9 @@ function scrollToBottom() {
 
 function setStatus(text, thinking) {
   statusText.textContent = text;
-  if (thinking) {
-    statusDot.classList.add("thinking");
-  } else {
-    statusDot.classList.remove("thinking");
-  }
+  statusDot.classList.toggle("thinking", thinking);
 }
 
-// ---- Initial health check ----
 async function checkHealth() {
   try {
     const resp = await fetch("/api/health");
@@ -222,9 +213,7 @@ async function checkHealth() {
     if (data.wiki_pages === 0 && data.rag_chunks === 0) {
       setStatus("No data loaded", false);
     }
-  } catch {
-    // Backend not available — that's fine during local dev startup
-  }
+  } catch {}
 }
 
 checkHealth();
