@@ -363,7 +363,7 @@ def hybrid_search(query, top_k=15):
 # ---------------------------------------------------------------------------
 
 
-def process_wiki_update(full_text):
+def process_wiki_update(full_text, user_message=""):
     if WIKI_OPEN not in full_text:
         return
     try:
@@ -377,12 +377,15 @@ def process_wiki_update(full_text):
         if not title or not content:
             return
 
+        from datetime import datetime, timezone
         embedding = get_document_embedding(content)
         page = {
             "title": title,
             "path": f"wiki/{title.lower().replace(' ', '-')}.md",
             "content": content,
             "type": "wiki",
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "source_query": user_message[:200] if user_message else "",
         }
         if embedding:
             page["embedding"] = embedding
@@ -549,7 +552,7 @@ def chat():
         # Process wiki update after response is sent
         if WIKI_OPEN in full_text and WIKI_STORE.is_dynamic():
             try:
-                process_wiki_update(full_text)
+                process_wiki_update(full_text, user_message=user_message)
             except Exception as exc:
                 print(f"[Wiki] Update error: {exc}")
 

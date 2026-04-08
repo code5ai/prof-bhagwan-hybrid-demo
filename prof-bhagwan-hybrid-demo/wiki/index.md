@@ -30,15 +30,16 @@ Master catalog of all wiki pages. Read this before every query.
 
 ## RAG Stubs
 
-The following large documents are indexed in the RAG system (5,760 chunks total):
+The following large documents are indexed in the RAG system (5,830 chunks total):
 
-### Books (5)
+### Books (6)
 
 - Financial Modeling, 5th Edition — Benninga & Mofkadi (919 chunks)
 - Introductory Econometrics: A Modern Approach (1,213 chunks)
 - Corporate Finance — DeMarzo & Berk (1,431 chunks)
 - Principles of Risk Management (977 chunks)
 - A Guide to Econometrics — Peter Kennedy (727 chunks)
+- [[stub-valuation-damodaran|Valuation Approaches and Metrics]] — Aswath Damodaran (70 chunks)
 
 ### Research Papers (11)
 
