@@ -127,6 +127,9 @@ app = Flask(__name__)
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
+# Claude model — configurable via env var
+CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-5-20250514")
+
 # Search weights
 W_BM25 = 0.076
 W_SEMANTIC = 0.924
@@ -151,9 +154,12 @@ CHUNKS = _load_json(DATA_DIR / "chunks.json")
 # Chunk embeddings — stored as numpy binary to avoid 352MB JSON bloat
 _CHUNK_EMB_PATH = DATA_DIR / "chunks_embeddings.npy"
 CHUNK_EMBEDDINGS = None
-if _CHUNK_EMB_PATH.exists():
-    CHUNK_EMBEDDINGS = np.load(str(_CHUNK_EMB_PATH))
-    print(f"[Data] Loaded chunk embeddings: {CHUNK_EMBEDDINGS.shape}")
+try:
+    if _CHUNK_EMB_PATH.exists():
+        CHUNK_EMBEDDINGS = np.load(str(_CHUNK_EMB_PATH))
+        print(f"[Data] Loaded chunk embeddings: {CHUNK_EMBEDDINGS.shape}")
+except Exception as exc:
+    print(f"[Data] Failed to load embeddings: {exc}. Falling back to BM25-only.")
 
 # Wiki pages — dynamic via store (Redis or static fallback)
 WIKI_STORE = create_wiki_store(DATA_DIR)
@@ -474,7 +480,7 @@ def chat():
 
         try:
             with client.messages.stream(
-                model="claude-sonnet-4-6-20250514",
+                model=CLAUDE_MODEL,
                 max_tokens=2048,
                 system=system,
                 messages=messages,
@@ -543,6 +549,7 @@ def health():
     wiki_pages = WIKI_STORE.get_all_pages()
     return jsonify({
         "status": "ok",
+        "model": CLAUDE_MODEL,
         "wiki_pages": len(wiki_pages),
         "rag_chunks": len(CHUNKS),
         "has_embeddings": INDEX.has_embeddings,
@@ -566,10 +573,13 @@ def serve_index():
 
 @app.route("/<path:path>")
 def serve_static(path):
+    # Only serve frontend assets, not data files
+    allowed = {".html", ".css", ".js", ".ico", ".png", ".svg", ".jpg", ".woff", ".woff2"}
+    ext = Path(path).suffix.lower()
     full = Path(STATIC_DIR) / path
-    if full.is_file():
+    if ext in allowed and full.is_file():
         return send_from_directory(STATIC_DIR, path)
-    # SPA fallback
+    # SPA fallback for unknown paths
     return send_from_directory(STATIC_DIR, "index.html")
 
 
