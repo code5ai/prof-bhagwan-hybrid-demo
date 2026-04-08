@@ -7,13 +7,10 @@ Wiki updates extracted from responses and persisted to Upstash Redis.
 """
 
 import os
-import sys
 import json
+import time
 import threading
 from pathlib import Path
-
-# Ensure sibling modules in api/ are importable (needed on Vercel)
-sys.path.insert(0, os.path.dirname(__file__))
 
 import numpy as np
 import requests as http_requests
@@ -21,7 +18,106 @@ from flask import Flask, request, Response, jsonify
 from anthropic import Anthropic
 from rank_bm25 import BM25Okapi
 
-from wiki_store import create_wiki_store
+# ---------------------------------------------------------------------------
+# Wiki persistence layer (inline — Vercel can't resolve sibling imports)
+# ---------------------------------------------------------------------------
+
+class WikiStore:
+    def get_all_pages(self):
+        raise NotImplementedError
+    def save_page(self, page):
+        raise NotImplementedError
+    def is_dynamic(self):
+        return False
+
+
+class StaticWikiStore(WikiStore):
+    def __init__(self, json_path):
+        self._pages = []
+        p = Path(json_path)
+        if p.exists():
+            self._pages = json.loads(p.read_text(encoding="utf-8"))
+    def get_all_pages(self):
+        return list(self._pages)
+    def save_page(self, page):
+        pass
+    def is_dynamic(self):
+        return False
+
+
+class RedisWikiStore(WikiStore):
+    WIKI_KEY = "wiki_pages"
+
+    def __init__(self, rest_url, rest_token):
+        self._url = rest_url.rstrip("/")
+        self._headers = {"Authorization": f"Bearer {rest_token}"}
+        self._cache = None
+        self._cache_time = 0
+        self._cache_ttl = 30
+
+    def _redis_get(self, key):
+        resp = http_requests.get(
+            f"{self._url}/get/{key}", headers=self._headers, timeout=5)
+        resp.raise_for_status()
+        return resp.json().get("result")
+
+    def _redis_set(self, key, value):
+        resp = http_requests.post(
+            f"{self._url}/set/{key}", headers=self._headers,
+            json=value, timeout=10)
+        resp.raise_for_status()
+
+    def get_all_pages(self):
+        now = time.time()
+        if self._cache is not None and (now - self._cache_time) < self._cache_ttl:
+            return list(self._cache)
+        try:
+            raw = self._redis_get(self.WIKI_KEY)
+            if raw:
+                self._cache = json.loads(raw) if isinstance(raw, str) else raw
+            else:
+                self._cache = []
+            self._cache_time = now
+        except Exception as exc:
+            print(f"[WikiStore] Redis read failed: {exc}")
+            if self._cache is not None:
+                return list(self._cache)
+            self._cache = []
+        return list(self._cache)
+
+    def save_page(self, page):
+        pages = self.get_all_pages()
+        updated = False
+        for i, p in enumerate(pages):
+            if p.get("title", "").lower() == page.get("title", "").lower():
+                pages[i] = page
+                updated = True
+                break
+        if not updated:
+            pages.append(page)
+        try:
+            self._redis_set(self.WIKI_KEY, json.dumps(pages))
+            self._cache = pages
+            self._cache_time = time.time()
+        except Exception as exc:
+            print(f"[WikiStore] Redis write failed: {exc}")
+
+    def is_dynamic(self):
+        return True
+
+
+def create_wiki_store(data_dir=None):
+    kv_url = os.environ.get("KV_REST_API_URL", "")
+    kv_token = os.environ.get("KV_REST_API_TOKEN", "")
+    if kv_url and kv_token:
+        print("[WikiStore] Using Upstash Redis (dynamic wiki)")
+        return RedisWikiStore(kv_url, kv_token)
+    if data_dir is None:
+        data_dir = Path(__file__).parent.parent / "data"
+    json_path = Path(data_dir) / "wiki_pages.json"
+    print(f"[WikiStore] Using static JSON: {json_path}")
+    return StaticWikiStore(json_path)
+
 
 # ---------------------------------------------------------------------------
 # App setup
@@ -452,22 +548,22 @@ def health():
 
 
 # ---------------------------------------------------------------------------
-# Local dev: serve static files
+# Local dev only: serve static files (on Vercel, static files are served
+# directly from the project root, not through Flask)
 # ---------------------------------------------------------------------------
 
-@app.route("/")
-def serve_index():
-    return app.send_static_file("index.html")
-
-
-@app.route("/<path:path>")
-def serve_static(path):
-    return app.send_static_file(path)
-
-
-app.static_folder = str(Path(__file__).parent.parent / "public")
-
 if __name__ == "__main__":
+    # Serve static files only in local dev
+    @app.route("/")
+    def serve_index():
+        return app.send_static_file("index.html")
+
+    @app.route("/<path:path>")
+    def serve_static(path):
+        return app.send_static_file(path)
+
+    app.static_folder = str(Path(__file__).parent.parent)
+
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent.parent.parent / ".env")
     app.run(debug=True, port=5000)
