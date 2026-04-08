@@ -191,13 +191,16 @@ class SearchIndex:
         # Build embedding matrix: wiki page embeddings (from JSON) +
         # chunk embeddings (from numpy binary file)
         wiki_embs = [p["embedding"] for p in wiki_pages if "embedding" in p]
-        n_wiki = len(wiki_pages)
 
-        if (len(wiki_embs) == n_wiki and
-                CHUNK_EMBEDDINGS is not None and
-                len(CHUNK_EMBEDDINGS) == len(CHUNKS)):
-            wiki_arr = np.array(wiki_embs, dtype=np.float32)
-            self.embeddings = np.vstack([wiki_arr, CHUNK_EMBEDDINGS])
+        if CHUNK_EMBEDDINGS is not None and len(CHUNK_EMBEDDINGS) == len(CHUNKS):
+            if wiki_embs:
+                wiki_arr = np.array(wiki_embs, dtype=np.float32)
+                self.embeddings = np.vstack([wiki_arr, CHUNK_EMBEDDINGS])
+            else:
+                # Wiki pages have no embeddings (e.g. fresh Redis with no embeddings)
+                # Use chunks only, pad wiki positions with zeros
+                pad = np.zeros((len(wiki_pages), CHUNK_EMBEDDINGS.shape[1]), dtype=np.float32)
+                self.embeddings = np.vstack([pad, CHUNK_EMBEDDINGS]) if wiki_pages else CHUNK_EMBEDDINGS
             self.has_embeddings = True
         else:
             self.embeddings = None
