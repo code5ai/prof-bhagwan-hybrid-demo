@@ -7,9 +7,13 @@ Wiki updates extracted from responses and persisted to Upstash Redis.
 """
 
 import os
+import sys
 import json
 import threading
 from pathlib import Path
+
+# Ensure sibling modules in api/ are importable (needed on Vercel)
+sys.path.insert(0, os.path.dirname(__file__))
 
 import numpy as np
 import requests as http_requests
