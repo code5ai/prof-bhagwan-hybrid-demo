@@ -14,7 +14,7 @@ from pathlib import Path
 
 import numpy as np
 import requests as http_requests
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_from_directory
 from anthropic import Anthropic
 from rank_bm25 import BM25Okapi
 
@@ -551,22 +551,29 @@ def health():
 
 
 # ---------------------------------------------------------------------------
-# Local dev only: serve static files (on Vercel, static files are served
-# directly from the project root, not through Flask)
+# Static file serving — all requests routed through Flask on Vercel
 # ---------------------------------------------------------------------------
 
+# On Vercel: /var/task/api/index.py → parent.parent = /var/task/
+# Locally:   webapp/api/index.py    → parent.parent = webapp/
+STATIC_DIR = str(Path(__file__).resolve().parent.parent)
+
+
+@app.route("/")
+def serve_index():
+    return send_from_directory(STATIC_DIR, "index.html")
+
+
+@app.route("/<path:path>")
+def serve_static(path):
+    full = Path(STATIC_DIR) / path
+    if full.is_file():
+        return send_from_directory(STATIC_DIR, path)
+    # SPA fallback
+    return send_from_directory(STATIC_DIR, "index.html")
+
+
 if __name__ == "__main__":
-    # Serve static files only in local dev
-    @app.route("/")
-    def serve_index():
-        return app.send_static_file("index.html")
-
-    @app.route("/<path:path>")
-    def serve_static(path):
-        return app.send_static_file(path)
-
-    app.static_folder = str(Path(__file__).parent.parent)
-
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent.parent.parent / ".env")
     app.run(debug=True, port=5000)
