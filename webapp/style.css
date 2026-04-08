@@ -284,6 +284,19 @@ html, body {
   margin: 14px 0;
 }
 
+/* KaTeX display math */
+.message.bot .msg-body .katex-display {
+  margin: 14px 0;
+  overflow-x: auto;
+}
+
+/* Fallback for unparseable math */
+.math-fallback {
+  font-family: 'KaTeX_Main', 'Times New Roman', serif;
+  font-style: italic;
+  color: var(--text);
+}
+
 /* Streaming cursor — blinking block cursor while text is being generated */
 .msg-body.streaming::after {
   content: "\25A0";

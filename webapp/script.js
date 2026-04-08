@@ -18,19 +18,71 @@ function stripWikiBlocks(text) {
   return text.replace(/<wiki_update>[\s\S]*?<\/wiki_update>/g, "").trimEnd();
 }
 
+// Math-safe markdown rendering:
+// 1. Extract math blocks ($$...$$ and $...$) and replace with placeholders
+// 2. Run marked on the math-free text
+// 3. Re-insert the math blocks
+// 4. Run KaTeX on the result
+// This prevents marked from eating backslashes in LaTeX.
+
 function renderMarkdown(el, text) {
-  el.innerHTML = marked.parse(text);
-  if (typeof renderMathInElement === "function") {
-    renderMathInElement(el, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false },
-        { left: "\\(", right: "\\)", display: false },
-        { left: "\\[", right: "\\]", display: true },
-      ],
-      throwOnError: false,
-    });
+  const mathBlocks = [];
+
+  // Extract display math first ($$...$$), then inline ($...$)
+  // Also handle \[...\] and \(...\)
+  let safe = text;
+
+  // Display math: $$...$$
+  safe = safe.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => {
+    const id = `%%MATH_${mathBlocks.length}%%`;
+    mathBlocks.push({ id, math: math.trim(), display: true });
+    return id;
+  });
+
+  // Display math: \[...\]
+  safe = safe.replace(/\\\[([\s\S]+?)\\\]/g, (_, math) => {
+    const id = `%%MATH_${mathBlocks.length}%%`;
+    mathBlocks.push({ id, math: math.trim(), display: true });
+    return id;
+  });
+
+  // Inline math: $...$ (but not $$)
+  safe = safe.replace(/\$([^\$\n]+?)\$/g, (_, math) => {
+    const id = `%%MATH_${mathBlocks.length}%%`;
+    mathBlocks.push({ id, math: math.trim(), display: false });
+    return id;
+  });
+
+  // Inline math: \(...\)
+  safe = safe.replace(/\\\(([\s\S]+?)\\\)/g, (_, math) => {
+    const id = `%%MATH_${mathBlocks.length}%%`;
+    mathBlocks.push({ id, math: math.trim(), display: false });
+    return id;
+  });
+
+  // Render markdown on the safe (math-free) text
+  let html = marked.parse(safe);
+
+  // Re-insert math blocks as rendered KaTeX HTML
+  for (const block of mathBlocks) {
+    let rendered;
+    if (typeof katex !== "undefined") {
+      try {
+        rendered = katex.renderToString(block.math, {
+          displayMode: block.display,
+          throwOnError: false,
+        });
+      } catch {
+        // Fallback: show raw math in a styled span
+        rendered = `<span class="math-fallback">${block.display ? "$$" : "$"}${block.math}${block.display ? "$$" : "$"}</span>`;
+      }
+    } else {
+      rendered = `<span class="math-fallback">${block.display ? "$$" : "$"}${block.math}${block.display ? "$$" : "$"}</span>`;
+    }
+    html = html.replace(block.id, rendered);
   }
+
+  el.innerHTML = html;
 }
 
 // ---- Textarea auto-resize ----
