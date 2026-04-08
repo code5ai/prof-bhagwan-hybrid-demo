@@ -128,7 +128,7 @@ app = Flask(__name__)
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 # Claude model — configurable via env var
-CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-5-20250514")
+CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
 
 # Search weights
 W_BM25 = 0.076
