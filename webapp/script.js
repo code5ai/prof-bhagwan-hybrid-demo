@@ -291,14 +291,14 @@ async function streamResponse(userMessage) {
     const decoder = new TextDecoder();
     let sseBuffer = "";
     let streamDone = false;
-    let fullJsonResponse = "";  // Collect the full JSON response
+    let fullJsonResponse = "";  // Collect raw JSON chunks
 
     removeThinking();
     setStatus("Responding...", true);
     const bubble = appendMessage("bot", "");
     bubble.classList.add("streaming");
-    renderer = createStreamRenderer(bubble);
 
+    // ========== STAGE 1: Collect all JSON chunks (don't render yet!) ==========
     while (!streamDone) {
       const { value, done } = await reader.read();
       if (done) break;
@@ -318,11 +318,10 @@ async function streamResponse(userMessage) {
 
         try {
           const parsed = JSON.parse(data);
-          if (parsed.error) {
-            renderer.push(`\n\n**Error:** ${parsed.error}`);
-          } else if (parsed.text) {
-            fullJsonResponse += parsed.text;  // Accumulate the streamed chunks
-            renderer.push(parsed.text);
+          if (parsed.text) {
+            fullJsonResponse += parsed.text;  // Accumulate chunks
+          } else if (parsed.error) {
+            fullJsonResponse += `\n\n**Error:** ${parsed.error}`;
           }
         } catch {
           // skip malformed
@@ -332,24 +331,22 @@ async function streamResponse(userMessage) {
 
     try { reader.cancel(); } catch {}
 
-    // ========== CRITICAL: Parse JSON and extract only the answer ==========
+    // ========== STAGE 2: Parse JSON and extract answer ==========
     let finalAnswer = "";
     try {
-      // Try to parse the accumulated response as JSON
       const responseObj = JSON.parse(fullJsonResponse);
       if (responseObj.answer) {
         finalAnswer = responseObj.answer;
       } else {
-        finalAnswer = fullJsonResponse;  // Fallback to raw if no answer field
+        finalAnswer = fullJsonResponse;
       }
     } catch {
-      // If not valid JSON, use as-is
+      // Not valid JSON, use as-is
       finalAnswer = fullJsonResponse;
     }
 
-    // Clear the bubble and render only the answer
-    bubble.innerHTML = "";
-    if (renderer) renderer.destroy();
+    // ========== STAGE 3: NOW render to UI (clean, no flashing) ==========
+    bubble.innerHTML = "";  // Clear the bubble
     renderer = createStreamRenderer(bubble);
     renderer.push(finalAnswer);
     renderer.finish();
