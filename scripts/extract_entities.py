@@ -79,6 +79,7 @@ EXTRACTION_PROMPT = """You are an expert knowledge graph builder for a finance k
 Analyze the following text excerpts from "{source_name}" and extract key concepts and entities.
 
 RULES:
+- ** FOR EVERY ANSWER YOU GENERATE, SPECIFY WHETHER IT WAS SOURCED FROM THE WIKI OR RAW DATA OR IF YOU INFERRED IT BASED ON YOUR KNOWLEDGE. **
 - Extract ONLY concepts and entities that are substantively discussed (not just mentioned in passing)
 - A **concept** is an idea, theory, model, method, principle, or technique (e.g., "Discounted Cash Flow", "CAPM", "Heteroscedasticity", "Hedging")
 - An **entity** is a person, institution, instrument, regulation, or named thing (e.g., "William Sharpe", "NYSE", "Basel III", "Black-Scholes Model")
@@ -86,6 +87,7 @@ RULES:
 - Identify relationships between extracted items AND to previously known items
 - Use kebab-case for slugs (e.g., "discounted-cash-flow", "william-sharpe")
 - Keep ALL string values on a single line — no line breaks inside JSON strings
+- If you are stepping beyond the text to infer relationships, ask the user for confirmation before including them
 
 Respond with ONLY valid JSON in this exact format (no markdown, no commentary):
 {{
