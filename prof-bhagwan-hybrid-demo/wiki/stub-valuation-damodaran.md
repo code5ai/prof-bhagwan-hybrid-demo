@@ -1,14 +1,3 @@
----
-type: stub
-aliases: [Damodaran valuation, valuation approaches]
-relationships:
-  - target: thinking-patterns-and-frameworks
-    type: related_to
-  - target: mechanism-design-applied
-    type: related_to
-tags: [valuation, dcf, relative-valuation, multiples, damodaran]
----
-
 # Valuation Approaches and Metrics: A Survey of the Theory and Evidence
 
 **Type**: RAG stub

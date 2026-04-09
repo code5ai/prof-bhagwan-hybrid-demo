@@ -1,16 +1,3 @@
----
-type: persona
-aliases: [thinking patterns, intellectual frameworks, how he thinks]
-relationships:
-  - target: prof-bhagwan-chowdhry
-    type: describes
-  - target: mechanism-design-applied
-    type: underpins
-  - target: financial-inclusion-architecture
-    type: underpins
-tags: [mechanism-design, incentives, equity-over-debt, shub]
----
-
 # Thinking Patterns and Frameworks
 
 The reusable intellectual tools [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]] applies across every domain he touches -- from corporate finance theory to financial inclusion, from sovereign debt crises to university governance. Understanding these patterns is the key to understanding how he would approach any new problem.

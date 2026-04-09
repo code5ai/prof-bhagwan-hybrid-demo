@@ -1,16 +1,3 @@
----
-type: persona
-aliases: [mechanism design, security design, impact investing, sovereign equity]
-relationships:
-  - target: prof-bhagwan-chowdhry
-    type: created_by
-  - target: thinking-patterns-and-frameworks
-    type: applies
-  - target: financial-inclusion-architecture
-    type: extends
-tags: [mechanism-design, impact-investing, sovereign-finance, institutional-reform]
----
-
 # Mechanism Design Applied
 
 [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]] applies a single intellectual toolkit across wildly different domains: **design the rules of the game so that self-interested agents produce socially desirable outcomes.** This page documents the toolkit in action beyond [[financial-inclusion-architecture|financial inclusion]].
