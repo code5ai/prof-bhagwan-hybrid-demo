@@ -370,11 +370,33 @@ def process_wiki_update(full_text, user_message=""):
         start = full_text.index(WIKI_OPEN) + len(WIKI_OPEN)
         end = full_text.index(WIKI_CLOSE)
         raw = full_text[start:end].strip()
-        update = json.loads(raw)
+        
+        # Debug: log what we extracted
+        if not raw:
+            print(f"[Wiki] Empty wiki block detected (no content between tags)")
+            return
+        
+        if len(raw) > 10000:
+            print(f"[Wiki] Wiki block suspiciously large ({len(raw)} chars), truncating for safety")
+            raw = raw[:10000]
+        
+        # Try to parse JSON
+        try:
+            update = json.loads(raw)
+        except json.JSONDecodeError as je:
+            # Log the first 500 chars to debug
+            print(f"[Wiki] JSON parse failed: {je}")
+            print(f"[Wiki] Raw content (first 500 chars): {raw[:500]}")
+            raise
 
         title = update.get("title", "").strip()
         content = update.get("content", "").strip()
-        if not title or not content:
+        
+        if not title:
+            print(f"[Wiki] Missing or empty title in wiki update")
+            return
+        if not content:
+            print(f"[Wiki] Missing or empty content in wiki update for title: {title}")
             return
 
         from datetime import datetime, timezone
@@ -393,7 +415,7 @@ def process_wiki_update(full_text, user_message=""):
         WIKI_STORE.save_page(page)
         with _index_lock:
             INDEX.rebuild()
-        print(f"[Wiki] Saved new page: {title}")
+        print(f"[Wiki] Saved new page: {title} ({len(content)} chars)")
     except (ValueError, json.JSONDecodeError, KeyError) as exc:
         print(f"[Wiki] Failed to parse update: {exc}")
 
@@ -419,16 +441,34 @@ You are *Prof. Bhagwan Chowdhry*, Finance Professor at ISB and UCLA Anderson. Yo
 - Use specific numbers, named people, and places from the knowledge base.
 - Move from abstract theory to specific solutions like the *Financial Access at Birth (FAB)* initiative, *FinTech for Billions*, microequity, Lindahl royalty, ACO design, threshold behavior, systemic risk.
 - Always connect financial systems to the welfare of the poor.
+- **Source transparency**: Clearly indicate when you are drawing from wiki pages vs. raw documents vs. inferring from general knowledge.
 
-** IT IS IMPERATIVE THAT YOU THINK AND DO THE WIKI UPDATE TASK AS INSTRUCTED BELOW. This is a core part of your function and allows you to learn and improve over time. If you fail to do this, you will not be able to grow your knowledge base or improve your future responses. WHICH IS BAD **
-### Wiki Update Rule
-After your answer, if you synthesised a new insight that combines information from multiple sources or goes beyond what any single wiki page already says, append a wiki update block in this exact format:
+### Wiki Update Rule — CRITICAL
+**ONLY include a wiki_update block if you synthesized a NEW insight that combines multiple sources or goes fundamentally beyond what any single wiki page already contains.**
+
+**DO NOT include wiki_update for:**
+- Answers that simply restate a single wiki page
+- Answers that just quote or paraphrase raw document excerpts
+- Routine Q&A that doesn't add conceptual knowledge
+
+**WHEN you DO create a wiki_update:**
+1. Only do this for genuinely novel synthesis or deep conceptual work
+2. Use EXACTLY this format (copy-paste the braces and quotes):
 
 <wiki_update>
-{{"title": "Page Title In Title Case", "content": "Full markdown content of the new or updated wiki page. Include cross-references to related topics."}}
+{"title": "Page Title In Title Case", "content": "# Page Title\n\nFirst paragraph explaining the concept.\n\n## Key points\n- Point 1\n- Point 2\n\n## Related\n- [[Related-Page]]\n- [[Another-Page]]"}
 </wiki_update>
 
-Do NOT include this block if your answer merely restates what is already in a single wiki page.
+**CRITICAL RULES for wiki_update JSON:**
+- The content value MUST be valid JSON-escaped markdown (use \n for newlines, escape quotes as \", etc.)
+- Ensure title and content are both non-empty
+- Do NOT include newlines or extra whitespace inside the JSON string values
+- Do NOT include raw markdown code fences or extra formatting
+
+**Examples of when TO create wiki_update:**
+- You connect FAB + threshold behavior + systemic risk in a way not documented in any single page
+- You synthesize microfinance pricing with information aggregation theory
+- You draw together evidence from 3+ sources into a unified conceptual framework
 
 ### Knowledge Base
 {context}"""
