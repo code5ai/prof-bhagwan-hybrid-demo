@@ -291,6 +291,7 @@ async function streamResponse(userMessage) {
     const decoder = new TextDecoder();
     let sseBuffer = "";
     let streamDone = false;
+    let fullJsonResponse = "";  // Collect the full JSON response
 
     removeThinking();
     setStatus("Responding...", true);
@@ -320,6 +321,7 @@ async function streamResponse(userMessage) {
           if (parsed.error) {
             renderer.push(`\n\n**Error:** ${parsed.error}`);
           } else if (parsed.text) {
+            fullJsonResponse += parsed.text;  // Accumulate the streamed chunks
             renderer.push(parsed.text);
           }
         } catch {
@@ -330,13 +332,31 @@ async function streamResponse(userMessage) {
 
     try { reader.cancel(); } catch {}
 
-    // Signal end of stream — renderer will finish draining + do final render
-    if (renderer) {
-      renderer.finish();
-      const cleanText = renderer.getCleanText();
-      if (cleanText.trim()) {
-        conversationHistory.push({ role: "assistant", content: cleanText });
+    // ========== CRITICAL: Parse JSON and extract only the answer ==========
+    let finalAnswer = "";
+    try {
+      // Try to parse the accumulated response as JSON
+      const responseObj = JSON.parse(fullJsonResponse);
+      if (responseObj.answer) {
+        finalAnswer = responseObj.answer;
+      } else {
+        finalAnswer = fullJsonResponse;  // Fallback to raw if no answer field
       }
+    } catch {
+      // If not valid JSON, use as-is
+      finalAnswer = fullJsonResponse;
+    }
+
+    // Clear the bubble and render only the answer
+    bubble.innerHTML = "";
+    if (renderer) renderer.destroy();
+    renderer = createStreamRenderer(bubble);
+    renderer.push(finalAnswer);
+    renderer.finish();
+
+    const cleanText = finalAnswer;
+    if (cleanText.trim()) {
+      conversationHistory.push({ role: "assistant", content: cleanText });
     }
   } catch (err) {
     removeThinking();
