@@ -1,24 +1,3 @@
----
-type: persona
-aliases: [Bhagwan Chowdhry, Prof. Chowdhry, BC]
-relationships:
-  - target: thinking-patterns-and-frameworks
-    type: uses
-  - target: intellectual-evolution
-    type: described_by
-  - target: financial-inclusion-architecture
-    type: created
-  - target: mechanism-design-applied
-    type: uses
-  - target: rhetorical-style-and-pedagogy
-    type: described_by
-  - target: mentor-network-and-influences
-    type: influenced_by
-  - target: fame-and-knowledge-democratization
-    type: created
-tags: [finance, isb, ucla-anderson, financial-inclusion, mechanism-design]
----
-
 # Prof. Bhagwan Chowdhry
 
 **Professor of Finance** at the Indian School of Business (ISB) and Research Professor at UCLA Anderson School of Management. A **mechanism designer disguised as a finance professor** -- he sees human problems (poverty, corruption, bureaucratic decay) as incentive-alignment failures, not moral failures, and applies the tools of corporate finance to serve the world's poorest billions.
