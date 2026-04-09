@@ -10,6 +10,7 @@ import os
 import json
 import time
 import threading
+import re
 from pathlib import Path
 
 import numpy as np
@@ -304,8 +305,122 @@ def get_document_embedding(text):
 
 
 # ---------------------------------------------------------------------------
-# Hybrid search
+# Layered search functions
 # ---------------------------------------------------------------------------
+
+
+def wiki_search(query, top_k=10):
+    """Search ONLY wiki pages using hybrid BM25 + semantic."""
+    with _index_lock:
+        all_docs = INDEX.all_docs
+        bm25 = INDEX.bm25
+        embeddings = INDEX.embeddings
+        has_embeddings = INDEX.has_embeddings
+
+    # Filter to wiki only
+    wiki_docs = [doc for doc in all_docs if doc.get("type") == "wiki"]
+    if not wiki_docs:
+        return []
+
+    n_all = len(all_docs)
+    wiki_indices = [i for i, doc in enumerate(all_docs) if doc.get("type") == "wiki"]
+
+    # BM25 on subset
+    bm25_scores = bm25.get_scores(query.lower().split()) if bm25 else np.zeros(n_all)
+    wiki_bm25 = np.array([bm25_scores[i] for i in wiki_indices])
+    max_bm25 = wiki_bm25.max() if len(wiki_bm25) > 0 else 1
+    bm25_norm = wiki_bm25 / max_bm25 if max_bm25 > 0 else wiki_bm25
+
+    # Semantic on subset
+    semantic_norm = np.zeros(len(wiki_indices))
+    if has_embeddings and embeddings is not None:
+        query_emb = get_query_embedding(query)
+        if query_emb is not None:
+            wiki_embs = embeddings[wiki_indices]
+            dot = wiki_embs @ query_emb
+            norms = np.linalg.norm(wiki_embs, axis=1) * np.linalg.norm(query_emb)
+            norms = np.where(norms == 0, 1.0, norms)
+            semantic_scores = dot / norms
+            max_sem = semantic_scores.max()
+            semantic_norm = (semantic_scores / max_sem
+                            if max_sem > 0 else semantic_scores)
+
+    # Hybrid
+    hybrid_scores = W_BM25 * bm25_norm + W_SEMANTIC * semantic_norm
+    top_local_indices = np.argsort(hybrid_scores)[::-1][:top_k]
+    top_global_indices = [wiki_indices[i] for i in top_local_indices]
+
+    results = []
+    for i in top_global_indices:
+        if hybrid_scores[np.where(np.array(wiki_indices) == i)[0][0]] <= 0:
+            continue
+        doc = all_docs[i]
+        results.append({
+            "title": doc.get("title", doc.get("source", "unknown")),
+            "content": doc["content"],
+            "type": "wiki",
+            "source": doc.get("source", doc.get("path", "")),
+            "score": float(hybrid_scores[np.where(np.array(wiki_indices) == i)[0][0]]),
+        })
+
+    return results
+
+
+def rag_search(query, top_k=10):
+    """Search ONLY RAG chunks using hybrid BM25 + semantic."""
+    with _index_lock:
+        all_docs = INDEX.all_docs
+        bm25 = INDEX.bm25
+        embeddings = INDEX.embeddings
+        has_embeddings = INDEX.has_embeddings
+
+    # Filter to RAG only
+    rag_docs = [doc for doc in all_docs if doc.get("type") == "rag"]
+    if not rag_docs:
+        return []
+
+    n_all = len(all_docs)
+    rag_indices = [i for i, doc in enumerate(all_docs) if doc.get("type") == "rag"]
+
+    # BM25 on subset
+    bm25_scores = bm25.get_scores(query.lower().split()) if bm25 else np.zeros(n_all)
+    rag_bm25 = np.array([bm25_scores[i] for i in rag_indices])
+    max_bm25 = rag_bm25.max() if len(rag_bm25) > 0 else 1
+    bm25_norm = rag_bm25 / max_bm25 if max_bm25 > 0 else rag_bm25
+
+    # Semantic on subset
+    semantic_norm = np.zeros(len(rag_indices))
+    if has_embeddings and embeddings is not None:
+        query_emb = get_query_embedding(query)
+        if query_emb is not None:
+            rag_embs = embeddings[rag_indices]
+            dot = rag_embs @ query_emb
+            norms = np.linalg.norm(rag_embs, axis=1) * np.linalg.norm(query_emb)
+            norms = np.where(norms == 0, 1.0, norms)
+            semantic_scores = dot / norms
+            max_sem = semantic_scores.max()
+            semantic_norm = (semantic_scores / max_sem
+                            if max_sem > 0 else semantic_scores)
+
+    # Hybrid
+    hybrid_scores = W_BM25 * bm25_norm + W_SEMANTIC * semantic_norm
+    top_local_indices = np.argsort(hybrid_scores)[::-1][:top_k]
+    top_global_indices = [rag_indices[i] for i in top_local_indices]
+
+    results = []
+    for i in top_global_indices:
+        if hybrid_scores[np.where(np.array(rag_indices) == i)[0][0]] <= 0:
+            continue
+        doc = all_docs[i]
+        results.append({
+            "title": doc.get("title", doc.get("source", "unknown")),
+            "content": doc["content"],
+            "type": "rag",
+            "source": doc.get("source", doc.get("path", "")),
+            "score": float(hybrid_scores[np.where(np.array(rag_indices) == i)[0][0]]),
+        })
+
+    return results
 
 
 def hybrid_search(query, top_k=15):
@@ -361,6 +476,234 @@ def hybrid_search(query, top_k=15):
 # ---------------------------------------------------------------------------
 # Wiki update processing
 # ---------------------------------------------------------------------------
+
+def _extract_json_from_text(text):
+    """Safely extract JSON object from text that may include markdown."""
+    text = text.strip()
+    # Try as-is first
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # Remove markdown code fences
+    if text.startswith("```"):
+        text = re.sub(r"^```(?:json)?\s*\n?", "", text)
+        text = re.sub(r"\n?```\s*$", "", text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # Try to extract JSON object
+    match = re.search(r'\{[\s\S]*\}', text)
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+# Wiki LLM System Prompt
+WIKI_LLM_SYSTEM_PROMPT = """You are a wiki search and synthesis specialist. Your sole job is to read the provided wiki pages and answer the user's question using ONLY what you find in those pages.
+
+**CRITICAL OUTPUT FORMAT:**
+Respond with ONLY a JSON object, no markdown, no explanation, just JSON:
+{
+  "answer": "Your synthesized answer based only on wiki pages",
+  "confidence": "high or medium or low",
+  "gaps": ["Question 1 the wiki cannot answer", "Question 2 if applicable"],
+  "pages_used": ["page_title_1", "page_title_2"]
+}
+
+**Rules:**
+- If the wiki has comprehensive info: confidence = "high"
+- If the wiki has partial info: confidence = "medium"
+- If the wiki has almost nothing: confidence = "low"
+- List only pages you actually read and used
+- If gaps exist (questions the wiki can't answer), list them
+- NEVER use external knowledge, ONLY what's in the wiki"""
+
+
+# Reply LLM System Prompt
+REPLY_LLM_SYSTEM_PROMPT = """You are *Prof. Bhagwan Chowdhry*, Finance Professor at ISB and UCLA Anderson. You are given:
+1. Wiki context (established, synthesized knowledge)
+2. RAG excerpts (raw source material)
+3. User's question
+
+Your job: Synthesize an answer using both sources, clearly marking what's established vs. new.
+
+**Voice & Style** (same as always):
+- Conversational Authority: blend narrative with principles, use medium-length sentences (15–25 words)
+- Employ em-dashes, rhetorical questions, active voice
+- Measured optimism with wit
+- Always connect to human welfare, especially the marginalized
+
+**CRITICAL OUTPUT FORMAT:**
+Respond with ONLY a JSON object, no markdown, no explanation:
+{
+  "answer": "Full conversational answer as Prof. Bhagwan",
+  "sources": {
+    "wiki": ["page_title_1", "page_title_2"],
+    "rag": ["source_document_1", "source_document_2"]
+  },
+  "new_synthesis": "If you synthesized something novel (connected ideas from 3+ sources, found contradiction, etc), explain here. Otherwise empty string.",
+  "should_wiki_update": true or false
+}
+
+**Guidelines:**
+- answer: Write naturally, in Prof. Bhagwan's voice. Don't say "this is from wiki" or "this is from RAG"
+- sources: List which pages/documents you drew from
+- new_synthesis: Only fill this if you found something genuinely novel (synthesis across 3+ sources, contradiction, surprising connection)
+- should_wiki_update: Set to true ONLY if new_synthesis is substantial AND combines multiple confirmed sources"""
+
+
+def call_wiki_lm(query, wiki_results):
+    """Call Claude as wiki search specialist. Returns structured output or None."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        print("[WikiLM] ANTHROPIC_API_KEY not configured")
+        return None
+
+    # Build wiki context
+    if not wiki_results:
+        wiki_context = "(No relevant wiki pages found.)"
+    else:
+        wiki_context = "\n\n".join(
+            f"--- {r['title']} ---\n{r['content'][:2000]}"
+            for r in wiki_results[:5]
+        )
+
+    messages = [
+        {
+            "role": "user",
+            "content": f"Question: {query}\n\nWiki pages:\n{wiki_context}",
+        }
+    ]
+
+    try:
+        client = Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model="claude-opus-4-1",
+            max_tokens=1024,
+            system=WIKI_LLM_SYSTEM_PROMPT,
+            messages=messages,
+        )
+        text = response.content[0].text
+        parsed = _extract_json_from_text(text)
+        if parsed is None:
+            print(f"[WikiLM] Failed to parse JSON response: {text[:200]}")
+            return None
+        return parsed
+    except Exception as exc:
+        print(f"[WikiLM] Error calling Claude: {exc}")
+        return None
+
+
+def call_reply_lm(wiki_output, rag_results, user_query):
+    """Call Claude as synthesizer. Returns structured output or None."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        print("[ReplyLM] ANTHROPIC_API_KEY not configured")
+        return None
+
+    # Build context
+    wiki_context = f"**Wiki Answer:** {wiki_output.get('answer', '(not available)')}\n**Gaps:** {', '.join(wiki_output.get('gaps', []))}"
+
+    if not rag_results:
+        rag_context = "(No RAG results found.)"
+    else:
+        rag_context = "\n\n".join(
+            f"--- From: {Path(r.get('source', 'Unknown')).stem} ---\n{r['content'][:1500]}"
+            for r in rag_results[:8]
+        )
+
+    messages = [
+        {
+            "role": "user",
+            "content": f"""Question: {user_query}
+
+Wiki Context:
+{wiki_context}
+
+Raw Source Material:
+{rag_context}
+
+Please synthesize a comprehensive answer.""",
+        }
+    ]
+
+    try:
+        client = Anthropic(api_key=api_key)
+        response = client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=2048,
+            system=REPLY_LLM_SYSTEM_PROMPT,
+            messages=messages,
+        )
+        text = response.content[0].text
+        parsed = _extract_json_from_text(text)
+        if parsed is None:
+            print(f"[ReplyLM] Failed to parse JSON response: {text[:200]}")
+            return None
+        return parsed
+    except Exception as exc:
+        print(f"[ReplyLM] Error calling Claude: {exc}")
+        return None
+
+
+def should_update_wiki(reply_output, rag_results):
+    """Deterministic rules + LLM agreement for wiki updates."""
+    if not reply_output:
+        return False
+
+    # Check LLM suggestion
+    lm_suggests = reply_output.get("should_wiki_update", False)
+    if not lm_suggests:
+        return False
+
+    # New synthesis must exist
+    new_synthesis = reply_output.get("new_synthesis", "").strip()
+    if not new_synthesis:
+        print("[WikiUpdate] No new synthesis, skipping update")
+        return False
+
+    # Rule 1: Multiple RAG sources
+    if len(rag_results) < 2:
+        print("[WikiUpdate] Insufficient RAG sources (need 2+)")
+        return False
+
+    # Rule 2: LLM + synthesis both present = PASS
+    print("[WikiUpdate] All rules pass, will update wiki")
+    return True
+
+
+def process_wiki_update_explicit(title, content, source_query=""):
+    """Explicitly write wiki update without tag parsing."""
+    if not title or not content:
+        print("[WikiUpdate] Missing title or content")
+        return
+
+    try:
+        from datetime import datetime, timezone
+
+        embedding = get_document_embedding(content)
+        page = {
+            "title": title.strip(),
+            "path": f"wiki/{title.lower().replace(' ', '-').replace('/', ':')}.md",
+            "content": content.strip(),
+            "type": "wiki",
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "source_query": source_query[:200] if source_query else "",
+        }
+        if embedding:
+            page["embedding"] = embedding
+
+        WIKI_STORE.save_page(page)
+        with _index_lock:
+            INDEX.rebuild()
+        print(f"[WikiUpdate] Saved page: {title} ({len(content)} chars)")
+    except Exception as exc:
+        print(f"[WikiUpdate] Failed to save: {exc}")
 
 
 def process_wiki_update(full_text, user_message=""):
@@ -591,6 +934,120 @@ def chat():
                 process_wiki_update(full_text, user_message=user_message)
             except Exception as exc:
                 print(f"[Wiki] Update error: {exc}")
+
+    return Response(
+        generate(),
+        mimetype="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
+    )
+
+
+@app.route("/api/chat-v2", methods=["POST"])
+def chat_v2():
+    """Two-agent orchestrator: Wiki-first with RAG fallback and explicit wiki updates."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return jsonify({"error": "ANTHROPIC_API_KEY not configured"}), 500
+
+    data = request.get_json(force=True)
+    user_message = data.get("message", "").strip()
+    history = data.get("history", [])
+
+    if not user_message:
+        return jsonify({"error": "Empty message"}), 400
+
+    # ========== STAGE 1: Wiki Search ==========
+    print(f"[ChatV2] Stage 1: Wiki search for: {user_message[:50]}")
+    wiki_results = wiki_search(user_message, top_k=10)
+
+    # ========== STAGE 2: Wiki LLM ==========
+    print(f"[ChatV2] Stage 2: Calling wiki_lm")
+    wiki_output = call_wiki_lm(user_message, wiki_results)
+
+    if wiki_output is None:
+        print("[ChatV2] Wiki LM failed, falling back to hybrid search")
+        wiki_output = {
+            "answer": "",
+            "confidence": "low",
+            "gaps": ["wiki search failed"],
+            "pages_used": [],
+        }
+
+    # ========== STAGE 3: Confidence Decision ==========
+    confidence_map = {"high": 0.95, "medium": 0.65, "low": 0.3}
+    confidence_score = confidence_map.get(
+        wiki_output.get("confidence", "low"), 0.3
+    )
+    print(f"[ChatV2] Wiki confidence: {wiki_output.get('confidence')} ({confidence_score})")
+
+    use_rag = confidence_score < 0.85
+    reply_output = None
+    rag_results = []
+
+    if use_rag:
+        # ========== STAGE 4: RAG Search ==========
+        print("[ChatV2] Stage 4: RAG search needed")
+        rag_results = rag_search(user_message, top_k=10)
+
+        # ========== STAGE 5: Reply LM ==========
+        print("[ChatV2] Stage 5: Calling reply_lm")
+        reply_output = call_reply_lm(wiki_output, rag_results, user_message)
+
+        if reply_output is None:
+            print("[ChatV2] Reply LM failed, using wiki-only answer")
+            reply_output = wiki_output
+    else:
+        print("[ChatV2] High wiki confidence, using wiki-only answer")
+        reply_output = wiki_output
+
+    # ========== STAGE 6: Wiki Update Decision ==========
+    should_update = False
+    if use_rag and reply_output != wiki_output:
+        should_update = should_update_wiki(reply_output, rag_results)
+        print(f"[ChatV2] Wiki update decision: {should_update}")
+
+    # ========== BUILD RESPONSE ==========
+    final_answer = reply_output.get("answer", "(No answer generated)")
+    sources_used = reply_output.get("sources", {"wiki": [], "rag": []})
+
+    def generate():
+        # Stream the answer
+        buffer = ""
+        marker_len = 30
+
+        # Chunk answer into pieces for streaming
+        words = final_answer.split()
+        for word in words:
+            buffer += word + " "
+            if len(buffer) > marker_len:
+                safe = buffer[:-marker_len]
+                if safe:
+                    yield f"data: {json.dumps({'text': safe})}\n\n"
+                buffer = buffer[-marker_len:]
+
+        if buffer:
+            yield f"data: {json.dumps({'text': buffer})}\n\n"
+
+        yield "data: [DONE]\n\n"
+
+        # ========== STAGE 7: Wiki Update (after streaming) ==========
+        if should_update and WIKI_STORE.is_dynamic():
+            try:
+                print("[ChatV2] Stage 7: Writing wiki update")
+                title = (
+                    reply_output.get("new_synthesis", "New Insight")[:100]
+                    .split("\n")[0]
+                    .strip()
+                )
+                if not title:
+                    title = "New Insight"
+                process_wiki_update_explicit(title, final_answer, source_query=user_message)
+            except Exception as exc:
+                print(f"[ChatV2] Wiki update error: {exc}")
 
     return Response(
         generate(),

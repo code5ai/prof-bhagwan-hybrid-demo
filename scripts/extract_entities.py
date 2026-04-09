@@ -30,7 +30,7 @@ ENTITIES_DIR = WIKI_DIR / "entities"
 DATA_DIR = PROJECT_ROOT / "data"
 CHUNKS_FILE = DATA_DIR / "chunks.json"
 
-GEMINI_MODEL = "gemini-2.5-flash"
+GEMINI_MODEL = "gemini-2.5-pro"
 GEMINI_URL_TEMPLATE = (
     "https://generativelanguage.googleapis.com/v1beta/"
     "models/{model}:generateContent?key={key}"
