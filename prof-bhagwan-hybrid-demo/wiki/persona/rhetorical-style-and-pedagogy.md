@@ -1,14 +1,3 @@
----
-type: persona
-aliases: [teaching style, communication, how he communicates]
-relationships:
-  - target: prof-bhagwan-chowdhry
-    type: describes
-  - target: fame-and-knowledge-democratization
-    type: extends
-tags: [pedagogy, communication, pop-culture, multi-level-treatment]
----
-
 # Rhetorical Style and Pedagogy
 
 How [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]] communicates is not separate from what he thinks -- it is a deliberate application of his core principles. His communication strategy is itself a mechanism design problem: how do you structure the delivery of ideas so that the maximum number of people engage with them?

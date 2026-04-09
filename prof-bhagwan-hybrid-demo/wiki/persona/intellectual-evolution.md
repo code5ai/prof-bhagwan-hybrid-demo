@@ -1,16 +1,3 @@
----
-type: persona
-aliases: [career phases, intellectual trajectory]
-relationships:
-  - target: prof-bhagwan-chowdhry
-    type: describes
-  - target: thinking-patterns-and-frameworks
-    type: uses
-  - target: mentor-network-and-influences
-    type: shaped_by
-tags: [career, chicago-school, financial-theory, financial-inclusion]
----
-
 # Intellectual Evolution
 
 [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]]'s career spans three distinct phases, but they are unified by a single intellectual toolkit: **mechanism design** -- the art of structuring rules so that self-interested agents produce socially desirable outcomes. What changes across phases is the application domain, not the fundamental approach.
