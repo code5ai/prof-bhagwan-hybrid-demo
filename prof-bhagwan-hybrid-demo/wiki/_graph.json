@@ -1,0 +1,1532 @@
+{
+  "nodes": {
+    "adjusted-present-value-approach": {
+      "type": "concept",
+      "title": "Adjusted Present Value Approach",
+      "aliases": [
+        "Adjusted Present Value Approach"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/adjusted-present-value-approach.md"
+    },
+    "book-value-of-capital": {
+      "type": "concept",
+      "title": "Book Value of Capital",
+      "aliases": [
+        "Book Value of Capital"
+      ],
+      "tags": [
+        "accounting",
+        "financial-reporting"
+      ],
+      "path": "wiki/concepts/book-value-of-capital.md"
+    },
+    "capital-cash-flows": {
+      "type": "concept",
+      "title": "Capital Cash Flows",
+      "aliases": [
+        "Capital Cash Flows"
+      ],
+      "tags": [
+        "valuation",
+        "cash-flow"
+      ],
+      "path": "wiki/concepts/capital-cash-flows.md"
+    },
+    "capital-invested-in-existing-assets": {
+      "type": "concept",
+      "title": "Capital Invested in Existing Assets",
+      "aliases": [
+        "Capital Invested in Existing Assets"
+      ],
+      "tags": [
+        "accounting",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/capital-invested-in-existing-assets.md"
+    },
+    "capm": {
+      "type": "concept",
+      "title": "CAPM (Capital Asset Pricing Model)",
+      "aliases": [
+        "CAPM (Capital Asset Pricing Model)"
+      ],
+      "tags": [
+        "asset-pricing",
+        "risk-and-return"
+      ],
+      "path": "wiki/concepts/capm.md"
+    },
+    "cash-flow-based-valuations": {
+      "type": "concept",
+      "title": "Cash Flow Based Valuations",
+      "aliases": [
+        "Cash Flow Based Valuations"
+      ],
+      "tags": [
+        "valuation"
+      ],
+      "path": "wiki/concepts/cash-flow-based-valuations.md"
+    },
+    "cashflow-haircuts": {
+      "type": "concept",
+      "title": "Cashflow Haircuts",
+      "aliases": [
+        "Cashflow Haircuts"
+      ],
+      "tags": [
+        "risk-adjustment",
+        "valuation-practice"
+      ],
+      "path": "wiki/concepts/cashflow-haircuts.md"
+    },
+    "certainty-equivalent-models": {
+      "type": "concept",
+      "title": "Certainty Equivalent Models",
+      "aliases": [
+        "Certainty Equivalent Models"
+      ],
+      "tags": [
+        "valuation",
+        "risk-adjustment"
+      ],
+      "path": "wiki/concepts/certainty-equivalent-models.md"
+    },
+    "certainty-equivalent": {
+      "type": "concept",
+      "title": "Certainty Equivalent",
+      "aliases": [
+        "Certainty Equivalent"
+      ],
+      "tags": [
+        "risk",
+        "decision-making"
+      ],
+      "path": "wiki/concepts/certainty-equivalent.md"
+    },
+    "compressed-apv-approach": {
+      "type": "concept",
+      "title": "Compressed APV Approach",
+      "aliases": [
+        "Compressed APV Approach"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/compressed-apv-approach.md"
+    },
+    "cost-of-capital-approach": {
+      "type": "concept",
+      "title": "Cost of Capital Approach",
+      "aliases": [
+        "Cost of Capital Approach"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/cost-of-capital-approach.md"
+    },
+    "cost-of-equity": {
+      "type": "concept",
+      "title": "Cost of Equity",
+      "aliases": [
+        "Cost of Equity"
+      ],
+      "tags": [
+        "corporate-finance",
+        "valuation"
+      ],
+      "path": "wiki/concepts/cost-of-equity.md"
+    },
+    "discounted-cash-flow-valuation-models": {
+      "type": "concept",
+      "title": "Discounted Cash Flow Valuation Models",
+      "aliases": [
+        "Discounted Cash Flow Valuation Models"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/discounted-cash-flow-valuation-models.md"
+    },
+    "discounted-cash-flow-valuation": {
+      "type": "concept",
+      "title": "Discounted Cash Flow (DCF) Valuation",
+      "aliases": [
+        "Discounted Cash Flow (DCF) Valuation"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/discounted-cash-flow-valuation.md"
+    },
+    "dividend-discount-model": {
+      "type": "concept",
+      "title": "Dividend Discount Model",
+      "aliases": [
+        "Dividend Discount Model"
+      ],
+      "tags": [
+        "valuation",
+        "dividend-discount-model"
+      ],
+      "path": "wiki/concepts/dividend-discount-model.md"
+    },
+    "double-counting-of-risk": {
+      "type": "concept",
+      "title": "Double Counting of Risk",
+      "aliases": [
+        "Double Counting of Risk"
+      ],
+      "tags": [
+        "risk-management",
+        "valuation-errors"
+      ],
+      "path": "wiki/concepts/double-counting-of-risk.md"
+    },
+    "economic-profit": {
+      "type": "concept",
+      "title": "Economic Profit",
+      "aliases": [
+        "Economic Profit"
+      ],
+      "tags": [
+        "valuation",
+        "performance-measurement"
+      ],
+      "path": "wiki/concepts/economic-profit.md"
+    },
+    "economic-value-added": {
+      "type": "concept",
+      "title": "Economic Value Added (EVA)",
+      "aliases": [
+        "Economic Value Added (EVA)"
+      ],
+      "tags": [
+        "performance-measure",
+        "valuation",
+        "corporate-finance",
+        "performance-measurement"
+      ],
+      "path": "wiki/concepts/economic-value-added.md"
+    },
+    "equity-valuation-approach": {
+      "type": "concept",
+      "title": "Equity Valuation Approach",
+      "aliases": [
+        "Equity Valuation Approach"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/equity-valuation-approach.md"
+    },
+    "excess-return-models": {
+      "type": "concept",
+      "title": "Excess Return Models",
+      "aliases": [
+        "Excess Return Models"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/excess-return-models.md"
+    },
+    "expected-bankruptcy-costs": {
+      "type": "concept",
+      "title": "Expected Bankruptcy Costs",
+      "aliases": [
+        "Expected Bankruptcy Costs"
+      ],
+      "tags": [
+        "corporate-finance",
+        "risk-management"
+      ],
+      "path": "wiki/concepts/expected-bankruptcy-costs.md"
+    },
+    "extended-equity-valuation-models": {
+      "type": "concept",
+      "title": "Extended Equity Valuation Models",
+      "aliases": [
+        "Extended Equity Valuation Models"
+      ],
+      "tags": [
+        "valuation",
+        "equity-valuation"
+      ],
+      "path": "wiki/concepts/extended-equity-valuation-models.md"
+    },
+    "firm-valuation-approach": {
+      "type": "concept",
+      "title": "Firm Valuation Approach",
+      "aliases": [
+        "Firm Valuation Approach"
+      ],
+      "tags": [
+        "valuation",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/firm-valuation-approach.md"
+    },
+    "free-cash-flow-to-equity": {
+      "type": "concept",
+      "title": "Free Cash Flow to Equity (FCFE)",
+      "aliases": [
+        "Free Cash Flow to Equity (FCFE)"
+      ],
+      "tags": [
+        "cash-flow",
+        "valuation"
+      ],
+      "path": "wiki/concepts/free-cash-flow-to-equity.md"
+    },
+    "free-cash-flow-to-firm": {
+      "type": "concept",
+      "title": "Free Cash Flow to Firm (FCFF)",
+      "aliases": [
+        "Free Cash Flow to Firm (FCFF)"
+      ],
+      "tags": [
+        "cash-flow",
+        "valuation"
+      ],
+      "path": "wiki/concepts/free-cash-flow-to-firm.md"
+    },
+    "gordon-growth-model": {
+      "type": "concept",
+      "title": "Gordon Growth Model",
+      "aliases": [
+        "Gordon Growth Model"
+      ],
+      "tags": [
+        "valuation",
+        "dividend-discount-model"
+      ],
+      "path": "wiki/concepts/gordon-growth-model.md"
+    },
+    "h-model": {
+      "type": "concept",
+      "title": "H Model",
+      "aliases": [
+        "H Model"
+      ],
+      "tags": [
+        "valuation",
+        "dividend-discount-model"
+      ],
+      "path": "wiki/concepts/h-model.md"
+    },
+    "modified-dividend-payout-ratio": {
+      "type": "concept",
+      "title": "Modified Dividend Payout Ratio",
+      "aliases": [
+        "Modified Dividend Payout Ratio"
+      ],
+      "tags": [
+        "valuation",
+        "financial-ratios"
+      ],
+      "path": "wiki/concepts/modified-dividend-payout-ratio.md"
+    },
+    "net-present-value": {
+      "type": "concept",
+      "title": "Net Present Value (NPV)",
+      "aliases": [
+        "Net Present Value (NPV)"
+      ],
+      "tags": [
+        "capital-budgeting",
+        "project-evaluation"
+      ],
+      "path": "wiki/concepts/net-present-value.md"
+    },
+    "probability-of-bankruptcy": {
+      "type": "concept",
+      "title": "Probability of Bankruptcy",
+      "aliases": [
+        "Probability of Bankruptcy"
+      ],
+      "tags": [
+        "risk-management",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/probability-of-bankruptcy.md"
+    },
+    "regulatory-capital-ratios": {
+      "type": "concept",
+      "title": "Regulatory Capital Ratios",
+      "aliases": [
+        "Regulatory Capital Ratios"
+      ],
+      "tags": [
+        "financial-regulation",
+        "banking"
+      ],
+      "path": "wiki/concepts/regulatory-capital-ratios.md"
+    },
+    "risk-adjusted-discount-rates": {
+      "type": "concept",
+      "title": "Risk-adjusted Discount Rates",
+      "aliases": [
+        "Risk-adjusted Discount Rates"
+      ],
+      "tags": [
+        "risk",
+        "valuation"
+      ],
+      "path": "wiki/concepts/risk-adjusted-discount-rates.md"
+    },
+    "risk-and-return-models": {
+      "type": "concept",
+      "title": "Risk and Return Models",
+      "aliases": [
+        "Risk and Return Models"
+      ],
+      "tags": [
+        "risk",
+        "finance-models"
+      ],
+      "path": "wiki/concepts/risk-and-return-models.md"
+    },
+    "st-petersburg-paradox": {
+      "type": "concept",
+      "title": "St. Petersburg Paradox",
+      "aliases": [
+        "St. Petersburg Paradox"
+      ],
+      "tags": [
+        "economics",
+        "paradox",
+        "risk"
+      ],
+      "path": "wiki/concepts/st-petersburg-paradox.md"
+    },
+    "stock-buybacks": {
+      "type": "concept",
+      "title": "Stock Buybacks",
+      "aliases": [
+        "Stock Buybacks"
+      ],
+      "tags": [
+        "corporate-finance",
+        "capital-allocation"
+      ],
+      "path": "wiki/concepts/stock-buybacks.md"
+    },
+    "tax-benefits-of-debt": {
+      "type": "concept",
+      "title": "Tax Benefits of Debt",
+      "aliases": [
+        "Tax Benefits of Debt"
+      ],
+      "tags": [
+        "corporate-finance",
+        "capital-structure"
+      ],
+      "path": "wiki/concepts/tax-benefits-of-debt.md"
+    },
+    "two-stage-dividend-discount-model": {
+      "type": "concept",
+      "title": "Two-Stage Dividend Discount Model",
+      "aliases": [
+        "Two-Stage Dividend Discount Model"
+      ],
+      "tags": [
+        "valuation",
+        "dividend-discount-model"
+      ],
+      "path": "wiki/concepts/two-stage-dividend-discount-model.md"
+    },
+    "weighted-average-cost-of-capital": {
+      "type": "concept",
+      "title": "Weighted Average Cost of Capital (WACC)",
+      "aliases": [
+        "Weighted Average Cost of Capital (WACC)"
+      ],
+      "tags": [
+        "cost-of-capital",
+        "corporate-finance"
+      ],
+      "path": "wiki/concepts/weighted-average-cost-of-capital.md"
+    },
+    "brealey-and-myers": {
+      "type": "entity",
+      "title": "Brealey and Myers",
+      "aliases": [
+        "Brealey and Myers"
+      ],
+      "tags": [
+        "authors",
+        "finance-literature"
+      ],
+      "path": "wiki/entities/brealey-and-myers.md"
+    },
+    "kaplan-and-ruback-1995": {
+      "type": "entity",
+      "title": "Kaplan and Ruback (1995)",
+      "aliases": [
+        "Kaplan and Ruback (1995)"
+      ],
+      "tags": [
+        "researchers",
+        "finance-theorists"
+      ],
+      "path": "wiki/entities/kaplan-and-ruback-1995.md"
+    },
+    "modigliani-and-miller-1963": {
+      "type": "entity",
+      "title": "Modigliani and Miller (1963)",
+      "aliases": [
+        "Modigliani and Miller (1963)"
+      ],
+      "tags": [
+        "economists",
+        "finance-theorists"
+      ],
+      "path": "wiki/entities/modigliani-and-miller-1963.md"
+    },
+    "myers-1974": {
+      "type": "entity",
+      "title": "Myers (1974)",
+      "aliases": [
+        "Myers (1974)"
+      ],
+      "tags": [
+        "economist",
+        "finance-theorist"
+      ],
+      "path": "wiki/entities/myers-1974.md"
+    },
+    "nicholas-bernoulli": {
+      "type": "entity",
+      "title": "Nicholas Bernoulli",
+      "aliases": [
+        "Nicholas Bernoulli"
+      ],
+      "tags": [
+        "economist",
+        "historical-figure"
+      ],
+      "path": "wiki/entities/nicholas-bernoulli.md"
+    },
+    "robichek-and-myers-1966": {
+      "type": "entity",
+      "title": "Robichek and Myers (1966)",
+      "aliases": [
+        "Robichek and Myers (1966)"
+      ],
+      "tags": [
+        "researchers",
+        "finance-literature"
+      ],
+      "path": "wiki/entities/robichek-and-myers-1966.md"
+    },
+    "stapleton-1971": {
+      "type": "entity",
+      "title": "Stapleton (1971)",
+      "aliases": [
+        "Stapleton (1971)"
+      ],
+      "tags": [
+        "researcher",
+        "finance-literature"
+      ],
+      "path": "wiki/entities/stapleton-1971.md"
+    },
+    "index": {
+      "type": "unknown",
+      "title": "Wiki Index",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/index.md"
+    },
+    "log": {
+      "type": "unknown",
+      "title": "Wiki Log",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/log.md"
+    },
+    "fame-and-knowledge-democratization": {
+      "type": "persona",
+      "title": "FAMe and Knowledge Democratization",
+      "aliases": [
+        "FAMe",
+        "knowledge democratization",
+        "education for billions"
+      ],
+      "tags": [
+        "fame-magazine",
+        "education",
+        "ai",
+        "pop-culture",
+        "knowledge-access"
+      ],
+      "path": "wiki/persona/fame-and-knowledge-democratization.md"
+    },
+    "financial-inclusion-architecture": {
+      "type": "persona",
+      "title": "Financial Inclusion Architecture",
+      "aliases": [
+        "FAB",
+        "financial access at birth",
+        "fintech for billions",
+        "aadhaar"
+      ],
+      "tags": [
+        "financial-inclusion",
+        "fab",
+        "aadhaar",
+        "shub",
+        "digital-identity",
+        "fintech"
+      ],
+      "path": "wiki/persona/financial-inclusion-architecture.md"
+    },
+    "intellectual-evolution": {
+      "type": "persona",
+      "title": "Intellectual Evolution",
+      "aliases": [
+        "career phases",
+        "intellectual trajectory"
+      ],
+      "tags": [
+        "career",
+        "chicago-school",
+        "financial-theory",
+        "financial-inclusion"
+      ],
+      "path": "wiki/persona/intellectual-evolution.md"
+    },
+    "mechanism-design-applied": {
+      "type": "persona",
+      "title": "Mechanism Design Applied",
+      "aliases": [
+        "mechanism design",
+        "security design",
+        "impact investing",
+        "sovereign equity"
+      ],
+      "tags": [
+        "mechanism-design",
+        "impact-investing",
+        "sovereign-finance",
+        "institutional-reform"
+      ],
+      "path": "wiki/persona/mechanism-design-applied.md"
+    },
+    "mentor-network-and-influences": {
+      "type": "persona",
+      "title": "Mentor Network and Influences",
+      "aliases": [
+        "mentors",
+        "influences",
+        "collaborators",
+        "network"
+      ],
+      "tags": [
+        "merton-miller",
+        "peter-singer",
+        "vijay-mahajan",
+        "nandan-nilekani"
+      ],
+      "path": "wiki/persona/mentor-network-and-influences.md"
+    },
+    "rhetorical-style-and-pedagogy": {
+      "type": "persona",
+      "title": "Rhetorical Style and Pedagogy",
+      "aliases": [
+        "teaching style",
+        "communication",
+        "how he communicates"
+      ],
+      "tags": [
+        "pedagogy",
+        "communication",
+        "pop-culture",
+        "multi-level-treatment"
+      ],
+      "path": "wiki/persona/rhetorical-style-and-pedagogy.md"
+    },
+    "thinking-patterns-and-frameworks": {
+      "type": "persona",
+      "title": "Thinking Patterns and Frameworks",
+      "aliases": [
+        "thinking patterns",
+        "intellectual frameworks",
+        "how he thinks"
+      ],
+      "tags": [
+        "mechanism-design",
+        "incentives",
+        "equity-over-debt",
+        "shub"
+      ],
+      "path": "wiki/persona/thinking-patterns-and-frameworks.md"
+    },
+    "prof-bhagwan-chowdhry": {
+      "type": "persona",
+      "title": "Prof. Bhagwan Chowdhry",
+      "aliases": [
+        "Bhagwan Chowdhry",
+        "Prof. Chowdhry",
+        "BC"
+      ],
+      "tags": [
+        "finance",
+        "isb",
+        "ucla-anderson",
+        "financial-inclusion",
+        "mechanism-design"
+      ],
+      "path": "wiki/prof-bhagwan-chowdhry.md"
+    },
+    "stub-valuation-damodaran": {
+      "type": "stub",
+      "title": "Valuation Approaches and Metrics: A Survey of the Theory and Evidence",
+      "aliases": [
+        "Damodaran valuation",
+        "valuation approaches"
+      ],
+      "tags": [
+        "valuation",
+        "dcf",
+        "relative-valuation",
+        "multiples",
+        "damodaran"
+      ],
+      "path": "wiki/stub-valuation-damodaran.md"
+    }
+  },
+  "edges": [
+    {
+      "from": "adjusted-present-value-approach",
+      "to": "myers-1974",
+      "type": "developed_by"
+    },
+    {
+      "from": "adjusted-present-value-approach",
+      "to": "tax-benefits-of-debt",
+      "type": "considers"
+    },
+    {
+      "from": "adjusted-present-value-approach",
+      "to": "expected-bankruptcy-costs",
+      "type": "considers"
+    },
+    {
+      "from": "adjusted-present-value-approach",
+      "to": "cost-of-capital-approach",
+      "type": "contrasted_with"
+    },
+    {
+      "from": "adjusted-present-value-approach",
+      "to": "compressed-apv-approach",
+      "type": "has_variant"
+    },
+    {
+      "from": "book-value-of-capital",
+      "to": "capital-invested-in-existing-assets",
+      "type": "is_proxy_for"
+    },
+    {
+      "from": "book-value-of-capital",
+      "to": "accounting-decisions",
+      "type": "impacted_by"
+    },
+    {
+      "from": "capital-cash-flows",
+      "to": "compressed-apv-approach",
+      "type": "used_in"
+    },
+    {
+      "from": "capital-cash-flows",
+      "to": "tax-benefits-of-debt",
+      "type": "includes"
+    },
+    {
+      "from": "capital-cash-flows",
+      "to": "unlevered-cost-of-equity",
+      "type": "discounted_by"
+    },
+    {
+      "from": "capital-invested-in-existing-assets",
+      "to": "economic-value-added",
+      "type": "is_input_for"
+    },
+    {
+      "from": "capital-invested-in-existing-assets",
+      "to": "book-value-of-capital",
+      "type": "can_be_proxied_by"
+    },
+    {
+      "from": "capm",
+      "to": "cost-of-equity",
+      "type": "used-to-estimate"
+    },
+    {
+      "from": "capm",
+      "to": "dividend-discount-model",
+      "type": "used-in"
+    },
+    {
+      "from": "cash-flow-based-valuations",
+      "to": "dividend-discount-model",
+      "type": "contrasted-with"
+    },
+    {
+      "from": "cashflow-haircuts",
+      "to": "double-counting-of-risk",
+      "type": "can_lead_to"
+    },
+    {
+      "from": "certainty-equivalent-models",
+      "to": "discounted-cash-flow-valuation",
+      "type": "type_of"
+    },
+    {
+      "from": "certainty-equivalent-models",
+      "to": "risk-adjusted-discount-rates",
+      "type": "alternative_to"
+    },
+    {
+      "from": "certainty-equivalent-models",
+      "to": "certainty-equivalent",
+      "type": "uses"
+    },
+    {
+      "from": "certainty-equivalent",
+      "to": "certainty-equivalent-models",
+      "type": "concept_in"
+    },
+    {
+      "from": "certainty-equivalent",
+      "to": "risk-aversion",
+      "type": "influenced_by"
+    },
+    {
+      "from": "certainty-equivalent",
+      "to": "utility-function",
+      "type": "can_be_derived_from"
+    },
+    {
+      "from": "certainty-equivalent",
+      "to": "risk-and-return-models",
+      "type": "can_be_derived_from"
+    },
+    {
+      "from": "compressed-apv-approach",
+      "to": "adjusted-present-value-approach",
+      "type": "is_variant_of"
+    },
+    {
+      "from": "compressed-apv-approach",
+      "to": "capital-cash-flows",
+      "type": "uses"
+    },
+    {
+      "from": "compressed-apv-approach",
+      "to": "unlevered-cost-of-equity",
+      "type": "discounts_tax_benefits_at"
+    },
+    {
+      "from": "compressed-apv-approach",
+      "to": "expected-bankruptcy-costs",
+      "type": "ignores"
+    },
+    {
+      "from": "cost-of-capital-approach",
+      "to": "adjusted-present-value-approach",
+      "type": "contrasted_with"
+    },
+    {
+      "from": "cost-of-capital-approach",
+      "to": "tax-benefits-of-debt",
+      "type": "incorporates"
+    },
+    {
+      "from": "cost-of-capital-approach",
+      "to": "expected-bankruptcy-costs",
+      "type": "incorporates"
+    },
+    {
+      "from": "cost-of-capital-approach",
+      "to": "levered-beta",
+      "type": "uses"
+    },
+    {
+      "from": "cost-of-capital-approach",
+      "to": "pre-tax-cost-of-debt",
+      "type": "uses"
+    },
+    {
+      "from": "cost-of-equity",
+      "to": "dividend-discount-model",
+      "type": "input-for"
+    },
+    {
+      "from": "cost-of-equity",
+      "to": "gordon-growth-model",
+      "type": "input-for"
+    },
+    {
+      "from": "cost-of-equity",
+      "to": "capm",
+      "type": "estimated-by"
+    },
+    {
+      "from": "discounted-cash-flow-valuation-models",
+      "to": "excess-return-models",
+      "type": "can_converge_with"
+    },
+    {
+      "from": "discounted-cash-flow-valuation-models",
+      "to": "dividend-discount-model",
+      "type": "contrasted_with"
+    },
+    {
+      "from": "discounted-cash-flow-valuation",
+      "to": "certainty-equivalent-models",
+      "type": "has_variant"
+    },
+    {
+      "from": "discounted-cash-flow-valuation",
+      "to": "excess-return-models",
+      "type": "has_variant"
+    },
+    {
+      "from": "dividend-discount-model",
+      "to": "cost-of-equity",
+      "type": "uses"
+    },
+    {
+      "from": "dividend-discount-model",
+      "to": "cash-flow-based-valuations",
+      "type": "contrasted-with"
+    },
+    {
+      "from": "dividend-discount-model",
+      "to": "extended-equity-valuation-models",
+      "type": "extended-by"
+    },
+    {
+      "from": "dividend-discount-model",
+      "to": "stock-buybacks",
+      "type": "can-incorporate"
+    },
+    {
+      "from": "double-counting-of-risk",
+      "to": "cashflow-haircuts",
+      "type": "risk_of"
+    },
+    {
+      "from": "economic-profit",
+      "to": "excess-return-models",
+      "type": "is_variant_of"
+    },
+    {
+      "from": "economic-profit",
+      "to": "net-income",
+      "type": "uses"
+    },
+    {
+      "from": "economic-profit",
+      "to": "cost-of-equity",
+      "type": "uses"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "excess-return-models",
+      "type": "type_of"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "net-present-value",
+      "type": "linked_to"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "excess-return-models",
+      "type": "is_variant_of"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "return-on-capital",
+      "type": "uses"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "cost-of-capital",
+      "type": "uses"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "capital-invested-in-existing-assets",
+      "type": "uses"
+    },
+    {
+      "from": "economic-value-added",
+      "to": "discounted-cash-flow-valuation-models",
+      "type": "can_converge_with"
+    },
+    {
+      "from": "equity-valuation-approach",
+      "to": "free-cash-flow-to-equity",
+      "type": "uses"
+    },
+    {
+      "from": "equity-valuation-approach",
+      "to": "firm-valuation-approach",
+      "type": "compared_to"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "discounted-cash-flow-valuation",
+      "type": "type_of"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "economic-value-added",
+      "type": "has_variant"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "economic-value-added",
+      "type": "includes"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "economic-profit",
+      "type": "includes"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "discounted-cash-flow-valuation-models",
+      "type": "can_converge_with"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "reinvestment",
+      "type": "links"
+    },
+    {
+      "from": "excess-return-models",
+      "to": "growth",
+      "type": "links"
+    },
+    {
+      "from": "expected-bankruptcy-costs",
+      "to": "adjusted-present-value-approach",
+      "type": "is_component_of"
+    },
+    {
+      "from": "expected-bankruptcy-costs",
+      "to": "value-of-business",
+      "type": "reduces"
+    },
+    {
+      "from": "expected-bankruptcy-costs",
+      "to": "probability-of-bankruptcy",
+      "type": "related_to"
+    },
+    {
+      "from": "extended-equity-valuation-models",
+      "to": "dividend-discount-model",
+      "type": "extends"
+    },
+    {
+      "from": "extended-equity-valuation-models",
+      "to": "stock-buybacks",
+      "type": "incorporates"
+    },
+    {
+      "from": "firm-valuation-approach",
+      "to": "free-cash-flow-to-firm",
+      "type": "uses"
+    },
+    {
+      "from": "firm-valuation-approach",
+      "to": "weighted-average-cost-of-capital",
+      "type": "depends_on"
+    },
+    {
+      "from": "firm-valuation-approach",
+      "to": "equity-valuation-approach",
+      "type": "compared_to"
+    },
+    {
+      "from": "free-cash-flow-to-equity",
+      "to": "equity-valuation-approach",
+      "type": "used_in"
+    },
+    {
+      "from": "free-cash-flow-to-firm",
+      "to": "firm-valuation-approach",
+      "type": "used_in"
+    },
+    {
+      "from": "gordon-growth-model",
+      "to": "two-stage-dividend-discount-model",
+      "type": "component-of"
+    },
+    {
+      "from": "gordon-growth-model",
+      "to": "cost-of-equity",
+      "type": "uses"
+    },
+    {
+      "from": "h-model",
+      "to": "two-stage-dividend-discount-model",
+      "type": "variant-of"
+    },
+    {
+      "from": "h-model",
+      "to": "dividend-discount-model",
+      "type": "type-of"
+    },
+    {
+      "from": "modified-dividend-payout-ratio",
+      "to": "stock-buybacks",
+      "type": "incorporates"
+    },
+    {
+      "from": "modified-dividend-payout-ratio",
+      "to": "dividend-discount-model",
+      "type": "used-in"
+    },
+    {
+      "from": "net-present-value",
+      "to": "economic-value-added",
+      "type": "linked_to"
+    },
+    {
+      "from": "probability-of-bankruptcy",
+      "to": "expected-bankruptcy-costs",
+      "type": "influences"
+    },
+    {
+      "from": "probability-of-bankruptcy",
+      "to": "bond-rating",
+      "type": "can_be_estimated_by"
+    },
+    {
+      "from": "probability-of-bankruptcy",
+      "to": "statistical-approach-to-default-probability",
+      "type": "can_be_estimated_by"
+    },
+    {
+      "from": "risk-adjusted-discount-rates",
+      "to": "discounted-cash-flow-valuation",
+      "type": "type_of"
+    },
+    {
+      "from": "risk-adjusted-discount-rates",
+      "to": "certainty-equivalent-models",
+      "type": "alternative_to"
+    },
+    {
+      "from": "risk-adjusted-discount-rates",
+      "to": "risk-and-return-models",
+      "type": "uses"
+    },
+    {
+      "from": "risk-and-return-models",
+      "to": "certainty-equivalent",
+      "type": "used_for"
+    },
+    {
+      "from": "risk-and-return-models",
+      "to": "risk-adjusted-discount-rates",
+      "type": "used_for"
+    },
+    {
+      "from": "st-petersburg-paradox",
+      "to": "nicholas-bernoulli",
+      "type": "proposed_by"
+    },
+    {
+      "from": "st-petersburg-paradox",
+      "to": "certainty-equivalent",
+      "type": "illustrates"
+    },
+    {
+      "from": "stock-buybacks",
+      "to": "dividends",
+      "type": "alternative-to"
+    },
+    {
+      "from": "stock-buybacks",
+      "to": "extended-equity-valuation-models",
+      "type": "incorporated-into"
+    },
+    {
+      "from": "stock-buybacks",
+      "to": "modified-dividend-payout-ratio",
+      "type": "measured-by"
+    },
+    {
+      "from": "tax-benefits-of-debt",
+      "to": "adjusted-present-value-approach",
+      "type": "is_component_of"
+    },
+    {
+      "from": "tax-benefits-of-debt",
+      "to": "modigliani-and-miller-1963",
+      "type": "first_isolated_by"
+    },
+    {
+      "from": "tax-benefits-of-debt",
+      "to": "value-of-business",
+      "type": "impacts"
+    },
+    {
+      "from": "two-stage-dividend-discount-model",
+      "to": "gordon-growth-model",
+      "type": "uses"
+    },
+    {
+      "from": "two-stage-dividend-discount-model",
+      "to": "h-model",
+      "type": "variant-is"
+    },
+    {
+      "from": "two-stage-dividend-discount-model",
+      "to": "dividend-discount-model",
+      "type": "type-of"
+    },
+    {
+      "from": "weighted-average-cost-of-capital",
+      "to": "firm-valuation-approach",
+      "type": "used_in"
+    },
+    {
+      "from": "kaplan-and-ruback-1995",
+      "to": "compressed-apv-approach",
+      "type": "developed"
+    },
+    {
+      "from": "kaplan-and-ruback-1995",
+      "to": "capital-cash-flows",
+      "type": "defined"
+    },
+    {
+      "from": "modigliani-and-miller-1963",
+      "to": "tax-benefits-of-debt",
+      "type": "first_isolated"
+    },
+    {
+      "from": "myers-1974",
+      "to": "adjusted-present-value-approach",
+      "type": "developed"
+    },
+    {
+      "from": "nicholas-bernoulli",
+      "to": "st-petersburg-paradox",
+      "type": "proposed"
+    },
+    {
+      "from": "nicholas-bernoulli",
+      "to": "certainty-equivalent",
+      "type": "introduced"
+    },
+    {
+      "from": "index",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "mechanism-design-applied",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "fame-and-knowledge-democratization",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "stub-valuation-damodaran",
+      "type": "references"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "created_by"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "extends"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "created_by"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "applies"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "mechanism-design-applied",
+      "type": "instance_of"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "mentor-network-and-influences",
+      "type": "shaped_by"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "describes"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "uses"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "mentor-network-and-influences",
+      "type": "shaped_by"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "mechanism-design-applied",
+      "type": "references"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "created_by"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "applies"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "financial-inclusion-architecture",
+      "type": "extends"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "mechanism-design-applied",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "influences"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "intellectual-evolution",
+      "type": "shaped"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "financial-inclusion-architecture",
+      "type": "contributed_to"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "fame-and-knowledge-democratization",
+      "type": "references"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "describes"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
+      "to": "fame-and-knowledge-democratization",
+      "type": "extends"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "describes"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "mechanism-design-applied",
+      "type": "underpins"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "financial-inclusion-architecture",
+      "type": "underpins"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "uses"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "intellectual-evolution",
+      "type": "described_by"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "financial-inclusion-architecture",
+      "type": "created"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "mechanism-design-applied",
+      "type": "uses"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "described_by"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "mentor-network-and-influences",
+      "type": "influenced_by"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
+      "to": "fame-and-knowledge-democratization",
+      "type": "created"
+    },
+    {
+      "from": "stub-valuation-damodaran",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "related_to"
+    },
+    {
+      "from": "stub-valuation-damodaran",
+      "to": "mechanism-design-applied",
+      "type": "related_to"
+    },
+    {
+      "from": "stub-valuation-damodaran",
+      "to": "intellectual-evolution",
+      "type": "references"
+    }
+  ]
+}

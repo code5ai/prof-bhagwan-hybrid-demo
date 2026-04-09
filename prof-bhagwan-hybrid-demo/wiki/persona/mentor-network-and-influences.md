@@ -1,3 +1,16 @@
+---
+type: persona
+aliases: [mentors, influences, collaborators, network]
+relationships:
+  - target: prof-bhagwan-chowdhry
+    type: influences
+  - target: intellectual-evolution
+    type: shaped
+  - target: financial-inclusion-architecture
+    type: contributed_to
+tags: [merton-miller, peter-singer, vijay-mahajan, nandan-nilekani]
+---
+
 # Mentor Network and Influences
 
 [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]]'s intellectual development is fundamentally **dialogic** -- ideas are not born in isolation but refined through conversations with specific people who each contribute a distinct capability. Understanding this network is essential to understanding why he thinks the way he does.

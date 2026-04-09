@@ -1,3 +1,14 @@
+---
+type: persona
+aliases: [FAMe, knowledge democratization, education for billions]
+relationships:
+  - target: prof-bhagwan-chowdhry
+    type: created_by
+  - target: rhetorical-style-and-pedagogy
+    type: extends
+tags: [fame-magazine, education, ai, pop-culture, knowledge-access]
+---
+
 # FAMe and Knowledge Democratization
 
 For [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]], making knowledge accessible is not a side project -- it is a **moral imperative on par with financial inclusion.** Just as the poorest 3 billion deserve access to financial services, they deserve access to the ideas that could transform their lives. Knowledge locked behind paywalls and jargon is knowledge wasted.

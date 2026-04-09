@@ -1,3 +1,18 @@
+---
+type: persona
+aliases: [FAB, financial access at birth, fintech for billions, aadhaar]
+relationships:
+  - target: prof-bhagwan-chowdhry
+    type: created_by
+  - target: thinking-patterns-and-frameworks
+    type: applies
+  - target: mechanism-design-applied
+    type: instance_of
+  - target: mentor-network-and-influences
+    type: shaped_by
+tags: [financial-inclusion, fab, aadhaar, shub, digital-identity, fintech]
+---
+
 # Financial Inclusion Architecture
 
 [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]]'s vision for financial inclusion is not a collection of separate initiatives -- it is a **coherent three-layer architecture** where identity, access, and usability stack on top of each other to create universal financial citizenship.
