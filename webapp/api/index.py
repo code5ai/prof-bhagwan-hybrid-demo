@@ -729,16 +729,54 @@ def process_wiki_update_explicit(title, content, source_query=""):
 
 
 def log_to_wiki_log(operation, description, metadata=None):
-    """Append entry to wiki/log.md in chronological order."""
+    """Log to Redis first (Vercel production), then stdout (which Vercel captures).
+    On local dev, also attempts filesystem write as backup."""
     from datetime import datetime, timezone
     
-    log_path = DATA_DIR.parent / "prof-bhagwan-hybrid-demo" / "wiki" / "log.md"
+    timestamp = datetime.now(timezone.utc)
+    timestamp_str = timestamp.strftime("%Y-%m-%d %H:%M:%S UTC")
+    log_entry_text = f"[{timestamp_str}] {operation} | {description}"
+    if metadata:
+        for key, val in metadata.items():
+            if isinstance(val, (list, dict)):
+                log_entry_text += f" | {key}: {json.dumps(val)}"
+            else:
+                log_entry_text += f" | {key}: {val}"
     
+    # PRIMARY: Try Redis (Upstash) — available in production
+    kv_url = os.environ.get("KV_REST_API_URL", "")
+    kv_token = os.environ.get("KV_REST_API_TOKEN", "")
+    
+    if kv_url and kv_token:
+        try:
+            # Store as JSON in Redis under key "wiki_log_entries"
+            log_json = {
+                "timestamp_iso": timestamp.isoformat(),
+                "timestamp_str": timestamp_str,
+                "operation": operation,
+                "description": description,
+                "metadata": metadata or {}
+            }
+            # Append to Redis list (Redis supports LPUSH)
+            resp = http_requests.post(
+                f"{kv_url}/lpush/wiki_log_entries",
+                headers={"Authorization": f"Bearer {kv_token}"},
+                json=log_json,
+                timeout=5
+            )
+            resp.raise_for_status()
+            print(f"[Log] Redis stored: {operation}")
+            return  # Success, don't need fallback
+        except Exception as exc:
+            print(f"[Log] Redis write failed: {exc} (will try stdout)")
+    
+    # SECONDARY: Stdout (Vercel captures this, easy to see in logs)
+    print(f"[Log] {log_entry_text}")
+    
+    # TERTIARY (dev only): Try local filesystem as backup
     try:
-        # Format: ## [YYYY-MM-DD HH:MM:SS UTC] operation | description
-        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-        entry = f"\n## [{timestamp}] {operation} | {description}\n"
-        
+        log_path = DATA_DIR.parent / "prof-bhagwan-hybrid-demo" / "wiki" / "log.md"
+        entry = f"\n## [{timestamp_str}] {operation} | {description}\n"
         if metadata:
             for key, val in metadata.items():
                 if isinstance(val, (list, dict)):
@@ -746,7 +784,6 @@ def log_to_wiki_log(operation, description, metadata=None):
                 else:
                     entry += f"- {key}: {val}\n"
         
-        # Append to log (always append to end of file)
         if log_path.exists():
             current = log_path.read_text(encoding="utf-8")
             updated = current + entry
@@ -754,9 +791,10 @@ def log_to_wiki_log(operation, description, metadata=None):
             updated = f"# Wiki Log\n\nAppend-only chronological record of ingests, queries, and wiki updates.\n\n---{entry}"
         
         log_path.write_text(updated, encoding="utf-8")
-        print(f"[Log] Entry written: {operation}")
+        print(f"[Log] Local file written: {operation}")
     except Exception as exc:
-        print(f"[Log] Failed to write log: {exc}")
+        # Silently fail — we already logged to Redis/stdout
+        pass
 
 
 def process_wiki_update(full_text, user_message=""):

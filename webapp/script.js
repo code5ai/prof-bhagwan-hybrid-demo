@@ -273,7 +273,7 @@ async function streamResponse(userMessage) {
   let renderer = null;
 
   try {
-    const response = await fetch("/api/chat", {
+    const response = await fetch("/api/chat-v2", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

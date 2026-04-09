@@ -26,6 +26,7 @@ prof-bhagwan-hybrid-demo/raw/**/extracted_md/
 # Raw source materials (copyrighted books, large PDFs — not for public repos)
 prof-bhagwan-hybrid-demo/raw/
 
+prof-bhagwan-hybrid-demo/ISSUE_ANALYSIS.md
 # Claude Code internal state
 .claude/
 
