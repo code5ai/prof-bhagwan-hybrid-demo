@@ -258,3 +258,51 @@ Append-only chronological record of ingests and queries.
 ## [2026-04-09] test | Entry 3
 
 ## [2026-04-09] test | Entry 4
+
+## [2026-04-09] test | Test entry creation
+
+## [2026-04-09] ingest | Test Format Check
+
+## [2026-04-09] ingest | Test Metadata
+- pages: 5
+- sources: ["test1", "test2"]
+
+## [2026-04-09] query | Test Append
+
+## [2026-04-09] ingest | Entry 1
+
+## [2026-04-09] query | Entry 2
+
+## [2026-04-09] ingest | Entry 3
+
+## [2026-04-09] ingest | Test Dict
+- pages_created: ["page1", "page2"]
+- chunks: 100
+- config: {"route": "RAG+stub"}
+
+## [2026-04-09] test | None
+
+## [2026-04-09] test | 
+
+## [2026-04-09] test | ok
+
+## [2026-04-09] test | Timestamp test
+
+## [2026-04-09 18:54:07 UTC] query | What is CAPM?
+- pages_consulted: ["capm.md", "risk.md"]
+- wiki_updated: False
+
+## [2026-04-09] ingest | Valuation-Damodaran
+- route: RAG+stub
+- pages_created: ["dcf.md", "wacc.md"]
+- chunks: 150
+
+## [2026-04-09] test | Entry 0
+
+## [2026-04-09] test | Entry 1
+
+## [2026-04-09] test | Entry 2
+
+## [2026-04-09] test | Entry 3
+
+## [2026-04-09] test | Entry 4
