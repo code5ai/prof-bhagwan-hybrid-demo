@@ -28,6 +28,67 @@ Master catalog of all wiki pages. Read this before every query.
 
 <!-- Source summary pages will be added as more sources are ingested -->
 
+## Extracted Concepts (38 pages)
+
+Fin ance and valuation concepts extracted from raw sources (books, papers, profile):
+
+- [[adjusted-present-value-approach]] — APV approach to firm valuation
+- [[book-value-of-capital]] — Measuring capital using book values
+- [[capital-cash-flows]] — Cash flows attributable to capital
+- [[capital-invested-in-existing-assets]] — Deployed capital measurement
+- [[capm]] — Capital Asset Pricing Model
+- [[cash-flow-based-valuations]] — Valuation using discounted cash flows
+- [[cashflow-haircuts]] — Adjustments to cash flow estimates
+- [[certainty-equivalent]] — Risk-adjusted valuations
+- [[certainty-equivalent-models]] — Certainty equivalent approaches to risk
+- [[compressed-apv-approach]] — Simplified APV calculations
+- [[cost-of-capital-approach]] — Valuation using cost of capital
+- [[cost-of-equity]] — Cost of equity capital
+- [[discounted-cash-flow-valuation]] — DCF valuation methodology
+- [[discounted-cash-flow-valuation-models]] — Models for DCF analysis
+- [[dividend-discount-model]] — Valuing firms via dividend streams
+- [[double-counting-of-risk]] — Avoiding double-counting in valuations
+- [[economic-profit]] — Profit after cost of capital charge
+- [[economic-value-added]] — EVA framework for firm value
+- [[equity-valuation-approach]] — Valuation from equity holder perspective
+- [[excess-return-models]] — Returns above cost of capital
+- [[expected-bankruptcy-costs]] — Cost of financial distress
+- [[extended-equity-valuation-models]] — Advanced DCF models
+- [[firm-valuation-approach]] — Valuation from firm perspective
+- [[free-cash-flow-to-equity]] — FCFE in equity valuation
+- [[free-cash-flow-to-firm]] — FCFF in firm valuation
+- [[gordon-growth-model]] — Perpetual growth valuation model
+- [[h-model]] — Multi-stage dividend discount model
+- [[modified-dividend-payout-ratio]] — Dividend policy adjustments
+- [[net-present-value]] — NPV decision criterion
+- [[probability-of-bankruptcy]] — Likelihood of financial distress
+- [[regulatory-capital-ratios]] — Capital requirements and ratios
+- [[risk-adjusted-discount-rates]] — Risk adjustment in valuations
+- [[risk-and-return-models]] — Models linking risk and return
+- [[st-petersburg-paradox]] — Paradox in risk and expected value
+- [[stock-buybacks]] — Share repurchase mechanisms
+- [[tax-benefits-of-debt]] — Tax deductions from debt financing
+- [[two-stage-dividend-discount-model]] — Two-stage DDM valuation
+- [[weighted-average-cost-of-capital]] — WACC calculation and application
+
+## Extracted Entities (7 pages)
+
+Key people and foundational works referenced across sources:
+
+- [[brealey-and-myers]] — Richard Brealey and Stewart Myers (Corporate Finance authors)
+- [[kaplan-and-ruback-1995]] — Kaplan & Ruback 1995 (Valuation framework)
+- [[modigliani-and-miller-1963]] — Modigliani & Miller 1963 (Capital structure theory)
+- [[myers-1974]] — Myers 1974 (Pecking order theory)
+- [[nicholas-bernoulli]] — Nicholas Bernoulli (Expected utility theory)
+- [[robichek-and-myers-1966]] — Robichek & Myers 1966 (Financial decision-making)
+- [[stapleton-1971]] — Stapleton 1971 (Valuation under uncertainty)
+
+## Query-Synthesized Pages
+
+Pages created from synthesis across multiple RAG sources during Q&A sessions:
+
+<!-- Pages will be added as /api/chat-v2 generates new insights warranting wiki updates -->
+
 ## RAG Stubs
 
 The following large documents are indexed in the RAG system (5,830 chunks total):

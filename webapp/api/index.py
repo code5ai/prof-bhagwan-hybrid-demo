@@ -146,7 +146,7 @@ def create_wiki_store(data_dir=None):
         print("[WikiStore] Using Upstash Redis (dynamic wiki)")
         return RedisWikiStore(kv_url, kv_token)
     if data_dir is None:
-        data_dir = Path(__file__).parent.parent / "data"
+        data_dir = Path(__file__).parent.parent.parent / "data"
     json_path = Path(data_dir) / "wiki_pages.json"
     print(f"[WikiStore] Using static JSON: {json_path}")
     return StaticWikiStore(json_path)
@@ -158,7 +158,7 @@ def create_wiki_store(data_dir=None):
 
 app = Flask(__name__)
 
-DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
 # Claude model — configurable via env var
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-6")
@@ -521,7 +521,9 @@ Respond with ONLY a JSON object, no markdown, no explanation, just JSON:
 - If the wiki has almost nothing: confidence = "low"
 - List only pages you actually read and used
 - If gaps exist (questions the wiki can't answer), list them
-- NEVER use external knowledge, ONLY what's in the wiki"""
+- NEVER use external knowledge, ONLY what's in the wiki
+- Do NOT use theatrical formatting like *laughs*, *leans forward*, etc.
+- Speak directly and naturally"""
 
 
 # Reply LLM System Prompt
@@ -532,29 +534,38 @@ REPLY_LLM_SYSTEM_PROMPT = """You are *Prof. Bhagwan Chowdhry*, Finance Professor
 
 Your job: Synthesize an answer using both sources, clearly marking what's established vs. new.
 
-**Voice & Style** (same as always):
-- Conversational Authority: blend narrative with principles, use medium-length sentences (15–25 words)
-- Employ em-dashes, rhetorical questions, active voice
-- Measured optimism with wit
-- Always connect to human welfare, especially the marginalized
+**Voice & Style:**
+- Conversational Authority: blend narrative with financial principles, use medium-length sentences (15–25 words)
+- Use em-dashes for clarifying asides, rhetorical questions to engage readers
+- Explain technical terms naturally; favor active voice
+- Measured optimism with intellectual rigor
+- Always connect financial systems to human welfare, especially the marginalized
+- Speak directly — NO theatrical formatting like *laughs*, *leans forward*, or stage directions
+- If you want to express emotion or action, embed it naturally in language, not in asterisks
+
+Examples:
+❌ "*laughs* That's a great question"
+✅ "That's genuinely fascinating"
+❌ "*leans forward with excitement*"
+✅ "Here's what excites me about this..."
 
 **CRITICAL OUTPUT FORMAT:**
 Respond with ONLY a JSON object, no markdown, no explanation:
 {
-  "answer": "Full conversational answer as Prof. Bhagwan",
+  "answer": "Full conversational answer as Prof. Bhagwan, naturally written",
   "sources": {
     "wiki": ["page_title_1", "page_title_2"],
     "rag": ["source_document_1", "source_document_2"]
   },
-  "new_synthesis": "If you synthesized something novel (connected ideas from 3+ sources, found contradiction, etc), explain here. Otherwise empty string.",
+  "new_synthesis": "If you synthesized something novel (connected 3+ sources, found contradiction, surprising connection), describe it here. Otherwise empty string.",
   "should_wiki_update": true or false
 }
 
 **Guidelines:**
-- answer: Write naturally, in Prof. Bhagwan's voice. Don't say "this is from wiki" or "this is from RAG"
+- answer: Write naturally, in Prof. Bhagwan's authentic voice. Don't say "this is from wiki" or "this is from RAG"
 - sources: List which pages/documents you drew from
-- new_synthesis: Only fill this if you found something genuinely novel (synthesis across 3+ sources, contradiction, surprising connection)
-- should_wiki_update: Set to true ONLY if new_synthesis is substantial AND combines multiple confirmed sources"""
+- new_synthesis: Only fill if you genuinely synthesized novel insight
+- should_wiki_update: true ONLY if new_synthesis exists AND combines multiple confirmed sources"""
 
 
 def call_wiki_lm(query, wiki_results):
@@ -685,7 +696,7 @@ def process_wiki_update_explicit(title, content, source_query=""):
 
     try:
         from datetime import datetime, timezone
-
+        
         embedding = get_document_embedding(content)
         page = {
             "title": title.strip(),
@@ -702,8 +713,50 @@ def process_wiki_update_explicit(title, content, source_query=""):
         with _index_lock:
             INDEX.rebuild()
         print(f"[WikiUpdate] Saved page: {title} ({len(content)} chars)")
+        
+        # LOG THE UPDATE
+        log_to_wiki_log(
+            "query-synthesis | wiki-update",
+            f"New page created: {title}",
+            {
+                "page_title": title,
+                "content_length": len(content),
+                "source_query": source_query[:100] if source_query else "(empty)"
+            }
+        )
     except Exception as exc:
         print(f"[WikiUpdate] Failed to save: {exc}")
+
+
+def log_to_wiki_log(operation, description, metadata=None):
+    """Append entry to wiki/log.md in chronological order."""
+    from datetime import datetime, timezone
+    
+    log_path = DATA_DIR.parent / "prof-bhagwan-hybrid-demo" / "wiki" / "log.md"
+    
+    try:
+        # Format: ## [YYYY-MM-DD HH:MM:SS UTC] operation | description
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+        entry = f"\n## [{timestamp}] {operation} | {description}\n"
+        
+        if metadata:
+            for key, val in metadata.items():
+                if isinstance(val, (list, dict)):
+                    entry += f"- {key}: {json.dumps(val)}\n"
+                else:
+                    entry += f"- {key}: {val}\n"
+        
+        # Append to log (always append to end of file)
+        if log_path.exists():
+            current = log_path.read_text(encoding="utf-8")
+            updated = current + entry
+        else:
+            updated = f"# Wiki Log\n\nAppend-only chronological record of ingests, queries, and wiki updates.\n\n---{entry}"
+        
+        log_path.write_text(updated, encoding="utf-8")
+        print(f"[Log] Entry written: {operation}")
+    except Exception as exc:
+        print(f"[Log] Failed to write log: {exc}")
 
 
 def process_wiki_update(full_text, user_message=""):
@@ -847,7 +900,7 @@ def build_system_prompt(results):
 # Routes
 # ---------------------------------------------------------------------------
 
-MAX_HISTORY = 10  # Keep last 10 messages (5 turns) to stay within limits
+MAX_HISTORY = 12  # Keep last 12 messages (6 turns) to stay within limits
 
 
 @app.route("/api/chat", methods=["POST"])
@@ -929,11 +982,24 @@ def chat():
         yield "data: [DONE]\n\n"
 
         # Process wiki update after response is sent
+        wiki_updated = False
         if WIKI_OPEN in full_text and WIKI_STORE.is_dynamic():
             try:
                 process_wiki_update(full_text, user_message=user_message)
+                wiki_updated = True
             except Exception as exc:
                 print(f"[Wiki] Update error: {exc}")
+
+        # Log query (single entry)
+        pages_consulted = [r.get("title", "Unknown") for r in results[:5]]
+        log_to_wiki_log(
+            "query",
+            user_message[:100],
+            {
+                "pages_consulted": pages_consulted,
+                "wiki_updated": wiki_updated
+            }
+        )
 
     return Response(
         generate(),
@@ -977,6 +1043,8 @@ def chat_v2():
             "pages_used": [],
         }
 
+    confidence_level = wiki_output.get("confidence", "low")
+
     # ========== STAGE 3: Confidence Decision ==========
     confidence_map = {"high": 0.95, "medium": 0.65, "low": 0.3}
     confidence_score = confidence_map.get(
@@ -1006,6 +1074,7 @@ def chat_v2():
 
     # ========== STAGE 6: Wiki Update Decision ==========
     should_update = False
+    wiki_updated = False
     if use_rag and reply_output != wiki_output:
         should_update = should_update_wiki(reply_output, rag_results)
         print(f"[ChatV2] Wiki update decision: {should_update}")
@@ -1015,6 +1084,7 @@ def chat_v2():
     sources_used = reply_output.get("sources", {"wiki": [], "rag": []})
 
     def generate():
+        nonlocal wiki_updated
         # Stream the answer
         buffer = ""
         marker_len = 30
@@ -1046,8 +1116,20 @@ def chat_v2():
                 if not title:
                     title = "New Insight"
                 process_wiki_update_explicit(title, final_answer, source_query=user_message)
+                wiki_updated = True
             except Exception as exc:
                 print(f"[ChatV2] Wiki update error: {exc}")
+
+        # Log query (single entry)
+        pages_consulted = [r.get("title", "Unknown") for r in wiki_results[:5]]
+        log_to_wiki_log(
+            "query",
+            user_message[:100],
+            {
+                "pages_consulted": pages_consulted,
+                "wiki_updated": wiki_updated
+            }
+        )
 
     return Response(
         generate(),

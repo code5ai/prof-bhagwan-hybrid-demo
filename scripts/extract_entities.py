@@ -20,7 +20,7 @@ import time
 import argparse
 import re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 PROJECT_ROOT = Path(__file__).parent.parent
 VAULT = PROJECT_ROOT / "prof-bhagwan-hybrid-demo"
@@ -431,7 +431,49 @@ def extract_source(source_filter, api_key):
     graph = save_graph()
     print(f"\n  Graph rebuilt: {len(graph['nodes'])} nodes, {len(graph['edges'])} edges")
 
+    # Log ingest (single entry per source)
+    pages_created = written["concepts"] + written["entities"]
+    log_to_wiki_log(
+        "ingest",
+        source_name,
+        {
+            "route": "RAG+stub",
+            "pages_created": pages_created,
+            "chunks": len(chunks)
+        }
+    )
+
     return written
+
+
+def log_to_wiki_log(operation, description, metadata=None):
+    """Append entry to wiki/log.md in chronological order."""
+    log_path = VAULT / "wiki" / "log.md"
+
+    try:
+        # Format: ## [YYYY-MM-DD] operation | description
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        entry = f"\n## [{timestamp}] {operation} | {description}\n"
+
+        if metadata:
+            for key, val in metadata.items():
+                if isinstance(val, (list, dict)):
+                    entry += f"- {key}: {json.dumps(val)}\n"
+                else:
+                    entry += f"- {key}: {val}\n"
+
+        # Append to log (always append to end of file)
+        if log_path.exists():
+            current = log_path.read_text(encoding="utf-8")
+            updated = current + entry
+        else:
+            # Create with header
+            updated = f"# Wiki Log\n\nAppend-only chronological record of ingests, queries, and wiki updates.\n\n---{entry}"
+
+        log_path.write_text(updated, encoding="utf-8")
+        print(f"[Log] Entry written: {operation}")
+    except Exception as exc:
+        print(f"[Log] Failed to write log: {exc}")
 
 
 # ---------------------------------------------------------------------------
