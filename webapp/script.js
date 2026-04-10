@@ -348,18 +348,18 @@ async function streamResponse(userMessage) {
     // ========== STAGE 2: Parse JSON and extract answer ==========
     let finalAnswer = "";
     try {
-      const responseObj = JSON.parse(fullJsonResponse);
-      if (responseObj.answer) {
-        finalAnswer = responseObj.answer;
-      } else {
-        finalAnswer = fullJsonResponse;
-      }
+      // Strip markdown code fences in case the model wrapped its JSON
+      const cleaned = fullJsonResponse
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim();
+      const responseObj = JSON.parse(cleaned);
+      finalAnswer = responseObj?.answer ?? fullJsonResponse;
     } catch {
-      // Not valid JSON, use as-is
+      // Not valid JSON — show raw response as fallback
       finalAnswer = fullJsonResponse;
     }
-
-    // ========== STAGE 3: NOW render to UI (clean, no flashing) ==========
+      // ========== STAGE 3: NOW render to UI (clean, no flashing) ==========
     bubble.innerHTML = "";  // Clear the bubble
     renderer = createStreamRenderer(bubble);
     renderer.push(finalAnswer);

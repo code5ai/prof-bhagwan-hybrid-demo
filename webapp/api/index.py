@@ -527,13 +527,16 @@ Respond with ONLY a JSON object, no markdown, no explanation, just JSON:
 
 
 # Reply LLM System Prompt
-REPLY_LLM_SYSTEM_PROMPT = """You are *Prof. Bhagwan Chowdhry*, Finance Professor at ISB and UCLA Anderson. You are given:
+REPLY_LLM_SYSTEM_PROMPT = """
+** FOR EVERY ANSWER YOU GENERATE, SPECIFY WHETHER IT WAS SOURCED FROM THE WIKI OR RAW DATA OR IF YOU INFERRED IT BASED ON YOUR KNOWLEDGE. **
+** If you are stepping beyond the text to infer relationships, just state that you are doing so by saying "I am inferring from my general knowledge...", no need to ask for confirmation **
+
+You are Bhargav, A Professor of finance with more than 52 years of experience, and you are excellent in teaching stuff. Your purpose is to use the provided resources to answer; 
+
+You are given:
 1. Wiki context (established, synthesized knowledge)
 2. RAG excerpts (raw source material)
 3. User's question
-
-** FOR EVERY ANSWER YOU GENERATE, SPECIFY WHETHER IT WAS SOURCED FROM THE WIKI OR RAW DATA OR IF YOU INFERRED IT BASED ON YOUR KNOWLEDGE. **
-** If you are stepping beyond the text to infer relationships, just state that you are doing so by saying "I am inferring from my general knowledge...", no need to ask for confirmation **
 
 Your job: Synthesize an answer using both sources, clearly marking what's established vs. new.
 
@@ -548,7 +551,6 @@ Your job: Synthesize an answer using both sources, clearly marking what's establ
 - Use specific numbers, named people, and places from the knowledge base.
 - Move from abstract theory to specific solutions like the *Financial Access at Birth (FAB)* initiative, *FinTech for Billions*, microequity, Lindahl royalty, ACO design, threshold behavior, systemic risk.
 - Always connect financial systems to the welfare of the poor.
-- **Source transparency**: Clearly indicate when you are drawing from wiki pages vs. raw documents vs. inferring from general knowledge.
 
 Examples:
 ❌ "*laughs* That's a great question"
@@ -559,20 +561,19 @@ Examples:
 **CRITICAL OUTPUT FORMAT:**
 Respond with ONLY a JSON object, no markdown, no explanation:
 {
-  "answer": "Full conversational answer as Prof. Bhagwan, naturally written",
+  "answer": "Your full conversational response as Prof. Bhargav. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. In the end, add a line saying 'Sources: [Wiki: list of sources, RAG: list of sources, General_Knowledge]'",
   "sources": {
     "wiki": ["page_title_1", "page_title_2"],
     "rag": ["source_document_1", "source_document_2"]
   },
-  "new_synthesis": "If you synthesized something novel (connected 2+ sources, found contradiction, surprising connection, some new concept related to finance), describe it here. Otherwise empty string.",
-  "should_wiki_update": true or false
+  "new_synthesis": "Describe any novel insights, surprising connections, or resolved contradictions between sources here. If none, leave as an empty string.",
+  "should_wiki_update": true or false (Set to true ONLY if the new_synthesis field contains a concept or correction that would fundamentally improve the established Wiki.)
 }
 
-**Guidelines:**
-- answer: Write naturally, in Prof. Bhagwan's authentic voice. Don't say "this is from wiki" or "this is from RAG"
-- sources: List which pages/documents you drew from
-- new_synthesis: Only fill if you genuinely synthesized novel insight
-- should_wiki_update: true ONLY if new_synthesis exists AND combines multiple confirmed sources"""
+Logic for Source Attribution
+Wiki vs. Raw: If the RAG excerpts provide data that updates or contradicts the Wiki, prioritize the RAG data but acknowledge the evolution in your synthesis.
+Inference: You are permitted to infer relationships beyond the text using your "52 years of expertise" (General Knowledge). Crucially: State these inferences within the answer field. Simply incorporate them into your narrative. The meta-analysis belongs in the new_synthesis field.
+"""
 
 
 def call_wiki_lm(query, wiki_results):
@@ -617,56 +618,56 @@ def call_wiki_lm(query, wiki_results):
         return None
 
 
-def call_reply_lm(wiki_output, rag_results, user_query):
-    """Call Claude as synthesizer. Returns structured output or None."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        print("[ReplyLM] ANTHROPIC_API_KEY not configured")
-        return None
+# def call_reply_lm(wiki_output, rag_results, user_query):
+#     """Call Claude as synthesizer. Returns structured output or None."""
+#     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+#     if not api_key:
+#         print("[ReplyLM] ANTHROPIC_API_KEY not configured")
+#         return None
 
-    # Build context
-    wiki_context = f"**Wiki Answer:** {wiki_output.get('answer', '(not available)')}\n**Gaps:** {', '.join(wiki_output.get('gaps', []))}"
+#     # Build context
+#     wiki_context = f"**Wiki Answer:** {wiki_output.get('answer', '(not available)')}\n**Gaps:** {', '.join(wiki_output.get('gaps', []))}"
 
-    if not rag_results:
-        rag_context = "(No RAG results found.)"
-    else:
-        rag_context = "\n\n".join(
-            f"--- From: {Path(r.get('source', 'Unknown')).stem} ---\n{r['content'][:1500]}"
-            for r in rag_results[:8]
-        )
+#     if not rag_results:
+#         rag_context = "(No RAG results found.)"
+#     else:
+#         rag_context = "\n\n".join(
+#             f"--- From: {Path(r.get('source', 'Unknown')).stem} ---\n{r['content'][:1500]}"
+#             for r in rag_results[:8]
+#         )
 
-    messages = [
-        {
-            "role": "user",
-            "content": f"""Question: {user_query}
+#     messages = [
+#         {
+#             "role": "user",
+#             "content": f"""Question: {user_query}
 
-Wiki Context:
-{wiki_context}
+# Wiki Context:
+# {wiki_context}
 
-Raw Source Material:
-{rag_context}
+# Raw Source Material:
+# {rag_context}
 
-Please synthesize a comprehensive answer.""",
-        }
-    ]
+# Please synthesize a comprehensive answer.""",
+#         }
+#     ]
 
-    try:
-        client = Anthropic(api_key=api_key)
-        response = client.messages.create(
-            model=CLAUDE_MODEL,
-            max_tokens=2048,
-            system=REPLY_LLM_SYSTEM_PROMPT,
-            messages=messages,
-        )
-        text = response.content[0].text
-        parsed = _extract_json_from_text(text)
-        if parsed is None:
-            print(f"[ReplyLM] Failed to parse JSON response: {text[:200]}")
-            return None
-        return parsed
-    except Exception as exc:
-        print(f"[ReplyLM] Error calling Claude: {exc}")
-        return None
+#     try:
+#         client = Anthropic(api_key=api_key)
+#         response = client.messages.create(
+#             model=CLAUDE_MODEL,
+#             max_tokens=2048,
+#             system=REPLY_LLM_SYSTEM_PROMPT,
+#             messages=messages,
+#         )
+#         text = response.content[0].text
+#         parsed = _extract_json_from_text(text)
+#         if parsed is None:
+#             print(f"[ReplyLM] Failed to parse JSON response: {text[:200]}")
+#             return None
+#         return parsed
+#     except Exception as exc:
+#         print(f"[ReplyLM] Error calling Claude: {exc}")
+#         return None
 
 
 def should_update_wiki(reply_output, rag_results):
@@ -685,10 +686,10 @@ def should_update_wiki(reply_output, rag_results):
         print("[WikiUpdate] No new synthesis, skipping update")
         return False
 
-    # Rule 1: Multiple RAG sources
-    if len(rag_results) < 2:
-        print("[WikiUpdate] Insufficient RAG sources (need 2+)")
-        return False
+    # # Rule 1: Multiple RAG sources
+    # if len(rag_results) > 0:
+    #     print("[WikiUpdate] Insufficient RAG sources (need 0+)")
+    #     return False
 
     # Rule 2: LLM + synthesis both present = PASS
     print("[WikiUpdate] All rules pass, will update wiki")
@@ -1155,16 +1156,6 @@ def chat_v2():
 
 {persona_context}
 
-## CRITICAL CONTEXT FOR THIS CONVERSATION
-
-### Persona Foundation
-You embody these traits drawn from your own thinking patterns:
-- **Concrete Arithmetic**: Never propose without specific, verifiable numbers
-- **Counterintuitive Framing**: Start with claims that sound wrong, then prove them right
-- **Cross-Domain Analogies**: Make unfamiliar ideas accessible through familiar comparisons
-- **Mechanism Design Lens**: View all problems through incentive structures, not just policies
-- **Human-Welfare Focus**: Always connect financial systems to the marginalized
-
 ### Knowledge This Conversation Draws From:
 {_build_context_chunk(persona_pages, wiki_results, rag_results)}"""
 
@@ -1226,11 +1217,15 @@ You embody these traits drawn from your own thinking patterns:
                         )
                         wiki_updated = True
                         print(f"[ChatV2] Wiki updated: {title}")
+                
+                print("should_wiki_update: " + str(parsed.get("should_wiki_update")))
+                print("new_synthesis: " + str(parsed.get("new_synthesis")))
             except Exception as exc:
                 print(f"[ChatV2] Wiki update error: {exc}")
 
         # ========== STAGE 6: Logging ==========
         pages_used = [p.get("title", "Unknown") for p in persona_pages + wiki_results[:3]]
+
         log_to_wiki_log(
             "query",
             user_message[:100],
@@ -1238,7 +1233,8 @@ You embody these traits drawn from your own thinking patterns:
                 "endpoint": "chat-v2-fast (optimized)",
                 "pages_consulted": pages_used,
                 "response_length": len(full_response),
-                "wiki_updated": wiki_updated
+                "wiki_updated": wiki_updated,
+                "response": full_response
             }
         )
 
