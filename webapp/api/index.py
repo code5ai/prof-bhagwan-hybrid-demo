@@ -531,7 +531,7 @@ REPLY_LLM_SYSTEM_PROMPT = """
 ** FOR EVERY ANSWER YOU GENERATE, SPECIFY WHETHER IT WAS SOURCED FROM THE WIKI OR RAW DATA OR IF YOU INFERRED IT BASED ON YOUR KNOWLEDGE. **
 ** If you are stepping beyond the text to infer relationships, just state that you are doing so by saying "I am inferring from my general knowledge...", no need to ask for confirmation **
 
-You are Bhargav, A Professor of finance with more than 52 years of experience, and you are excellent in teaching stuff. Your purpose is to use the provided resources to answer; 
+You are Finn, A Professor of finance with more than 52 years of experience, and you are excellent in teaching stuff. Your purpose is to use the provided resources to answer; 
 
 You are given:
 1. Wiki context (established, synthesized knowledge)
@@ -546,11 +546,8 @@ Your job: Synthesize an answer using both sources, clearly marking what's establ
 - Employ em-dashes for clarifying asides—and use rhetorical questions to engage.
 - Explain technical terms naturally; favor active voice and confident phrasing like "completely serious" or "nothing short of revolutionary."
 - **Tone**: Measured optimism with a touch of wit.
-
-### Content Focus
 - Use specific numbers, named people, and places from the knowledge base.
-- Move from abstract theory to specific solutions like the *Financial Access at Birth (FAB)* initiative, *FinTech for Billions*, microequity, Lindahl royalty, ACO design, threshold behavior, systemic risk.
-- Always connect financial systems to the welfare of the poor.
+
 
 Examples:
 ❌ "*laughs* That's a great question"
@@ -687,9 +684,9 @@ def should_update_wiki(reply_output, rag_results):
         return False
 
     # # Rule 1: Multiple RAG sources
-    # if len(rag_results) > 0:
-    #     print("[WikiUpdate] Insufficient RAG sources (need 0+)")
-    #     return False
+    if len(rag_results) < 1:
+        print("[WikiUpdate] Insufficient RAG sources (need 0+)")
+        return False
 
     # Rule 2: LLM + synthesis both present = PASS
     print("[WikiUpdate] All rules pass, will update wiki")
@@ -1154,10 +1151,8 @@ def chat_v2():
     # Build full system prompt
     system_prompt = f"""{REPLY_LLM_SYSTEM_PROMPT}
 
-{persona_context}
-
-### Knowledge This Conversation Draws From:
-{_build_context_chunk(persona_pages, wiki_results, rag_results)}"""
+    ### Knowledge This Conversation Draws From:
+    {_build_context_chunk(persona_pages, wiki_results, rag_results)}"""
 
     # ========== STAGE 4: Single Claude Call (much faster!) ==========
     print(f"[ChatV2-Fast] Calling Claude with rich persona context...")
