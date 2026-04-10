@@ -804,6 +804,27 @@ def log_to_wiki_log(operation, description, metadata=None):
         pass
 
 
+def _derive_wiki_title(synthesis_text, user_query):
+    """Derive a short Title-Case wiki page title from synthesis or query."""
+    # Try to use the first sentence of the synthesis as the basis
+    first_line = synthesis_text.split("\n")[0].strip()
+    first_sentence = re.split(r'[.!?;:]', first_line)[0].strip()
+
+    # If the first sentence is a reasonable length, title-case it
+    if 5 <= len(first_sentence) <= 80:
+        title = first_sentence
+    else:
+        # Fall back to the user query
+        title = user_query[:80]
+
+    # Clean up: remove markdown, leading punctuation, title-case
+    title = re.sub(r'[#*_\[\]`]', '', title).strip(' -\'"')
+    words = title.split()
+    if len(words) > 10:
+        words = words[:10]
+    return " ".join(words).title()
+
+
 def process_wiki_update(full_text, user_message=""):
     if WIKI_OPEN not in full_text:
         return
@@ -1190,7 +1211,25 @@ You embody these traits drawn from your own thinking patterns:
 
         yield "data: [DONE]\n\n"
 
-        # ========== STAGE 5: Logging ==========
+        # ========== STAGE 5: Wiki Update (if warranted) ==========
+        if WIKI_STORE.is_dynamic() and full_response.strip():
+            try:
+                parsed = _extract_json_from_text(full_response)
+                if (parsed
+                        and parsed.get("should_wiki_update")
+                        and parsed.get("new_synthesis", "").strip()):
+                    if should_update_wiki(parsed, rag_results):
+                        synthesis = parsed["new_synthesis"].strip()
+                        title = _derive_wiki_title(synthesis, user_message)
+                        process_wiki_update_explicit(
+                            title, synthesis, source_query=user_message
+                        )
+                        wiki_updated = True
+                        print(f"[ChatV2] Wiki updated: {title}")
+            except Exception as exc:
+                print(f"[ChatV2] Wiki update error: {exc}")
+
+        # ========== STAGE 6: Logging ==========
         pages_used = [p.get("title", "Unknown") for p in persona_pages + wiki_results[:3]]
         log_to_wiki_log(
             "query",
@@ -1198,7 +1237,8 @@ You embody these traits drawn from your own thinking patterns:
             {
                 "endpoint": "chat-v2-fast (optimized)",
                 "pages_consulted": pages_used,
-                "response_length": len(full_response)
+                "response_length": len(full_response),
+                "wiki_updated": wiki_updated
             }
         )
 
