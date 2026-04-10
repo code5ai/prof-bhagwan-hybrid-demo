@@ -8,6 +8,20 @@ const messageInput = document.getElementById("message-input");
 const sendBtn = document.getElementById("send-btn");
 const statusText = document.getElementById("status-text");
 const statusDot = document.querySelector(".status-dot");
+const themeToggle = document.getElementById("theme-toggle");
+
+// ---- Theme Logic ----
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const storedTheme = localStorage.getItem('theme');
+if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+  document.documentElement.classList.add('dark-mode');
+}
+
+themeToggle.addEventListener('click', () => {
+  document.documentElement.classList.toggle('dark-mode');
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
 
 let conversationHistory = [];
 let isStreaming = false;
