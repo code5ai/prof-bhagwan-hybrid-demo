@@ -567,7 +567,7 @@ Respond with ONLY a JSON object, no markdown, no explanation:
     "rag": ["source_document_1", "source_document_2"]
   },
   "new_synthesis": "Describe any novel insights, surprising connections, or resolved contradictions between sources here. If none, leave as an empty string.",
-  "should_wiki_update": true or false (Set to true ONLY if the new_synthesis field contains a concept or correction that would fundamentally improve the established Wiki.)
+  "should_wiki_update": true or false (Set to true ONLY if the new_synthesis field contains a concept or correction that would improve the established Wiki. Doesn't matter the exact source. But it should make improvements to the Wiki.)
 }
 
 Logic for Source Attribution
