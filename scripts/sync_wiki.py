@@ -8,6 +8,7 @@ Usage:
     python scripts/sync_wiki.py --seed         # Initial seed: push local wiki + embeddings
     python scripts/sync_wiki.py --lint         # Run wiki health checks
     python scripts/sync_wiki.py --sync-and-pr  # Pull from Redis + lint + create GitHub PR
+    python scripts/sync_wiki.py --prune-remote # Remove junk/duplicate pages from Redis
 
 Requires KV_REST_API_URL and KV_REST_API_TOKEN in .env
 """
@@ -19,7 +20,7 @@ import json
 import hashlib
 import argparse
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -32,6 +33,80 @@ DATA_DIR = PROJECT_ROOT / "data"
 WEBAPP_DATA = PROJECT_ROOT / "webapp" / "data"
 
 REDIS_KEY = "wiki_pages"
+
+
+# ---------------------------------------------------------------------------
+# Title / path normalization
+# ---------------------------------------------------------------------------
+
+def _normalize_title(title):
+    """Normalize a title for comparison: lowercase, collapse hyphens/spaces,
+    strip special characters and trailing punctuation."""
+    t = title.lower().strip()
+    # Replace hyphens with spaces then collapse whitespace
+    t = t.replace("-", " ")
+    t = re.sub(r"\s+", " ", t)
+    # Strip characters that shouldn't be in a title (JSON braces, quotes, etc.)
+    t = re.sub(r'[{}"\[\]`]', "", t)
+    # Strip trailing punctuation
+    t = t.strip(" ?!.,;:'\"")
+    return t
+
+
+def _is_junk_title(title):
+    """Detect titles that are clearly junk (leaked JSON, garbage, etc.)."""
+    t = title.strip()
+    # Starts with JSON characters
+    if t.startswith("{") or t.startswith("["):
+        return True
+    # Contains JSON-like patterns
+    if '"answer"' in t.lower() or '"content"' in t.lower():
+        return True
+    # Too short after cleanup
+    cleaned = _normalize_title(t)
+    if len(cleaned) < 3:
+        return True
+    return False
+
+
+def _sanitize_slug(text):
+    """Create a safe filesystem slug from a title string."""
+    slug = text.lower().strip()
+    # Replace spaces, underscores with hyphens
+    slug = slug.replace(" ", "-").replace("_", "-")
+    # Remove all characters that aren't alphanumeric or hyphens
+    slug = re.sub(r"[^a-z0-9\-]", "", slug)
+    # Collapse multiple hyphens
+    slug = re.sub(r"-{2,}", "-", slug)
+    # Strip leading/trailing hyphens
+    slug = slug.strip("-")
+    # Truncate to reasonable length
+    if len(slug) > 80:
+        slug = slug[:80].rstrip("-")
+    return slug
+
+
+def _normalize_path(path_str):
+    """Normalize a path string: always use forward slashes, ensure it's
+    under wiki/ and has a .md extension."""
+    # Replace backslashes with forward slashes
+    p = path_str.replace("\\", "/")
+    # Ensure it starts with wiki/
+    if not p.startswith("wiki/"):
+        # Extract just the filename part
+        parts = PurePosixPath(p).parts
+        filename = parts[-1] if parts else p
+        p = f"wiki/{filename}"
+    # Ensure .md extension
+    if not p.endswith(".md"):
+        p += ".md"
+    # Sanitize the filename part
+    parent = str(PurePosixPath(p).parent)
+    stem = PurePosixPath(p).stem
+    safe_stem = _sanitize_slug(stem)
+    if not safe_stem:
+        safe_stem = "untitled"
+    return f"{parent}/{safe_stem}.md"
 
 
 # ---------------------------------------------------------------------------
@@ -116,8 +191,11 @@ def load_local_wiki():
 def save_page_locally(page):
     """Write a wiki page to the local Obsidian vault."""
     path = page.get("path", "")
-    if not path:
-        slug = page["title"].lower().replace(" ", "-")
+    if path:
+        # Normalize the path from Redis (fix backslashes, special chars)
+        path = _normalize_path(path)
+    else:
+        slug = _sanitize_slug(page["title"])
         path = f"wiki/{slug}.md"
 
     full_path = VAULT / path
@@ -140,16 +218,20 @@ def cmd_status():
     local_pages = load_local_wiki()
     remote_pages = redis_get(url, token, REDIS_KEY)
 
-    local_titles = {p["title"].lower() for p in local_pages}
-    remote_titles = {p["title"].lower() for p in remote_pages}
+    # Filter out junk pages from remote for display purposes
+    junk_pages = [p for p in remote_pages if _is_junk_title(p.get("title", ""))]
+    clean_remote = [p for p in remote_pages if not _is_junk_title(p.get("title", ""))]
+
+    local_titles = {_normalize_title(p["title"]) for p in local_pages}
+    remote_titles = {_normalize_title(p["title"]) for p in clean_remote}
 
     only_local = local_titles - remote_titles
     only_remote = remote_titles - local_titles
     shared = local_titles & remote_titles
 
     # Check for content differences in shared pages
-    local_by_title = {p["title"].lower(): p for p in local_pages}
-    remote_by_title = {p["title"].lower(): p for p in remote_pages}
+    local_by_title = {_normalize_title(p["title"]): p for p in local_pages}
+    remote_by_title = {_normalize_title(p["title"]): p for p in clean_remote}
     content_diff = []
     for t in shared:
         lh = _content_hash(local_by_title[t]["content"])
@@ -157,8 +239,18 @@ def cmd_status():
         if lh != rh:
             content_diff.append(t)
 
+    # Detect duplicate titles on remote (after normalization)
+    seen_normalized = {}
+    duplicate_titles = []
+    for p in remote_pages:
+        norm = _normalize_title(p["title"])
+        if norm in seen_normalized:
+            duplicate_titles.append((p["title"], seen_normalized[norm]))
+        else:
+            seen_normalized[norm] = p["title"]
+
     print(f"\nLocal:  {len(local_pages)} pages")
-    print(f"Remote: {len(remote_pages)} pages")
+    print(f"Remote: {len(remote_pages)} pages ({len(clean_remote)} clean, {len(junk_pages)} junk)")
     print(f"Shared: {len(shared)} pages")
 
     if only_local:
@@ -182,7 +274,19 @@ def cmd_status():
                 extra += f" query: \"{query[:60]}...\""
             print(f"  ~ {t}{extra}")
 
-    if not only_local and not only_remote and not content_diff:
+    if junk_pages:
+        print(f"\nJunk pages on remote ({len(junk_pages)}) — leaked JSON or garbage:")
+        for p in junk_pages:
+            print(f"  ✗ {p['title'][:80]}")
+        print("  → Run --prune-remote to clean these up")
+
+    if duplicate_titles:
+        print(f"\nDuplicate titles on remote ({len(duplicate_titles)}) — differ only by hyphens/punctuation:")
+        for dup, original in duplicate_titles:
+            print(f"  ≈ \"{dup}\" duplicates \"{original}\"")
+        print("  → Run --prune-remote to deduplicate")
+
+    if not only_local and not only_remote and not content_diff and not junk_pages and not duplicate_titles:
         print("\nLocal and remote are in sync.")
 
 
@@ -192,13 +296,15 @@ def cmd_push():
     remote_pages = redis_get(url, token, REDIS_KEY)
 
     # Merge: local pages override remote, but keep remote-only pages
-    remote_by_title = {p["title"].lower(): p for p in remote_pages}
-    local_by_title = {p["title"].lower(): p for p in local_pages}
+    remote_by_title = {_normalize_title(p["title"]): p for p in remote_pages}
+    local_by_title = {_normalize_title(p["title"]): p for p in local_pages}
 
     merged = list(local_pages)
-    for title_lower, p in remote_by_title.items():
-        if title_lower not in local_by_title:
-            merged.append(p)
+    for norm_title, p in remote_by_title.items():
+        if norm_title not in local_by_title:
+            # Only keep non-junk remote-only pages
+            if not _is_junk_title(p.get("title", "")):
+                merged.append(p)
 
     redis_set(url, token, REDIS_KEY, merged)
     print(f"Pushed {len(local_pages)} local pages to Redis (total: {len(merged)})")
@@ -209,15 +315,21 @@ def cmd_pull():
     url, token = get_redis_config()
     remote_pages = redis_get(url, token, REDIS_KEY)
     local_pages = load_local_wiki()
-    local_by_title = {p["title"].lower(): p for p in local_pages}
+    local_by_title = {_normalize_title(p["title"]): p for p in local_pages}
 
     new_count = 0
     updated_count = 0
+    skipped_junk = 0
     changes = []
 
     for page in remote_pages:
-        title_lower = page["title"].lower()
-        if title_lower not in local_by_title:
+        # Skip junk pages
+        if _is_junk_title(page.get("title", "")):
+            skipped_junk += 1
+            continue
+
+        norm_title = _normalize_title(page["title"])
+        if norm_title not in local_by_title:
             # New page
             path = save_page_locally(page)
             print(f"  New: {page['title']} → {path}")
@@ -226,7 +338,7 @@ def cmd_pull():
                             "path": str(path)})
         else:
             # Check content difference
-            local_hash = _content_hash(local_by_title[title_lower]["content"])
+            local_hash = _content_hash(local_by_title[norm_title]["content"])
             remote_hash = _content_hash(page["content"])
             if local_hash != remote_hash:
                 path = save_page_locally(page)
@@ -241,6 +353,9 @@ def cmd_pull():
         print("Review them in Obsidian, then update wiki/index.md if needed.")
     else:
         print("No changes to pull.")
+
+    if skipped_junk:
+        print(f"Skipped {skipped_junk} junk page(s). Run --prune-remote to clean Redis.")
 
     return changes
 
@@ -266,6 +381,74 @@ def cmd_seed():
 
     redis_set(url, token, REDIS_KEY, pages)
     print(f"Seeded {len(pages)} pages to Redis.")
+
+
+def cmd_prune_remote():
+    """Remove junk and deduplicate pages on Redis."""
+    url, token = get_redis_config()
+    remote_pages = redis_get(url, token, REDIS_KEY)
+    original_count = len(remote_pages)
+
+    # Step 1: Remove junk pages
+    junk_removed = []
+    clean_pages = []
+    for p in remote_pages:
+        if _is_junk_title(p.get("title", "")):
+            junk_removed.append(p["title"])
+        else:
+            clean_pages.append(p)
+
+    # Step 2: Deduplicate by normalized title (keep the one with more content
+    # or the one updated more recently)
+    seen = {}
+    deduped = []
+    duplicates_removed = []
+    for p in clean_pages:
+        norm = _normalize_title(p["title"])
+        if norm in seen:
+            existing = seen[norm]
+            # Keep the one with more content, or newer updated_at
+            existing_len = len(existing.get("content", ""))
+            current_len = len(p.get("content", ""))
+            if current_len > existing_len:
+                duplicates_removed.append(existing["title"])
+                # Replace in deduped list
+                deduped = [x for x in deduped if _normalize_title(x["title"]) != norm]
+                deduped.append(p)
+                seen[norm] = p
+            else:
+                duplicates_removed.append(p["title"])
+        else:
+            seen[norm] = p
+            deduped.append(p)
+
+    # Step 3: Normalize paths in remaining pages
+    for p in deduped:
+        if "path" in p:
+            p["path"] = _normalize_path(p["path"])
+
+    if junk_removed:
+        print(f"Removing {len(junk_removed)} junk page(s):")
+        for t in junk_removed:
+            print(f"  ✗ {t[:80]}")
+
+    if duplicates_removed:
+        print(f"\nRemoving {len(duplicates_removed)} duplicate(s):")
+        for t in duplicates_removed:
+            print(f"  ≈ {t}")
+
+    if not junk_removed and not duplicates_removed:
+        print("No junk or duplicates found on remote. Redis is clean!")
+        return
+
+    # Confirm before writing
+    print(f"\nTotal: {original_count} → {len(deduped)} pages")
+    response = input("Write cleaned data to Redis? [y/N] ").strip().lower()
+    if response == "y":
+        redis_set(url, token, REDIS_KEY, deduped)
+        print(f"Done. Redis now has {len(deduped)} clean pages.")
+    else:
+        print("Aborted. No changes written.")
 
 
 # ---------------------------------------------------------------------------
@@ -470,6 +653,8 @@ if __name__ == "__main__":
                        help="Run wiki health checks")
     group.add_argument("--sync-and-pr", action="store_true",
                        help="Pull from Redis + lint + create GitHub PR")
+    group.add_argument("--prune-remote", action="store_true",
+                       help="Remove junk and duplicate pages from Redis")
     args = parser.parse_args()
 
     if args.status:
@@ -484,3 +669,5 @@ if __name__ == "__main__":
         cmd_lint()
     elif args.sync_and_pr:
         cmd_sync_and_pr()
+    elif args.prune_remote:
+        cmd_prune_remote()
