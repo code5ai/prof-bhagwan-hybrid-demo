@@ -2,14 +2,14 @@
   "nodes": {
     "answer-tea-and-coffee-are-what-economists-call-substitute": {
       "type": "unknown",
-      "title": "Substitute Goods, Mechanism Design, and Restaurant Marketing",
+      "title": "Answer Tea And Coffee Are What Economists Call Substitute",
       "aliases": [],
       "tags": [],
       "path": "wiki/answer-tea-and-coffee-are-what-economists-call-substitute.md"
     },
     "can-genetic-diversity-measure-economic-distance-that-should-matter-for": {
       "type": "unknown",
-      "title": "Genetic Diversity as Economic Distance Proxy",
+      "title": "Can Genetic Diversity Measure Economic Distance That Should Matter For",
       "aliases": [],
       "tags": [],
       "path": "wiki/can-genetic-diversity-measure-economic-distance-that-should-matter-for.md"
@@ -563,6 +563,13 @@
       "tags": [],
       "path": "wiki/fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion.md"
     },
+    "fab-blockchain-identity-and-threshold-behavior": {
+      "type": "unknown",
+      "title": "FAB, Blockchain Identity, and Threshold Behavior",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/fab-blockchain-identity-and-threshold-behavior.md"
+    },
     "gravity-model-applied-to-financial-transactions-costs": {
       "type": "unknown",
       "title": "Gravity Model Applied to Financial Transactions Costs",
@@ -572,14 +579,14 @@
     },
     "how-can-historic-institutions-affect-economic-outcomes-in-the-current": {
       "type": "unknown",
-      "title": "Historical Institutions and Financial Exclusion",
+      "title": "How Can Historic Institutions Affect Economic Outcomes In The Current",
       "aliases": [],
       "tags": [],
       "path": "wiki/how-can-historic-institutions-affect-economic-outcomes-in-the-current.md"
     },
     "how-do-gravity-models-determine-transactions-costs-in-the-currency": {
       "type": "unknown",
-      "title": "Gravity Model Residuals and Remittance Corridors",
+      "title": "How Do Gravity Models Determine Transactions Costs In The Currency",
       "aliases": [],
       "tags": [],
       "path": "wiki/how-do-gravity-models-determine-transactions-costs-in-the-currency.md"
@@ -590,6 +597,13 @@
       "aliases": [],
       "tags": [],
       "path": "wiki/index.md"
+    },
+    "is-it-better-to-quatify-risk-of-failure-by-grssing": {
+      "type": "unknown",
+      "title": "Is It Better To Quatify Risk Of Failure By Grssing",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/is-it-better-to-quatify-risk-of-failure-by-grssing.md"
     },
     "log": {
       "type": "unknown",
@@ -670,54 +684,48 @@
     },
     "the-answer-establishes-a-novel-triangulation-framework": {
       "type": "unknown",
-      "title": "Triangulation Framework for Transaction Costs",
+      "title": "The Answer Establishes A Novel Triangulation Framework",
       "aliases": [],
       "tags": [],
       "path": "wiki/the-answer-establishes-a-novel-triangulation-framework.md"
     },
+    "the-connection-between-decimalization-and-the-law-of-one-price": {
+      "type": "unknown",
+      "title": "The Connection Between Decimalization And The Law Of One Price",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/the-connection-between-decimalization-and-the-law-of-one-price.md"
+    },
     "the-conversation-reveals-a-productive-three-way-synthesis": {
       "type": "unknown",
-      "title": "Language Barriers as Financial Distance",
+      "title": "The Conversation Reveals A Productive Three Way Synthesis",
       "aliases": [],
       "tags": [],
       "path": "wiki/the-conversation-reveals-a-productive-three-way-synthesis.md"
     },
     "the-conversation-surfaces-a-novel-three-way-connection": {
       "type": "unknown",
-      "title": "Genetic Distance, Trust, and Home Bias",
+      "title": "The Conversation Surfaces A Novel Three Way Connection",
       "aliases": [],
       "tags": [],
       "path": "wiki/the-conversation-surfaces-a-novel-three-way-connection.md"
     },
     "what-is-the-fab-initiative": {
       "type": "unknown",
-      "title": "FAB and Threshold Behavior Theory",
+      "title": "What Is The Fab Initiative",
       "aliases": [],
       "tags": [],
       "path": "wiki/what-is-the-fab-initiative.md"
+    },
+    "what-is-the-law-of-one-price-in-finance": {
+      "type": "unknown",
+      "title": "What Is The Law Of One Price In Finance?",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/what-is-the-law-of-one-price-in-finance.md"
     }
   },
   "edges": [
-    {
-      "from": "answer-tea-and-coffee-are-what-economists-call-substitute",
-      "to": "thinking-patterns-and-frameworks",
-      "type": "references"
-    },
-    {
-      "from": "answer-tea-and-coffee-are-what-economists-call-substitute",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
     {
       "from": "adjusted-present-value-approach",
       "to": "myers-1974",
@@ -1274,6 +1282,21 @@
       "type": "references"
     },
     {
+      "from": "fab-blockchain-identity-and-threshold-behavior",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior",
+      "to": "prof-bhagwan-chowdhry",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
       "from": "gravity-model-applied-to-financial-transactions-costs",
       "to": "financial-inclusion-architecture",
       "type": "references"
@@ -1286,36 +1309,6 @@
     {
       "from": "gravity-model-applied-to-financial-transactions-costs",
       "to": "mechanism-design-applied",
-      "type": "references"
-    },
-    {
-      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
-      "to": "mechanism-design-applied",
-      "type": "references"
-    },
-    {
-      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
-      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
       "type": "references"
     },
     {
@@ -1585,22 +1578,12 @@
     },
     {
       "from": "index",
-      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "answer-tea-and-coffee-are-what-economists-call-substitute",
       "type": "references"
     },
     {
       "from": "index",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "index",
-      "to": "systematic-risk-versus-systemic-risk",
-      "type": "references"
-    },
-    {
-      "from": "index",
-      "to": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
+      "to": "fab-blockchain-identity-and-threshold-behavior",
       "type": "references"
     },
     {
@@ -1635,7 +1618,22 @@
     },
     {
       "from": "index",
-      "to": "answer-tea-and-coffee-are-what-economists-call-substitute",
+      "to": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "what-is-the-law-of-one-price-in-finance",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "the-connection-between-decimalization-and-the-law-of-one-price",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "is-it-better-to-quatify-risk-of-failure-by-grssing",
       "type": "references"
     },
     {
@@ -1886,66 +1884,6 @@
     {
       "from": "stub-valuation-damodaran",
       "to": "mechanism-design-applied",
-      "type": "references"
-    },
-    {
-      "from": "the-answer-establishes-a-novel-triangulation-framework",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "the-answer-establishes-a-novel-triangulation-framework",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
-      "to": "fame-and-knowledge-democratization",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-surfaces-a-novel-three-way-connection",
-      "to": "gravity-model-applied-to-financial-transactions-costs",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-surfaces-a-novel-three-way-connection",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-surfaces-a-novel-three-way-connection",
-      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
-      "type": "references"
-    },
-    {
-      "from": "the-conversation-surfaces-a-novel-three-way-connection",
-      "to": "systematic-risk-versus-systemic-risk",
-      "type": "references"
-    },
-    {
-      "from": "what-is-the-fab-initiative",
-      "to": "financial-inclusion-architecture",
-      "type": "references"
-    },
-    {
-      "from": "what-is-the-fab-initiative",
-      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
-      "type": "references"
-    },
-    {
-      "from": "what-is-the-fab-initiative",
-      "to": "thinking-patterns-and-frameworks",
       "type": "references"
     }
   ]

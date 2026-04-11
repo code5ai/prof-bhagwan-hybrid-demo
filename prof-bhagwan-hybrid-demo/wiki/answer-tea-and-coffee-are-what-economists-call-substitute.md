@@ -1,7 +1,1 @@
-# Substitute Goods, Mechanism Design, and Restaurant Marketing
-
 Applied the mechanism design and choice architecture lens — used in FAB's financial inclusion design — to restaurant marketing strategy during commodity price shocks. The core insight: just as FAB makes formal financial identity feel like the natural default (not charity), restaurants should design menus and nudges so that the high-margin substitute (tea) feels like the sophisticated natural choice, not the fallback. Cross-domain application of incentive-alignment logic from financial inclusion to consumer marketing.
-
-## Related
-- [[thinking-patterns-and-frameworks]]
-- [[financial-inclusion-architecture]]
