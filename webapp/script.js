@@ -42,11 +42,9 @@ function stripWikiBlocks(text) {
 function renderMarkdown(el, text) {
   const mathBlocks = [];
 
-  // Extract display math first ($$...$$), then inline ($...$)
-  // Also handle \[...\] and \(...\)
   let safe = text;
 
-  // Display math: $$...$$
+  // Display math: $$...$$ 
   safe = safe.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => {
     const id = `%%MATH_${mathBlocks.length}%%`;
     mathBlocks.push({ id, math: math.trim(), display: true });
@@ -60,24 +58,15 @@ function renderMarkdown(el, text) {
     return id;
   });
 
-  // Inline math: $...$ (but not $$)
-  safe = safe.replace(/\$([^\$\n]+?)\$/g, (_, math) => {
-    const id = `%%MATH_${mathBlocks.length}%%`;
-    mathBlocks.push({ id, math: math.trim(), display: false });
-    return id;
-  });
-
-  // Inline math: \(...\)
+  // Inline math: \(...\) ONLY — no $...$ to avoid matching dollar amounts
   safe = safe.replace(/\\\(([\s\S]+?)\\\)/g, (_, math) => {
     const id = `%%MATH_${mathBlocks.length}%%`;
     mathBlocks.push({ id, math: math.trim(), display: false });
     return id;
   });
 
-  // Render markdown on the safe (math-free) text
   let html = marked.parse(safe);
 
-  // Re-insert math blocks as rendered KaTeX HTML
   for (const block of mathBlocks) {
     let rendered;
     if (typeof katex !== "undefined") {
@@ -87,11 +76,10 @@ function renderMarkdown(el, text) {
           throwOnError: false,
         });
       } catch {
-        // Fallback: show raw math in a styled span
-        rendered = `<span class="math-fallback">${block.display ? "$$" : "$"}${block.math}${block.display ? "$$" : "$"}</span>`;
+        rendered = `<span class="math-fallback">${block.display ? "\\[" : "\\("}${block.math}${block.display ? "\\]" : "\\)"}</span>`;
       }
     } else {
-      rendered = `<span class="math-fallback">${block.display ? "$$" : "$"}${block.math}${block.display ? "$$" : "$"}</span>`;
+      rendered = `<span class="math-fallback">${block.display ? "\\[" : "\\("}${block.math}${block.display ? "\\]" : "\\)"}</span>`;
     }
     html = html.replace(block.id, rendered);
   }
@@ -191,9 +179,27 @@ function removeThinking() {
 // re-rendered at most every ~80ms (debounced).
 // =====================================================
 
+function hasOpenMath(text) {
+  // Check for unclosed $$
+  const displayCount = (text.match(/\$\$/g) || []).length;
+  if (displayCount % 2 !== 0) return true;
+
+  // Check for unclosed \[
+  const openDisplay = (text.match(/\\\[/g) || []).length;
+  const closeDisplay = (text.match(/\\\]/g) || []).length;
+  if (openDisplay !== closeDisplay) return true;
+
+  // Check for unclosed \(
+  const openInline = (text.match(/\\\(/g) || []).length;
+  const closeInline = (text.match(/\\\)/g) || []).length;
+  if (openInline !== closeInline) return true;
+
+  return false;
+}
+
 function createStreamRenderer(bubble) {
-  let tokenQueue = "";    // Buffered tokens not yet revealed
-  let revealedText = "";  // Text shown so far
+  let tokenQueue = "";
+  let revealedText = "";
   let drainRAF = null;
   let renderTimer = null;
   let finished = false;
@@ -203,7 +209,8 @@ function createStreamRenderer(bubble) {
     renderTimer = setTimeout(() => {
       renderTimer = null;
       const clean = stripWikiBlocks(revealedText);
-      if (clean) {
+      // Don't render if math delimiters are unclosed — avoids flash of broken LaTeX
+      if (clean && !hasOpenMath(clean)) {
         renderMarkdown(bubble, clean);
         scrollToBottom();
       }
@@ -217,14 +224,7 @@ function createStreamRenderer(bubble) {
       return;
     }
 
-    // Adaptive drain speed:
-    // - Small queue (1-5): show 1 char/frame → smooth typing
-    // - Medium queue (6-40): show 2-5 chars/frame → keeps up
-    // - Large queue (40+): show more to prevent lag
-    const chars = Math.min(
-      Math.max(1, Math.ceil(tokenQueue.length / 8)),
-      12
-    );
+    const chars = Math.min(Math.max(1, Math.ceil(tokenQueue.length / 8)), 12);
     revealedText += tokenQueue.slice(0, chars);
     tokenQueue = tokenQueue.slice(chars);
 
@@ -248,28 +248,14 @@ function createStreamRenderer(bubble) {
   return {
     push(text) {
       tokenQueue += text;
-      if (!drainRAF) {
-        drainRAF = requestAnimationFrame(drain);
-      }
+      if (!drainRAF) drainRAF = requestAnimationFrame(drain);
     },
-
     finish() {
       finished = true;
-      // If queue is already empty, render now
-      if (tokenQueue.length === 0 && !drainRAF) {
-        finalRender();
-      }
-      // Otherwise drain() will call finalRender when queue empties
+      if (tokenQueue.length === 0 && !drainRAF) finalRender();
     },
-
-    getText() {
-      return revealedText + tokenQueue;
-    },
-
-    getCleanText() {
-      return stripWikiBlocks(revealedText + tokenQueue);
-    },
-
+    getText() { return revealedText + tokenQueue; },
+    getCleanText() { return stripWikiBlocks(revealedText + tokenQueue); },
     destroy() {
       if (drainRAF) cancelAnimationFrame(drainRAF);
       if (renderTimer) clearTimeout(renderTimer);
@@ -343,7 +329,7 @@ async function streamResponse(userMessage) {
       }
     }
 
-    try { reader.cancel(); } catch {}
+    try { reader.cancel(); } catch { }
 
     // ========== STAGE 2: Parse JSON and extract answer ==========
     let finalAnswer = "";
@@ -359,7 +345,7 @@ async function streamResponse(userMessage) {
       // Not valid JSON — show raw response as fallback
       finalAnswer = fullJsonResponse;
     }
-      // ========== STAGE 3: NOW render to UI (clean, no flashing) ==========
+    // ========== STAGE 3: NOW render to UI (clean, no flashing) ==========
     bubble.innerHTML = "";  // Clear the bubble
     renderer = createStreamRenderer(bubble);
     renderer.push(finalAnswer);
@@ -400,7 +386,7 @@ async function checkHealth() {
     if (data.wiki_pages === 0 && data.rag_chunks === 0) {
       setStatus("No data loaded", false);
     }
-  } catch {}
+  } catch { }
 }
 
 checkHealth();

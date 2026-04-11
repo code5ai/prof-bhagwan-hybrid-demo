@@ -15,7 +15,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
-from datetime import date
+from datetime import date, datetime
 
 # Add scripts dir to path so chunker is importable
 sys.path.insert(0, str(Path(__file__).parent))
