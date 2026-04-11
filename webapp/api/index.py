@@ -560,6 +560,7 @@ Respond with ONLY a JSON object, no markdown, no explanation:
 {
   "answer": "Your full conversational response as Prof. Finn. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. 
   In the end, add a line saying 'Sources (in bold): [Wiki (write My Memory (in bold, new line), instead of Wiki): list of sources (and if no sources found, mention: "Found Nothing in My Memory", the point here is to let the user know that you have not found anything in the wiki pages by not mentioning "wiki" explicitly), RAG (write My Library (in bold, new line), instead of RAG): list of sources (and if no sources found, mention: "Found Nothing in My Library", the point here is to let the user know that you have not found anything in the RAG pages by not mentioning "RAG" explicitly), General_Knowledge as General Knowledge (in bold, new line)]'",
+  Don't play safe, saying you found nothing! You need to find and classify the exact things given to you, into wiki or rag or general knowledge. Don't just say everything under "general knowledge". Ask yourself whether or not you have those sources first. Then classify. The My Memory, My Library and General Knowledge are the wordings for user interface. They essentially mean Wiki, RAG and Your General Knowledge respectively.
   "sources": {
     "wiki": ["page_title_1", "page_title_2"],
     "rag": ["source_document_1", "source_document_2"]
@@ -695,21 +696,42 @@ def should_update_wiki(reply_output, rag_results):
 
 
 def process_wiki_update_explicit(title, content, source_query=""):
-    """Explicitly write wiki update without tag parsing."""
+    """Explicitly write wiki update without tag parsing.
+    Formats content as a proper wiki page with heading and structure."""
     if not title or not content:
         print("[WikiUpdate] Missing title or content")
         return
 
     try:
-        from datetime import datetime, timezone
+        from datetime import datetime, timezone, timedelta
         
-        embedding = get_document_embedding(content)
+        IST = timezone(timedelta(hours=5, minutes=30))
+        
+        # Format as a proper wiki page if content is just a raw paragraph
+        formatted_content = content.strip()
+        if not formatted_content.startswith("# "):
+            # Build structured wiki page
+            lines = [f"# {title.strip()}", ""]
+            
+            # Add the synthesis content
+            lines.append(formatted_content)
+            lines.append("")
+            
+            # Add metadata footer
+            if source_query:
+                lines.append("## Source")
+                lines.append(f"*Query-synthesized from: \"{source_query[:200]}\"*")
+                lines.append("")
+            
+            formatted_content = "\n".join(lines)
+        
+        embedding = get_document_embedding(formatted_content)
         page = {
             "title": title.strip(),
             "path": f"wiki/{title.lower().replace(' ', '-').replace('/', ':')}.md",
-            "content": content.strip(),
+            "content": formatted_content,
             "type": "wiki",
-            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(IST).isoformat(),
             "source_query": source_query[:200] if source_query else "",
         }
         if embedding:
@@ -718,7 +740,7 @@ def process_wiki_update_explicit(title, content, source_query=""):
         WIKI_STORE.save_page(page)
         with _index_lock:
             INDEX.rebuild()
-        print(f"[WikiUpdate] Saved page: {title} ({len(content)} chars)")
+        print(f"[WikiUpdate] Saved page: {title} ({len(formatted_content)} chars)")
         
         # LOG THE UPDATE
         log_to_wiki_log(
@@ -726,7 +748,7 @@ def process_wiki_update_explicit(title, content, source_query=""):
             f"New page created: {title}",
             {
                 "page_title": title,
-                "content_length": len(content),
+                "content_length": len(formatted_content),
                 "source_query": source_query[:100] if source_query else "(empty)"
             }
         )
@@ -736,11 +758,13 @@ def process_wiki_update_explicit(title, content, source_query=""):
 
 def log_to_wiki_log(operation, description, metadata=None):
     """Log to Redis first (Vercel production), then stdout (which Vercel captures).
-    On local dev, also attempts filesystem write as backup."""
-    from datetime import datetime, timezone
+    On local dev, also attempts filesystem write as backup.
+    All timestamps in IST (UTC+5:30)."""
+    from datetime import datetime, timezone, timedelta
     
-    timestamp = datetime.now(timezone.utc)
-    timestamp_str = timestamp.strftime("%Y-%m-%d %H:%M:%S UTC")
+    IST = timezone(timedelta(hours=5, minutes=30))
+    timestamp = datetime.now(IST)
+    timestamp_str = timestamp.strftime("%Y-%m-%d %H:%M IST")
     log_entry_text = f"[{timestamp_str}] {operation} | {description}"
     if metadata:
         for key, val in metadata.items():
@@ -1230,7 +1254,6 @@ def chat_v2():
                 "pages_consulted": pages_used,
                 "response_length": len(full_response),
                 "wiki_updated": wiki_updated,
-                "response": full_response
             }
         )
 
