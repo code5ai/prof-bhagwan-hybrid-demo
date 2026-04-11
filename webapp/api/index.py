@@ -558,7 +558,8 @@ Examples:
 **CRITICAL OUTPUT FORMAT:**
 Respond with ONLY a JSON object, no markdown, no explanation:
 {
-  "answer": "Your full conversational response as Prof. Finn. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. In the end, add a line saying 'Sources (in bold): [Wiki (write My Memory (in bold, new line), instead of Wiki): list of sources, RAG (write My Library (in bold, new line), instead of RAG): list of sources, General_Knowledge as General Knowledge (in bold, new line)]'",
+  "answer": "Your full conversational response as Prof. Finn. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. 
+  In the end, add a line saying 'Sources (in bold): [Wiki (write My Memory (in bold, new line), instead of Wiki): list of sources (and if no sources found, mention: "Found Nothing in My Memory", the point here is to let the user know that you have not found anything in the wiki pages by not mentioning "wiki" explicitly), RAG (write My Library (in bold, new line), instead of RAG): list of sources (and if no sources found, mention: "Found Nothing in My Library", the point here is to let the user know that you have not found anything in the RAG pages by not mentioning "RAG" explicitly), General_Knowledge as General Knowledge (in bold, new line)]'",
   "sources": {
     "wiki": ["page_title_1", "page_title_2"],
     "rag": ["source_document_1", "source_document_2"]
