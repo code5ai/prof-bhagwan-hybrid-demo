@@ -558,7 +558,7 @@ Examples:
 **CRITICAL OUTPUT FORMAT:**
 Respond with ONLY a JSON object, no markdown, no explanation:
 {
-  "answer": "Your full conversational response as Prof. Bhargav. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. In the end, add a line saying 'Sources: [Wiki: list of sources, RAG: list of sources, General_Knowledge]'",
+  "answer": "Your full conversational response as Prof. Bhargav. Write naturally. DO NOT mention 'Wiki' or 'RAG' sources by name here. Focus entirely on the narrative. In the end, add a line saying 'Sources: [Wiki (write My Memory, instead of Wiki): list of sources, RAG (write My Library, instead of RAG): list of sources, General_Knowledge as General Knowledge]'",
   "sources": {
     "wiki": ["page_title_1", "page_title_2"],
     "rag": ["source_document_1", "source_document_2"]
