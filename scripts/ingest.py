@@ -39,6 +39,7 @@ LOG_FILE = WIKI_DIR / "log.md"
 INDEX_FILE = WIKI_DIR / "index.md"
 DATA_DIR = PROJECT_ROOT / "data"
 CHUNKS_FILE = DATA_DIR / "chunks.json"
+INGESTED_FILE = DATA_DIR / "ingested.json"
 
 WORD_THRESHOLD = 5000
 PAGE_THRESHOLD = 20
@@ -51,19 +52,23 @@ SUPPORTED_EXTENSIONS = {".md", ".txt", ".pdf"}
 # ---------------------------------------------------------------------------
 
 def get_already_ingested():
-    """Parse log.md for previously ingested file paths."""
-    ingested = set()
-    if LOG_FILE.exists():
-        for line in LOG_FILE.read_text(encoding="utf-8").splitlines():
-            # Look for lines like: - Source: `raw/books/foo.pdf`
-            if "Source:" in line and "`" in line:
-                parts = line.split("`")
-                if len(parts) >= 2:
-                    ingested.add(parts[1].strip())
-            # Also match: ## [...] ingest | Title — path: raw/...
-            if "ingest |" in line.lower():
-                ingested.add(line.strip())
-    return ingested
+    """Load the structured ingested.json sidecar tracking file.
+    Returns a dict of relative_path → {chunks, words, timestamp}."""
+    if INGESTED_FILE.exists():
+        try:
+            return json.loads(INGESTED_FILE.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, Exception):
+            return {}
+    return {}
+
+
+def save_ingested(ingested):
+    """Write the ingested tracking file."""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    INGESTED_FILE.write_text(
+        json.dumps(ingested, indent=2, ensure_ascii=False),
+        encoding="utf-8"
+    )
 
 
 def scan_raw_files():
@@ -96,7 +101,7 @@ def cmd_scan():
         print("No files found in raw/. Upload source documents first.")
         return
 
-    ingested_log = LOG_FILE.read_text(encoding="utf-8") if LOG_FILE.exists() else ""
+    ingested = get_already_ingested()
 
     wiki_files = []
     rag_files = []
@@ -106,11 +111,11 @@ def cmd_scan():
     print(f"{'='*70}\n")
 
     for f in files:
-        rel = f.relative_to(PROJECT_ROOT)
+        rel = str(f.relative_to(PROJECT_ROOT))
         route, words, pages = route_file(f)
 
-        # Check if already ingested (simple heuristic: filename in log)
-        already = f.name in ingested_log
+        # Check if already ingested via structured tracking
+        already = rel in ingested
         status = " [DONE]" if already else " [NEW]"
 
         page_info = f", {pages} pages" if pages else ""
@@ -198,16 +203,40 @@ def cmd_process(file_path, gemini_key):
     print(f"  │ Abstract hint: {abstract_hint}…")
     print(f"  └────────────────────────────────────────────────")
 
+    # BUG 7 fix: Track in ingested.json
+    ingested = get_already_ingested()
+    rel_key = str(rel_source)
+    ingested[rel_key] = {
+        "chunks": len(chunks),
+        "words": len(text.split()),
+        "timestamp": datetime.now().isoformat(),
+    }
+    save_ingested(ingested)
+    print(f"  Tracked in ingested.json: {rel_key}")
+
+    # BUG 5 fix: Log to wiki log
+    from wiki_logger import log_to_wiki_log
+    log_to_wiki_log(
+        "ingest",
+        fp.stem.replace("-", " ").replace("_", " ").title(),
+        {
+            "source": str(rel_source),
+            "chunks": len(chunks),
+            "words": len(text.split()),
+        }
+    )
+
 
 def cmd_process_all(gemini_key):
     """Process all RAG-routed files."""
     files = scan_raw_files()
-    ingested_log = LOG_FILE.read_text(encoding="utf-8") if LOG_FILE.exists() else ""
+    ingested = get_already_ingested()
 
     rag_files = []
     for f in files:
+        rel = str(f.relative_to(PROJECT_ROOT))
         route, _, _ = route_file(f)
-        if route == "rag" and f.name not in ingested_log:
+        if route == "rag" and rel not in ingested:
             rag_files.append(f)
 
     if not rag_files:

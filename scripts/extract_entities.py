@@ -446,34 +446,7 @@ def extract_source(source_filter, api_key):
     return written
 
 
-def log_to_wiki_log(operation, description, metadata=None):
-    """Append entry to wiki/log.md in chronological order."""
-    log_path = VAULT / "wiki" / "log.md"
-
-    try:
-        # Format: ## [YYYY-MM-DD] operation | description
-        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        entry = f"\n## [{timestamp}] {operation} | {description}\n"
-
-        if metadata:
-            for key, val in metadata.items():
-                if isinstance(val, (list, dict)):
-                    entry += f"- {key}: {json.dumps(val)}\n"
-                else:
-                    entry += f"- {key}: {val}\n"
-
-        # Append to log (always append to end of file)
-        if log_path.exists():
-            current = log_path.read_text(encoding="utf-8")
-            updated = current + entry
-        else:
-            # Create with header
-            updated = f"# Wiki Log\n\nAppend-only chronological record of ingests, queries, and wiki updates.\n\n---{entry}"
-
-        log_path.write_text(updated, encoding="utf-8")
-        print(f"[Log] Entry written: {operation}")
-    except Exception as exc:
-        print(f"[Log] Failed to write log: {exc}")
+from wiki_logger import log_to_wiki_log
 
 
 # ---------------------------------------------------------------------------

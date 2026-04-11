@@ -83,11 +83,21 @@ Key people and foundational works referenced across sources:
 - [[robichek-and-myers-1966]] — Robichek & Myers 1966 (Financial decision-making)
 - [[stapleton-1971]] — Stapleton 1971 (Valuation under uncertainty)
 
-## Query-Synthesized Pages
+## Query-Synthesized Pages (11 pages)
 
 Pages created from synthesis across multiple RAG sources during Q&A sessions:
 
-<!-- Pages will be added as /api/chat-v2 generates new insights warranting wiki updates -->
+- [[fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion]] — FAB, blockchain identity, and threshold behavior combined into a unified theory of generational financial transformation
+- [[gravity-model-applied-to-financial-transactions-costs]] — Gravity model reinterpreted for financial markets: informational distance, liquidity mass, and triangular arbitrage
+- [[systematic-risk-versus-systemic-risk]] — Distinguishing market risk (CAPM beta) from institutional collapse risk (2008 crisis)
+- [[can-genetic-diversity-measure-economic-distance-that-should-matter-for]] — Genetic distance as exogenous instrument for cultural-informational distance in home bias research
+- [[how-can-historic-institutions-affect-economic-outcomes-in-the-current]] — Colonial institutional legacy, transaction costs, and FAB as an institutional bypass
+- [[how-do-gravity-models-determine-transactions-costs-in-the-currency]] — Gravity residuals as welfare diagnostics for remittance corridors
+- [[the-answer-establishes-a-novel-triangulation-framework]] — Gravity residuals and arbitrage deviations as bracketing proxies for transaction costs
+- [[the-conversation-reveals-a-productive-three-way-synthesis]] — Language barriers as non-geographic distance in gravity models, with FinTech implications
+- [[the-conversation-surfaces-a-novel-three-way-connection]] — Genetic distance, trust channels, and home bias as a missing infrastructure problem
+- [[what-is-the-fab-initiative]] — FAB's identity-at-birth mechanism and threshold behavior as explicit causal link
+- [[answer-tea-and-coffee-are-what-economists-call-substitute]] — Mechanism design applied to restaurant marketing during commodity price shocks
 
 ## RAG Stubs
 

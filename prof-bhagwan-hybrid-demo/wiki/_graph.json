@@ -1,5 +1,19 @@
 {
   "nodes": {
+    "answer-tea-and-coffee-are-what-economists-call-substitute": {
+      "type": "unknown",
+      "title": "Substitute Goods, Mechanism Design, and Restaurant Marketing",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/answer-tea-and-coffee-are-what-economists-call-substitute.md"
+    },
+    "can-genetic-diversity-measure-economic-distance-that-should-matter-for": {
+      "type": "unknown",
+      "title": "Genetic Diversity as Economic Distance Proxy",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/can-genetic-diversity-measure-economic-distance-that-should-matter-for.md"
+    },
     "adjusted-present-value-approach": {
       "type": "concept",
       "title": "Adjusted Present Value Approach",
@@ -542,6 +556,34 @@
       ],
       "path": "wiki/entities/stapleton-1971.md"
     },
+    "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion": {
+      "type": "unknown",
+      "title": "FAB, Blockchain Identity, and Threshold Behavior in Financial Inclusion",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion.md"
+    },
+    "gravity-model-applied-to-financial-transactions-costs": {
+      "type": "unknown",
+      "title": "Gravity Model Applied to Financial Transactions Costs",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/gravity-model-applied-to-financial-transactions-costs.md"
+    },
+    "how-can-historic-institutions-affect-economic-outcomes-in-the-current": {
+      "type": "unknown",
+      "title": "Historical Institutions and Financial Exclusion",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/how-can-historic-institutions-affect-economic-outcomes-in-the-current.md"
+    },
+    "how-do-gravity-models-determine-transactions-costs-in-the-currency": {
+      "type": "unknown",
+      "title": "Gravity Model Residuals and Remittance Corridors",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/how-do-gravity-models-determine-transactions-costs-in-the-currency.md"
+    },
     "index": {
       "type": "unknown",
       "title": "Wiki Index",
@@ -557,157 +599,125 @@
       "path": "wiki/log.md"
     },
     "fame-and-knowledge-democratization": {
-      "type": "persona",
+      "type": "unknown",
       "title": "FAMe and Knowledge Democratization",
-      "aliases": [
-        "FAMe",
-        "knowledge democratization",
-        "education for billions"
-      ],
-      "tags": [
-        "fame-magazine",
-        "education",
-        "ai",
-        "pop-culture",
-        "knowledge-access"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/fame-and-knowledge-democratization.md"
     },
     "financial-inclusion-architecture": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Financial Inclusion Architecture",
-      "aliases": [
-        "FAB",
-        "financial access at birth",
-        "fintech for billions",
-        "aadhaar"
-      ],
-      "tags": [
-        "financial-inclusion",
-        "fab",
-        "aadhaar",
-        "shub",
-        "digital-identity",
-        "fintech"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/financial-inclusion-architecture.md"
     },
     "intellectual-evolution": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Intellectual Evolution",
-      "aliases": [
-        "career phases",
-        "intellectual trajectory"
-      ],
-      "tags": [
-        "career",
-        "chicago-school",
-        "financial-theory",
-        "financial-inclusion"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/intellectual-evolution.md"
     },
     "mechanism-design-applied": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Mechanism Design Applied",
-      "aliases": [
-        "mechanism design",
-        "security design",
-        "impact investing",
-        "sovereign equity"
-      ],
-      "tags": [
-        "mechanism-design",
-        "impact-investing",
-        "sovereign-finance",
-        "institutional-reform"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/mechanism-design-applied.md"
     },
     "mentor-network-and-influences": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Mentor Network and Influences",
-      "aliases": [
-        "mentors",
-        "influences",
-        "collaborators",
-        "network"
-      ],
-      "tags": [
-        "merton-miller",
-        "peter-singer",
-        "vijay-mahajan",
-        "nandan-nilekani"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/mentor-network-and-influences.md"
     },
     "rhetorical-style-and-pedagogy": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Rhetorical Style and Pedagogy",
-      "aliases": [
-        "teaching style",
-        "communication",
-        "how he communicates"
-      ],
-      "tags": [
-        "pedagogy",
-        "communication",
-        "pop-culture",
-        "multi-level-treatment"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/rhetorical-style-and-pedagogy.md"
     },
     "thinking-patterns-and-frameworks": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Thinking Patterns and Frameworks",
-      "aliases": [
-        "thinking patterns",
-        "intellectual frameworks",
-        "how he thinks"
-      ],
-      "tags": [
-        "mechanism-design",
-        "incentives",
-        "equity-over-debt",
-        "shub"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/persona/thinking-patterns-and-frameworks.md"
     },
     "prof-bhagwan-chowdhry": {
-      "type": "persona",
+      "type": "unknown",
       "title": "Prof. Bhagwan Chowdhry",
-      "aliases": [
-        "Bhagwan Chowdhry",
-        "Prof. Chowdhry",
-        "BC"
-      ],
-      "tags": [
-        "finance",
-        "isb",
-        "ucla-anderson",
-        "financial-inclusion",
-        "mechanism-design"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/prof-bhagwan-chowdhry.md"
     },
     "stub-valuation-damodaran": {
-      "type": "stub",
+      "type": "unknown",
       "title": "Valuation Approaches and Metrics: A Survey of the Theory and Evidence",
-      "aliases": [
-        "Damodaran valuation",
-        "valuation approaches"
-      ],
-      "tags": [
-        "valuation",
-        "dcf",
-        "relative-valuation",
-        "multiples",
-        "damodaran"
-      ],
+      "aliases": [],
+      "tags": [],
       "path": "wiki/stub-valuation-damodaran.md"
+    },
+    "systematic-risk-versus-systemic-risk": {
+      "type": "unknown",
+      "title": "Systematic Risk Versus Systemic Risk",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/systematic-risk-versus-systemic-risk.md"
+    },
+    "the-answer-establishes-a-novel-triangulation-framework": {
+      "type": "unknown",
+      "title": "Triangulation Framework for Transaction Costs",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/the-answer-establishes-a-novel-triangulation-framework.md"
+    },
+    "the-conversation-reveals-a-productive-three-way-synthesis": {
+      "type": "unknown",
+      "title": "Language Barriers as Financial Distance",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/the-conversation-reveals-a-productive-three-way-synthesis.md"
+    },
+    "the-conversation-surfaces-a-novel-three-way-connection": {
+      "type": "unknown",
+      "title": "Genetic Distance, Trust, and Home Bias",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/the-conversation-surfaces-a-novel-three-way-connection.md"
+    },
+    "what-is-the-fab-initiative": {
+      "type": "unknown",
+      "title": "FAB and Threshold Behavior Theory",
+      "aliases": [],
+      "tags": [],
+      "path": "wiki/what-is-the-fab-initiative.md"
     }
   },
   "edges": [
+    {
+      "from": "answer-tea-and-coffee-are-what-economists-call-substitute",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "answer-tea-and-coffee-are-what-economists-call-substitute",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
     {
       "from": "adjusted-present-value-approach",
       "to": "myers-1974",
@@ -1239,6 +1249,76 @@
       "type": "introduced"
     },
     {
+      "from": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "financial-access-at-birth",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "fintech-for-billions",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "microequity",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "threshold-behavior-in-financial-systems",
+      "type": "references"
+    },
+    {
+      "from": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "to": "systemic-risk",
+      "type": "references"
+    },
+    {
+      "from": "gravity-model-applied-to-financial-transactions-costs",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "gravity-model-applied-to-financial-transactions-costs",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "gravity-model-applied-to-financial-transactions-costs",
+      "to": "mechanism-design-applied",
+      "type": "references"
+    },
+    {
+      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
+      "to": "mechanism-design-applied",
+      "type": "references"
+    },
+    {
+      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
+      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "type": "references"
+    },
+    {
       "from": "index",
       "to": "prof-bhagwan-chowdhry",
       "type": "references"
@@ -1276,6 +1356,286 @@
     {
       "from": "index",
       "to": "fame-and-knowledge-democratization",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "adjusted-present-value-approach",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "book-value-of-capital",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "capital-cash-flows",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "capital-invested-in-existing-assets",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "capm",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "cash-flow-based-valuations",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "cashflow-haircuts",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "certainty-equivalent",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "certainty-equivalent-models",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "compressed-apv-approach",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "cost-of-capital-approach",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "cost-of-equity",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "discounted-cash-flow-valuation",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "discounted-cash-flow-valuation-models",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "dividend-discount-model",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "double-counting-of-risk",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "economic-profit",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "economic-value-added",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "equity-valuation-approach",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "excess-return-models",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "expected-bankruptcy-costs",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "extended-equity-valuation-models",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "firm-valuation-approach",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "free-cash-flow-to-equity",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "free-cash-flow-to-firm",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "gordon-growth-model",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "h-model",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "modified-dividend-payout-ratio",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "net-present-value",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "probability-of-bankruptcy",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "regulatory-capital-ratios",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "risk-adjusted-discount-rates",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "risk-and-return-models",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "st-petersburg-paradox",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "stock-buybacks",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "tax-benefits-of-debt",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "two-stage-dividend-discount-model",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "weighted-average-cost-of-capital",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "brealey-and-myers",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "kaplan-and-ruback-1995",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "modigliani-and-miller-1963",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "myers-1974",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "nicholas-bernoulli",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "robichek-and-myers-1966",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "stapleton-1971",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "systematic-risk-versus-systemic-risk",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "can-genetic-diversity-measure-economic-distance-that-should-matter-for",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "how-can-historic-institutions-affect-economic-outcomes-in-the-current",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "how-do-gravity-models-determine-transactions-costs-in-the-currency",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "the-answer-establishes-a-novel-triangulation-framework",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "the-conversation-reveals-a-productive-three-way-synthesis",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "the-conversation-surfaces-a-novel-three-way-connection",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "what-is-the-fab-initiative",
+      "type": "references"
+    },
+    {
+      "from": "index",
+      "to": "answer-tea-and-coffee-are-what-economists-call-substitute",
       "type": "references"
     },
     {
@@ -1286,12 +1646,7 @@
     {
       "from": "fame-and-knowledge-democratization",
       "to": "prof-bhagwan-chowdhry",
-      "type": "created_by"
-    },
-    {
-      "from": "fame-and-knowledge-democratization",
-      "to": "rhetorical-style-and-pedagogy",
-      "type": "extends"
+      "type": "references"
     },
     {
       "from": "fame-and-knowledge-democratization",
@@ -1305,32 +1660,37 @@
     },
     {
       "from": "fame-and-knowledge-democratization",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
+    },
+    {
+      "from": "fame-and-knowledge-democratization",
       "to": "financial-inclusion-architecture",
       "type": "references"
     },
     {
       "from": "financial-inclusion-architecture",
       "to": "prof-bhagwan-chowdhry",
-      "type": "created_by"
+      "type": "references"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "mentor-network-and-influences",
+      "type": "references"
     },
     {
       "from": "financial-inclusion-architecture",
       "to": "thinking-patterns-and-frameworks",
-      "type": "applies"
+      "type": "references"
+    },
+    {
+      "from": "financial-inclusion-architecture",
+      "to": "rhetorical-style-and-pedagogy",
+      "type": "references"
     },
     {
       "from": "financial-inclusion-architecture",
       "to": "mechanism-design-applied",
-      "type": "instance_of"
-    },
-    {
-      "from": "financial-inclusion-architecture",
-      "to": "mentor-network-and-influences",
-      "type": "shaped_by"
-    },
-    {
-      "from": "financial-inclusion-architecture",
-      "to": "rhetorical-style-and-pedagogy",
       "type": "references"
     },
     {
@@ -1341,21 +1701,21 @@
     {
       "from": "intellectual-evolution",
       "to": "prof-bhagwan-chowdhry",
-      "type": "describes"
-    },
-    {
-      "from": "intellectual-evolution",
-      "to": "thinking-patterns-and-frameworks",
-      "type": "uses"
+      "type": "references"
     },
     {
       "from": "intellectual-evolution",
       "to": "mentor-network-and-influences",
-      "type": "shaped_by"
+      "type": "references"
     },
     {
       "from": "intellectual-evolution",
       "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "intellectual-evolution",
+      "to": "thinking-patterns-and-frameworks",
       "type": "references"
     },
     {
@@ -1366,17 +1726,12 @@
     {
       "from": "mechanism-design-applied",
       "to": "prof-bhagwan-chowdhry",
-      "type": "created_by"
-    },
-    {
-      "from": "mechanism-design-applied",
-      "to": "thinking-patterns-and-frameworks",
-      "type": "applies"
+      "type": "references"
     },
     {
       "from": "mechanism-design-applied",
       "to": "financial-inclusion-architecture",
-      "type": "extends"
+      "type": "references"
     },
     {
       "from": "mechanism-design-applied",
@@ -1394,19 +1749,14 @@
       "type": "references"
     },
     {
+      "from": "mechanism-design-applied",
+      "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
       "from": "mentor-network-and-influences",
       "to": "prof-bhagwan-chowdhry",
-      "type": "influences"
-    },
-    {
-      "from": "mentor-network-and-influences",
-      "to": "intellectual-evolution",
-      "type": "shaped"
-    },
-    {
-      "from": "mentor-network-and-influences",
-      "to": "financial-inclusion-architecture",
-      "type": "contributed_to"
+      "type": "references"
     },
     {
       "from": "mentor-network-and-influences",
@@ -1420,18 +1770,23 @@
     },
     {
       "from": "mentor-network-and-influences",
+      "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "mentor-network-and-influences",
       "to": "thinking-patterns-and-frameworks",
+      "type": "references"
+    },
+    {
+      "from": "mentor-network-and-influences",
+      "to": "financial-inclusion-architecture",
       "type": "references"
     },
     {
       "from": "rhetorical-style-and-pedagogy",
       "to": "prof-bhagwan-chowdhry",
-      "type": "describes"
-    },
-    {
-      "from": "rhetorical-style-and-pedagogy",
-      "to": "fame-and-knowledge-democratization",
-      "type": "extends"
+      "type": "references"
     },
     {
       "from": "rhetorical-style-and-pedagogy",
@@ -1445,23 +1800,28 @@
     },
     {
       "from": "rhetorical-style-and-pedagogy",
+      "to": "fame-and-knowledge-democratization",
+      "type": "references"
+    },
+    {
+      "from": "rhetorical-style-and-pedagogy",
       "to": "financial-inclusion-architecture",
       "type": "references"
     },
     {
       "from": "thinking-patterns-and-frameworks",
       "to": "prof-bhagwan-chowdhry",
-      "type": "describes"
-    },
-    {
-      "from": "thinking-patterns-and-frameworks",
-      "to": "mechanism-design-applied",
-      "type": "underpins"
+      "type": "references"
     },
     {
       "from": "thinking-patterns-and-frameworks",
       "to": "financial-inclusion-architecture",
-      "type": "underpins"
+      "type": "references"
+    },
+    {
+      "from": "thinking-patterns-and-frameworks",
+      "to": "mechanism-design-applied",
+      "type": "references"
     },
     {
       "from": "thinking-patterns-and-frameworks",
@@ -1480,52 +1840,112 @@
     },
     {
       "from": "prof-bhagwan-chowdhry",
+      "to": "mentor-network-and-influences",
+      "type": "references"
+    },
+    {
+      "from": "prof-bhagwan-chowdhry",
       "to": "thinking-patterns-and-frameworks",
-      "type": "uses"
+      "type": "references"
     },
     {
       "from": "prof-bhagwan-chowdhry",
       "to": "intellectual-evolution",
-      "type": "described_by"
+      "type": "references"
     },
     {
       "from": "prof-bhagwan-chowdhry",
       "to": "financial-inclusion-architecture",
-      "type": "created"
+      "type": "references"
     },
     {
       "from": "prof-bhagwan-chowdhry",
       "to": "mechanism-design-applied",
-      "type": "uses"
+      "type": "references"
     },
     {
       "from": "prof-bhagwan-chowdhry",
       "to": "rhetorical-style-and-pedagogy",
-      "type": "described_by"
-    },
-    {
-      "from": "prof-bhagwan-chowdhry",
-      "to": "mentor-network-and-influences",
-      "type": "influenced_by"
+      "type": "references"
     },
     {
       "from": "prof-bhagwan-chowdhry",
       "to": "fame-and-knowledge-democratization",
-      "type": "created"
+      "type": "references"
     },
     {
       "from": "stub-valuation-damodaran",
       "to": "thinking-patterns-and-frameworks",
-      "type": "related_to"
-    },
-    {
-      "from": "stub-valuation-damodaran",
-      "to": "mechanism-design-applied",
-      "type": "related_to"
+      "type": "references"
     },
     {
       "from": "stub-valuation-damodaran",
       "to": "intellectual-evolution",
+      "type": "references"
+    },
+    {
+      "from": "stub-valuation-damodaran",
+      "to": "mechanism-design-applied",
+      "type": "references"
+    },
+    {
+      "from": "the-answer-establishes-a-novel-triangulation-framework",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "the-answer-establishes-a-novel-triangulation-framework",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-reveals-a-productive-three-way-synthesis",
+      "to": "fame-and-knowledge-democratization",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-surfaces-a-novel-three-way-connection",
+      "to": "gravity-model-applied-to-financial-transactions-costs",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-surfaces-a-novel-three-way-connection",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-surfaces-a-novel-three-way-connection",
+      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "type": "references"
+    },
+    {
+      "from": "the-conversation-surfaces-a-novel-three-way-connection",
+      "to": "systematic-risk-versus-systemic-risk",
+      "type": "references"
+    },
+    {
+      "from": "what-is-the-fab-initiative",
+      "to": "financial-inclusion-architecture",
+      "type": "references"
+    },
+    {
+      "from": "what-is-the-fab-initiative",
+      "to": "fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion",
+      "type": "references"
+    },
+    {
+      "from": "what-is-the-fab-initiative",
+      "to": "thinking-patterns-and-frameworks",
       "type": "references"
     }
   ]

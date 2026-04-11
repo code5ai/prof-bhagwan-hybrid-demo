@@ -9,6 +9,14 @@ writes:
 
 The split keeps the deployment under Vercel's 250MB function size limit.
 
+IMPORTANT: This script only reads from local wiki/*.md files on disk.
+If there are query-synthesized pages in Redis that haven't been pulled yet,
+they will be MISSING from the export. Always run:
+
+    python scripts/sync_wiki.py --pull
+
+BEFORE running this script to ensure all pages are included.
+
 Usage:
     python scripts/export_for_web.py
 """
@@ -80,6 +88,9 @@ def main():
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
 
     WEBAPP_DATA.mkdir(parents=True, exist_ok=True)
+
+    print("NOTE: This exports local wiki/*.md files only.")
+    print("      Run 'python scripts/sync_wiki.py --pull' first to include Redis-only pages.\n")
 
     # --- Wiki pages ---
     print("Loading wiki pages…")

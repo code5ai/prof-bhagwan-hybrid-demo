@@ -146,7 +146,7 @@ def create_wiki_store(data_dir=None):
         print("[WikiStore] Using Upstash Redis (dynamic wiki)")
         return RedisWikiStore(kv_url, kv_token)
     if data_dir is None:
-        data_dir = Path(__file__).parent.parent.parent / "data"
+        data_dir = Path(__file__).parent.parent / "data"
     json_path = Path(data_dir) / "wiki_pages.json"
     print(f"[WikiStore] Using static JSON: {json_path}")
     return StaticWikiStore(json_path)
@@ -158,7 +158,7 @@ def create_wiki_store(data_dir=None):
 
 app = Flask(__name__)
 
-DATA_DIR = Path(__file__).parent.parent.parent / "data"
+DATA_DIR = Path(__file__).parent.parent / "data"
 
 # Claude model — configurable via env var
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-6")

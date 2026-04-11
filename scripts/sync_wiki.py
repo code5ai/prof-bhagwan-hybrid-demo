@@ -21,18 +21,23 @@ import hashlib
 import argparse
 import subprocess
 from pathlib import Path, PurePosixPath
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 sys.path.insert(0, str(Path(__file__).parent))
 from chunker import get_embeddings_batch
 
+IST = timezone(timedelta(hours=5, minutes=30))
+
 PROJECT_ROOT = Path(__file__).parent.parent
 VAULT = PROJECT_ROOT / "prof-bhagwan-hybrid-demo"
 WIKI_DIR = VAULT / "wiki"
+INDEX_FILE = WIKI_DIR / "index.md"
+LOG_FILE = WIKI_DIR / "log.md"
 DATA_DIR = PROJECT_ROOT / "data"
 WEBAPP_DATA = PROJECT_ROOT / "webapp" / "data"
 
 REDIS_KEY = "wiki_pages"
+REDIS_LOG_KEY = "wiki_log_entries"
 
 
 # ---------------------------------------------------------------------------
@@ -310,8 +315,197 @@ def cmd_push():
     print(f"Pushed {len(local_pages)} local pages to Redis (total: {len(merged)})")
 
 
+# ---------------------------------------------------------------------------
+# Index.md and log helpers
+# ---------------------------------------------------------------------------
+
+
+def update_index_md(new_pages):
+    """Append new query-synthesized pages to the ## Query-Synthesized Pages
+    section of index.md.
+
+    Each entry in new_pages should have 'title' and 'path' keys.
+    """
+    if not new_pages or not INDEX_FILE.exists():
+        return
+
+    content = INDEX_FILE.read_text(encoding="utf-8")
+    section_header = "## Query-Synthesized Pages"
+
+    if section_header not in content:
+        print("  WARN: '## Query-Synthesized Pages' section not found in index.md")
+        return
+
+    # Remove the placeholder comment if still present
+    placeholder = "<!-- Pages will be added as /api/chat-v2 generates new insights warranting wiki updates -->"
+    content = content.replace(placeholder, "")
+
+    # Find insertion point — right after the section description paragraph
+    lines = content.split("\n")
+    insert_idx = None
+    in_section = False
+    for i, line in enumerate(lines):
+        if line.strip() == section_header:
+            in_section = True
+            continue
+        if in_section:
+            # Skip blank lines and description text after the header
+            if line.strip() == "" or (line.strip() and not line.startswith("- ") and not line.startswith("##")):
+                insert_idx = i + 1
+                continue
+            # We've hit either a list item or the next section
+            if line.startswith("## "):
+                insert_idx = i
+                break
+            if line.startswith("- "):
+                # Find end of existing list
+                insert_idx = i + 1
+                continue
+            insert_idx = i
+            break
+
+    if insert_idx is None:
+        # Append at end of file
+        insert_idx = len(lines)
+
+    # Build entries, skip duplicates
+    existing_content = content.lower()
+    entries_to_add = []
+    for page in new_pages:
+        title = page["title"]
+        path = page.get("path", "")
+        # Derive slug from path or title
+        if path:
+            slug = Path(path).stem
+        else:
+            slug = _sanitize_slug(title)
+
+        # Skip if already in index
+        if f"[[{slug}]]" in existing_content or f"[[{slug.lower()}]]" in existing_content:
+            continue
+
+        # Read file to get first-line description
+        desc = title
+        full_path = VAULT / path if path else WIKI_DIR / f"{slug}.md"
+        if full_path.exists():
+            file_content = full_path.read_text(encoding="utf-8").strip()
+            # Get first non-heading, non-empty line as description
+            for fline in file_content.splitlines():
+                stripped = fline.strip()
+                if stripped and not stripped.startswith("#") and not stripped.startswith("---"):
+                    desc = stripped[:120]
+                    if len(stripped) > 120:
+                        desc += "…"
+                    break
+
+        entries_to_add.append(f"- [[{slug}]] — {desc}")
+
+    if not entries_to_add:
+        print("  index.md: no new entries to add.")
+        return
+
+    # Insert the new entries
+    for entry in reversed(entries_to_add):
+        lines.insert(insert_idx, entry)
+
+    INDEX_FILE.write_text("\n".join(lines), encoding="utf-8")
+    print(f"  index.md: added {len(entries_to_add)} query-synthesized page(s).")
+
+
+def cmd_pull_log():
+    """Pull log entries from Redis and append to local log.md, then clear Redis."""
+    url, token = get_redis_config()
+
+    # Read all entries from the Redis list
+    import requests
+    try:
+        resp = requests.get(
+            f"{url}/lrange/{REDIS_LOG_KEY}/0/-1",
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        raw_entries = resp.json().get("result", [])
+    except Exception as exc:
+        print(f"ERROR: Failed to read Redis log: {exc}")
+        return
+
+    if not raw_entries:
+        print("No log entries in Redis.")
+        return
+
+    # Parse entries (they may be JSON strings or dicts)
+    entries = []
+    for raw in raw_entries:
+        if isinstance(raw, str):
+            try:
+                entry = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+        elif isinstance(raw, dict):
+            entry = raw
+        else:
+            continue
+        if "operation" in entry and "description" in entry:
+            entries.append(entry)
+
+    if not entries:
+        print("No valid log entries in Redis.")
+        return
+
+    # Redis LPUSH adds newest first, so reverse to get chronological order
+    entries.reverse()
+
+    # Format and append to local log.md
+    log_text = ""
+    for entry in entries:
+        ts = entry.get("timestamp_str", entry.get("timestamp_iso", "unknown"))
+        op = entry.get("operation", "unknown")
+        desc = entry.get("description", "")
+        meta = entry.get("metadata", {})
+
+        log_text += f"\n## [{ts}] {op} | {desc}\n"
+        if meta:
+            for key, val in meta.items():
+                if isinstance(val, (list, dict)):
+                    log_text += f"- {key}: {json.dumps(val)}\n"
+                else:
+                    log_text += f"- {key}: {val}\n"
+
+    if LOG_FILE.exists():
+        current = LOG_FILE.read_text(encoding="utf-8")
+        updated = current + log_text
+    else:
+        updated = (
+            "# Wiki Log\n\n"
+            "Append-only chronological record of ingests, queries, and wiki updates.\n\n"
+            f"---{log_text}"
+        )
+
+    LOG_FILE.write_text(updated, encoding="utf-8")
+    print(f"Appended {len(entries)} log entries from Redis to local log.md.")
+
+    # Clear the Redis list
+    try:
+        resp = requests.post(
+            f"{url}/del/{REDIS_LOG_KEY}",
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=5,
+        )
+        resp.raise_for_status()
+        print("Cleared Redis log entries.")
+    except Exception as exc:
+        print(f"WARN: Failed to clear Redis log: {exc}")
+
+
+# ---------------------------------------------------------------------------
+# Pull command
+# ---------------------------------------------------------------------------
+
+
 def cmd_pull():
-    """Pull new AND updated pages from Redis to local vault."""
+    """Pull new AND updated pages from Redis to local vault.
+    Also updates index.md, rebuilds _graph.json, and pulls log entries."""
     url, token = get_redis_config()
     remote_pages = redis_get(url, token, REDIS_KEY)
     local_pages = load_local_wiki()
@@ -335,7 +529,7 @@ def cmd_pull():
             print(f"  New: {page['title']} → {path}")
             new_count += 1
             changes.append({"title": page["title"], "action": "new",
-                            "path": str(path)})
+                            "path": str(path.relative_to(VAULT)) if path.is_relative_to(VAULT) else str(path)})
         else:
             # Check content difference
             local_hash = _content_hash(local_by_title[norm_title]["content"])
@@ -345,17 +539,33 @@ def cmd_pull():
                 print(f"  Updated: {page['title']} → {path}")
                 updated_count += 1
                 changes.append({"title": page["title"], "action": "updated",
-                                "path": str(path)})
+                                "path": str(path.relative_to(VAULT)) if path.is_relative_to(VAULT) else str(path)})
 
     total = new_count + updated_count
     if total:
         print(f"\nPulled {new_count} new + {updated_count} updated page(s).")
-        print("Review them in Obsidian, then update wiki/index.md if needed.")
     else:
         print("No changes to pull.")
 
     if skipped_junk:
         print(f"Skipped {skipped_junk} junk page(s). Run --prune-remote to clean Redis.")
+
+    # BUG 2 fix: Update index.md with new query-synthesized pages
+    new_pages = [c for c in changes if c["action"] == "new"]
+    if new_pages:
+        print("\n--- Updating index.md ---")
+        update_index_md(new_pages)
+
+    # BUG 3 fix: Rebuild knowledge graph
+    if total:
+        print("\n--- Rebuilding knowledge graph ---")
+        from graph import save_graph
+        graph = save_graph()
+        print(f"  Graph rebuilt: {len(graph['nodes'])} nodes, {len(graph['edges'])} edges")
+
+    # BUG 1 fix: Pull log entries from Redis
+    print("\n--- Pulling log entries from Redis ---")
+    cmd_pull_log()
 
     return changes
 
@@ -544,8 +754,12 @@ def cmd_lint():
 # ---------------------------------------------------------------------------
 
 def cmd_sync_and_pr():
-    """Pull from Redis, run lint, create a GitHub PR for review."""
-    # Step 1: Pull changes
+    """Pull from Redis, run lint, create a GitHub PR for review.
+
+    Complete workflow: pull pages + log, update index, rebuild graph,
+    run lint, commit, push, create PR.
+    """
+    # Step 1: Pull changes (includes index.md update, graph rebuild, log pull)
     print("=== Step 1: Pull changes from Redis ===")
     changes = cmd_pull()
 
@@ -566,7 +780,7 @@ def cmd_sync_and_pr():
         return
 
     # Step 4: Create branch
-    timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
+    timestamp = datetime.now(IST).strftime("%Y-%m-%d-%H%M%S")
     branch = f"wiki-sync/{timestamp}"
     print(f"\n=== Step 3: Creating branch {branch} ===")
 
@@ -615,6 +829,10 @@ def cmd_sync_and_pr():
         body_lines.append("## Lint Report\n")
         body_lines.extend(lint_results)
 
+    body_lines.append("\n---\n")
+    body_lines.append("**Reminder**: After merging, run `python scripts/export_for_web.py` "
+                      "and `python scripts/sync_wiki.py --seed` to update the deployment.")
+
     pr_body = "\n".join(body_lines)
 
     subprocess.run(
@@ -629,6 +847,9 @@ def cmd_sync_and_pr():
     subprocess.run(["git", "checkout", "main"], cwd=PROJECT_ROOT, check=True)
 
     print("\nDone! PR created. Review it on GitHub.")
+    print("After merging, run:")
+    print("  python scripts/export_for_web.py")
+    print("  python scripts/sync_wiki.py --seed")
 
 
 # ---------------------------------------------------------------------------
@@ -645,6 +866,8 @@ if __name__ == "__main__":
                        help="Push local wiki to Redis")
     group.add_argument("--pull", action="store_true",
                        help="Pull new + updated pages from Redis")
+    group.add_argument("--pull-log", action="store_true",
+                       help="Pull log entries from Redis to local log.md")
     group.add_argument("--status", action="store_true",
                        help="Show diff between local and remote")
     group.add_argument("--seed", action="store_true",
@@ -663,6 +886,8 @@ if __name__ == "__main__":
         cmd_push()
     elif args.pull:
         cmd_pull()
+    elif args.pull_log:
+        cmd_pull_log()
     elif args.seed:
         cmd_seed()
     elif args.lint:
