@@ -129,7 +129,7 @@ function appendMessage(role, content) {
 
   const avatar = document.createElement("div");
   avatar.className = "msg-avatar";
-  avatar.textContent = role === "user" ? "You" : "BC";
+  avatar.textContent = role === "user" ? "You" : "Prof";
 
   const bubble = document.createElement("div");
   bubble.className = "msg-body";
@@ -154,7 +154,7 @@ function showThinking() {
   msg.id = "thinking-msg";
   const avatar = document.createElement("div");
   avatar.className = "msg-avatar";
-  avatar.textContent = "BC";
+  avatar.textContent = "Prof";
   const bubble = document.createElement("div");
   bubble.className = "msg-body thinking";
   bubble.innerHTML =
