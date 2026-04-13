@@ -21,3 +21,6 @@ A model used to compute the present value of the price at the end of a high grow
 
 ---
 *Extracted from: Valuation Damodaran Content*
+
+---
+*Also referenced in: Mit15 401F08 Ses08 300K.Srt*

@@ -74,7 +74,7 @@ def _normalize_rel_type(rel_type):
     return re.sub(r'\s+', '_', rel_type)
 
 
-EXTRACTION_PROMPT = """You are an expert knowledge graph builder for a finance knowledge base.
+EXTRACTION_PROMPT = """You are an expert knowledge graph builder for a knowledge base.
 
 Analyze the following text excerpts from "{source_name}" and extract key concepts and entities.
 

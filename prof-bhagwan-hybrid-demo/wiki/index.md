@@ -6,126 +6,214 @@ Master catalog of all wiki pages. Read this before every query.
 
 ## Persona Page
 
-- [[prof-bhagwan-chowdhry]] — Finance Professor at ISB & UCLA Anderson; intellectual DNA, core convictions, and how his mind works
+- [[prof-bhagwan-chowdhry|Prof. Bhagwan Chowdhry]] — Finance Professor at ISB & UCLA Anderson; intellectual DNA, core convictions, and how his mind works
 
 ## Tacit Knowledge Pages (persona/)
 
-- [[thinking-patterns-and-frameworks]] — Reusable intellectual tools: incentive-first lens, equity-over-debt, SHUb, mechanism design, concrete arithmetic
-- [[intellectual-evolution]] — Three phases: pure theory (1988-2005) → bridge (2005-2012) → applied inclusion (2013-present)
-- [[rhetorical-style-and-pedagogy]] — How he communicates: counterintuitive inversions, cross-domain analogies, multi-level treatment, pop culture pedagogy
+- [[persona/thinking-patterns-and-frameworks|Thinking Patterns and Frameworks]] — Reusable intellectual tools: incentive-first lens, equity-over-debt, SHUb, mechanism design, concrete arithmetic
+- [[persona/intellectual-evolution|Intellectual Evolution]] — Three phases: pure theory (1988-2005) → bridge (2005-2012) → applied inclusion (2013-present)
+- [[persona/rhetorical-style-and-pedagogy|Rhetorical Style and Pedagogy]] — How he communicates: counterintuitive inversions, cross-domain analogies, multi-level treatment, pop culture pedagogy
 
 ## Domain Pages (persona/)
 
-- [[financial-inclusion-architecture]] — The three-layer stack: Identity (Aadhaar) + Access (FAB) + Usability (SHUb). FAB origin story, pilot strategy, digital money
-- [[mechanism-design-applied]] — The same toolkit across domains: impact investing (SIGs), sovereign equity, IAS reform, university governance, land auctions
+- [[persona/financial-inclusion-architecture|Financial Inclusion Architecture]] — The three-layer stack: Identity (Aadhaar) + Access (FAB) + Usability (SHUb)
+- [[persona/mechanism-design-applied|Mechanism Design Applied]] — Same toolkit across domains: impact investing, sovereign equity, IAS reform, university governance
 
 ## Network and Philosophy Pages (persona/)
 
-- [[mentor-network-and-influences]] — Merton Miller, Peter Singer, Vijay Mahajan, Nandan Nilekani, and the dialogic method of idea development
-- [[fame-and-knowledge-democratization]] — FAMe jagazine, multi-level communication, "people learn by imitation," Education for Billions
+- [[persona/mentor-network-and-influences|Mentor Network and Influences]] — Merton Miller, Peter Singer, Vijay Mahajan, Nandan Nilekani, and dialogic idea development
+- [[persona/fame-and-knowledge-democratization|FAMe and Knowledge Democratization]] — FAMe jagazine, multi-level communication, "people learn by imitation," Education for Billions
 
-## Source Summaries
+## Extracted Concepts (894 pages)
 
-<!-- Source summary pages will be added as more sources are ingested -->
-
-## Extracted Concepts (38 pages)
-
-Fin ance and valuation concepts extracted from raw sources (books, papers, profile):
-
-- [[adjusted-present-value-approach]] — APV approach to firm valuation
-- [[book-value-of-capital]] — Measuring capital using book values
-- [[capital-cash-flows]] — Cash flows attributable to capital
-- [[capital-invested-in-existing-assets]] — Deployed capital measurement
-- [[capm]] — Capital Asset Pricing Model
-- [[cash-flow-based-valuations]] — Valuation using discounted cash flows
-- [[cashflow-haircuts]] — Adjustments to cash flow estimates
-- [[certainty-equivalent]] — Risk-adjusted valuations
-- [[certainty-equivalent-models]] — Certainty equivalent approaches to risk
-- [[compressed-apv-approach]] — Simplified APV calculations
-- [[cost-of-capital-approach]] — Valuation using cost of capital
-- [[cost-of-equity]] — Cost of equity capital
-- [[discounted-cash-flow-valuation]] — DCF valuation methodology
-- [[discounted-cash-flow-valuation-models]] — Models for DCF analysis
-- [[dividend-discount-model]] — Valuing firms via dividend streams
-- [[double-counting-of-risk]] — Avoiding double-counting in valuations
-- [[economic-profit]] — Profit after cost of capital charge
-- [[economic-value-added]] — EVA framework for firm value
-- [[equity-valuation-approach]] — Valuation from equity holder perspective
-- [[excess-return-models]] — Returns above cost of capital
-- [[expected-bankruptcy-costs]] — Cost of financial distress
-- [[extended-equity-valuation-models]] — Advanced DCF models
-- [[firm-valuation-approach]] — Valuation from firm perspective
-- [[free-cash-flow-to-equity]] — FCFE in equity valuation
-- [[free-cash-flow-to-firm]] — FCFF in firm valuation
-- [[gordon-growth-model]] — Perpetual growth valuation model
-- [[h-model]] — Multi-stage dividend discount model
-- [[modified-dividend-payout-ratio]] — Dividend policy adjustments
-- [[net-present-value]] — NPV decision criterion
-- [[probability-of-bankruptcy]] — Likelihood of financial distress
-- [[regulatory-capital-ratios]] — Capital requirements and ratios
-- [[risk-adjusted-discount-rates]] — Risk adjustment in valuations
-- [[risk-and-return-models]] — Models linking risk and return
-- [[st-petersburg-paradox]] — Paradox in risk and expected value
-- [[stock-buybacks]] — Share repurchase mechanisms
-- [[tax-benefits-of-debt]] — Tax deductions from debt financing
-- [[two-stage-dividend-discount-model]] — Two-stage DDM valuation
-- [[weighted-average-cost-of-capital]] — WACC calculation and application
-
-## Extracted Entities (7 pages)
-
-Key people and foundational works referenced across sources:
-
-- [[brealey-and-myers]] — Richard Brealey and Stewart Myers (Corporate Finance authors)
-- [[kaplan-and-ruback-1995]] — Kaplan & Ruback 1995 (Valuation framework)
-- [[modigliani-and-miller-1963]] — Modigliani & Miller 1963 (Capital structure theory)
-- [[myers-1974]] — Myers 1974 (Pecking order theory)
-- [[nicholas-bernoulli]] — Nicholas Bernoulli (Expected utility theory)
-- [[robichek-and-myers-1966]] — Robichek & Myers 1966 (Financial decision-making)
-- [[stapleton-1971]] — Stapleton 1971 (Valuation under uncertainty)
-
-## Query-Synthesized Pages (11 pages)
-
-Pages created from synthesis across multiple RAG sources during Q&A sessions:
-
-- [[fab-blockchain-identity-and-threshold-behavior-in-financial-inclusion]] — FAB, blockchain identity, and threshold behavior combined into a unified theory of generational financial transformation
-- [[gravity-model-applied-to-financial-transactions-costs]] — Gravity model reinterpreted for financial markets: informational distance, liquidity mass, and triangular arbitrage
-- [[systematic-risk-versus-systemic-risk]] — Distinguishing market risk (CAPM beta) from institutional collapse risk (2008 crisis)
-- [[can-genetic-diversity-measure-economic-distance-that-should-matter-for]] — Genetic distance as exogenous instrument for cultural-informational distance in home bias research
-- [[how-can-historic-institutions-affect-economic-outcomes-in-the-current]] — Colonial institutional legacy, transaction costs, and FAB as an institutional bypass
-- [[how-do-gravity-models-determine-transactions-costs-in-the-currency]] — Gravity residuals as welfare diagnostics for remittance corridors
-- [[the-answer-establishes-a-novel-triangulation-framework]] — Gravity residuals and arbitrage deviations as bracketing proxies for transaction costs
-- [[the-conversation-reveals-a-productive-three-way-synthesis]] — Language barriers as non-geographic distance in gravity models, with FinTech implications
-- [[the-conversation-surfaces-a-novel-three-way-connection]] — Genetic distance, trust channels, and home bias as a missing infrastructure problem
-- [[what-is-the-fab-initiative]] — FAB's identity-at-birth mechanism and threshold behavior as explicit causal link
-- [[answer-tea-and-coffee-are-what-economists-call-substitute]] — Mechanism design applied to restaurant marketing during commodity price shocks
-
-## RAG Stubs
-
-The following large documents are indexed in the RAG system (5,830 chunks total):
-
-### Books (6)
-
-- Financial Modeling, 5th Edition — Benninga & Mofkadi (919 chunks)
-- Introductory Econometrics: A Modern Approach (1,213 chunks)
-- Corporate Finance — DeMarzo & Berk (1,431 chunks)
-- Principles of Risk Management (977 chunks)
-- A Guide to Econometrics — Peter Kennedy (727 chunks)
-- [[stub-valuation-damodaran|Valuation Approaches and Metrics]] — Aswath Damodaran (70 chunks)
-
-### Research Papers (11)
-
-- Assessing Project Risk (18 chunks)
-- Defaults and Interest Rates in International Lending (12 chunks)
-- Digital Identity in India (31 chunks)
-- Exchange Risk Management and Corporate Capital Structure (15 chunks)
-- Information Aggregation, Currency Swaps, and the Design of Derivative Securities (30 chunks)
-- Information Aggregation, Security Design, and Currency Swaps (22 chunks)
-- International Debt Crisis and the Prices of Options of Bank Stocks (5 chunks)
-- Organization Capital and Intrafirm Communication (39 chunks)
-- Pricing Microfinance Loans and Loan Guarantees (9 chunks)
-- Transactions Costs in the Foreign Exchange Market (12 chunks)
-- Why Real Interest Rates, Cost of Capital and PE Ratios Vary Across Countries (24 chunks)
-
-### Profile
-
-- Prof. Bhagwan Chowdhry Knowledge Base (276 chunks) — articles, interviews, lectures, opinions
+- [[concepts/10-k-and-10-q-filings|10-K and 10-Q Filings]] — Annual and quarterly SEC accounting reports filed by public companies
+- [[concepts/130-30-portfolio|130-30 Portfolio]] — 130% long / 30% short investment product summing to 100% net
+- [[concepts/50-50-stock-bond-portfolio|50/50 Stock/Bond Portfolio]] — Bogle's personal asset allocation split evenly between stocks and bonds
+- [[concepts/60-40-portfolio|60/40 Portfolio]] — Traditional 60% stocks / 40% bonds allocation benchmark
+- [[concepts/absolute-vs-relative-returns|Absolute vs. Relative Returns]] — Distinction between absolute performance and benchmark-relative measurement
+- [[concepts/absorptive-capacity|Absorptive Capacity]] — Firms with more knowledge better exploit external knowledge flows
+- [[concepts/access-inversion|Access Inversion]] — CRLM scenario where uninsured in rich countries fare worse than poor-country peers
+- [[concepts/accounting-earnings|Accounting Earnings]] — Past-performance measure unsuitable for future-oriented financial decisions
+- [[concepts/accounting|Accounting]] — Language and lexicon of finance for measuring profit, loss, and value
+- [[concepts/accumulation-phase|Accumulation Phase]] — Investor life period focused on saving for retirement
+- [[concepts/adaptive-asset-allocation|Adaptive Asset Allocation]] — Investment procedure Sharpe wrote about for dynamic allocation adjustments
+- [[concepts/adaptive-markets-hypothesis|Adaptive Markets Hypothesis]] — Theory reconciling rational and behavioral finance via evolutionary dynamics
+- [[concepts/adaptive-markets|Adaptive Markets]] — Super-theory integrating rational and behavioral finance for market dynamics
+- [[concepts/adjustable-rate-mortgage|Adjustable Rate Mortgage]] — Mortgage with low teaser rate that can increase significantly later
+- [[concepts/adjusted-present-value-approach|Adjusted Present Value Approach]] — Valuation: unlevered value plus PV of financing side effects
+- [[concepts/adjusted-present-value|Adjusted Present Value]] — NPV modified for taxes, project interactions, and other adjustments
+- [[concepts/after-tax-mean-variance-analysis|After-Tax Mean-Variance Analysis]] — Mean-variance analysis accounting for individual tax situation and horizons
+- [[concepts/agency-cost-of-csr|Agency Cost of Corporate Social Responsibility]] — Cost when managers divert resources from profitable uses toward nonpecuniary CSR
+- [[concepts/alpha-hunters-and-beta-grazers|Alpha Hunters and Beta Grazers]] — Framework distinguishing active mispricing seekers from passive risk harvesters
+- [[concepts/alpha|Alpha]] — Return from actively seeking mispricing opportunities
+- [[concepts/annual-percentage-rate|Annual Percentage Rate (APR)]] — Stated annual interest rate before compounding effects
+- [[concepts/annuity-discount-factor|Annuity Discount Factor]] — Value separating interest rate from cash flow in annuity formula
+- [[concepts/annuity-discount-formula|Annuity Discount Formula]] — Formula for calculating present value of an annuity
+- [[concepts/annuity|Annuity]] — Special cashflow type valued using present value methods
+- [[concepts/anti-persistence|Anti-persistence]] — Noise property (d < 0) engineered to accelerate learning
+- [[concepts/arbitrage-argument|Arbitrage Argument]] — Pricing options by constructing identical-payoff portfolios of stocks and bonds
+- [[concepts/arbitrage-in-futures-forwards|Arbitrage (in Futures/Forwards)]] — Strategy exploiting forward/futures pricing relationship violations
+- [[concepts/arbitrage|Arbitrage]] — Risk-free profit from Law of One Price violations with no initial investment
+- [[concepts/architectural-absence-of-password|Architectural Absence of Password]] — Design principle: complete password never stored on or reconstructible from server
+- [[concepts/asset-allocation|Asset Allocation]] — Division of wealth between asset classes like stocks and bonds
+- [[concepts/asset-liability-management|Asset-Liability Management]] — Framework managing discrepancies between organizational needs and assets
+- [[concepts/asset|Asset]] — Sequence of current and future cashflows defined relative to a time point
+- [[concepts/assortative-matching|Assortative Matching]] — Two-sided matching between heterogeneous managers and firms
+- [[concepts/ayushman-bharat-plus|Ayushman Bharat Plus]] — Insurance solution using savings interest to cover premiums
+- [[concepts/bailout|Bailout]] — Government rescue buying an asset above actual worth
+- [[concepts/balance-sheet|Balance Sheet]] — Accounting statement measuring stock of company wealth
+- [[concepts/bank-balance-batao|Bank Balance Batao (BBB)]] — Proposed nationwide phone number (222) for bank balance checks
+- [[concepts/bankruptcy-costs|Bankruptcy Costs]] — Potential financial distress costs incorporated into NPV calculations
+- [[concepts/bankruptcy|Bankruptcy]] — State where shareholders' equity value becomes effectively zero
+- [[concepts/bc-agents|BC Agents (Business Correspondents)]] — Individuals helping people with simple digital transactions in public spaces
+- [[concepts/behavioral-biases|Behavioral Biases]] — Irrationalities from limited cognition causing deviations from rational decisions
+- [[concepts/behavioral-finance|Behavioral Finance]] — Theory positing irrational market participants with psychological biases
+- [[concepts/benchmark|Benchmark]] — Standard against which portfolio performance is measured
+- [[concepts/bet-on-volatility|Bet on Volatility]] — Options portfolio strategy profitable on large underlying price moves
+- [[concepts/beta-sensitivity|Beta Sensitivity]] — Measure of portfolio sensitivity to market determining forward-looking volatility
+- [[concepts/beta|Beta]] — Passive portfolio approach capturing broad market risks via static allocation
+- [[concepts/bifurcation-of-choice|Bifurcation of Choice]] — Principle: individuals choose meaningful items; experts handle the rest
+- [[concepts/big-hairy-audacious-goal|Big Hairy Audacious Goal (BHAG)]] — Bold, long-horizon goal that is clear and compelling
+- [[concepts/binary-entropy-function|Binary Entropy Function]] — h(p) measuring uncertainty of a binary random variable
+- [[concepts/binomial-option-pricing-model|Binomial Option Pricing Model]] — Discrete-time tree model converging to continuous-time option prices
+- [[concepts/block-reward|Block Reward]] — Compensation for miners successfully solving proof-of-work puzzles
+- [[concepts/block-time|Block Time]] — Designed average time for new block formation with speed/security tradeoff
+- [[concepts/blockchain|Blockchain]] — Technology recording information in cryptographically linked sequential blocks
+- [[concepts/blocking-in-matching-theory|Blocking (in Matching Theory)]] — Firm-manager pair that can mutually benefit by matching outside current allocation
+- [[concepts/bond-coupon|Bond Coupon]] — Periodic interest payments made to coupon bond holders
+- [[concepts/bond-principal|Bond Principal]] — Face value amount owed to bondholder at maturity
+- [[concepts/bond-valuation|Bond Valuation]] — Present value of future bond cash flows using discount rates
+- [[concepts/book-to-market-ratio|Book-to-Market Ratio]] — Accounting book value divided by market value for sorting stocks
+- [[concepts/book-value-of-capital|Book Value of Capital]] — Accounting measure of capital reflecting historical choices and depreciation
+- [[concepts/bootstrap-statistical-method|Bootstrap (statistical method)]] — Resampling technique constructing null distribution for Cp test
+- [[concepts/borrowing-cost|Borrowing Cost]] — Opportunity cost of capital as component of forward price
+- [[concepts/bottom-of-the-pyramid-bop|Bottom of the Pyramid (BOP)]] — 400 million feature phone users potentially excluded from digital finance
+- [[concepts/bottom-of-the-pyramid|Bottom of the Pyramid (BOP)]] — Lowest-income population segment targeted for financial inclusion
+- [[concepts/breaking-the-buck|Breaking the Buck]] — Money market fund value dropping below $1 per share
+- [[concepts/brownian-motion|Brownian Motion]] — Mathematical description of financial instrument price movements (Random Walk)
+- [[concepts/bunching-methodology|Bunching Methodology]] — Statistical method detecting manipulation at known thresholds
+- [[concepts/business-correspondent-model|Business Correspondent (BC) Model]] — Banks extending services to underserved areas via local agents
+- [[concepts/butterfly-spread|Butterfly Spread]] — Option strategy generating payoff within a specific price range
+- [[concepts/byzantine-fault-tolerance|Byzantine Fault Tolerance (BFT)]] — Distributed system property achieving consensus despite faulty/malicious nodes
+- [[concepts/c-sigma-c-rho-diagnostic-space|($C_{\sigma}, C_{\rho}$) Diagnostic Space]] — Two-dimensional space distinguishing reporting put from policy put
+- [[concepts/call-option|Call Option]] — Right but not obligation to buy an asset at specified strike price
+- [[concepts/cap-weighted-index|Cap-Weighted Index]] — Traditional indexing with weights based on market capitalization
+- [[concepts/cape-ratio|CAPE Ratio]] — Cyclically adjusted P/E ratio averaging ten years of real earnings
+- [[concepts/capital-asset-pricing-model|Capital Asset Pricing Model (CAPM)]] — Sharpe's positive theory relating market risk to expected returns
+- [[concepts/capital-budgeting|Capital Budgeting]] — Decision process for undertaking specific projects using financial analysis
+- [[concepts/capital-cash-flows|Capital Cash Flows]] — Cash flows to both debt and equity including tax benefits
+- [[concepts/capital-formation|Capital Formation]] — Accumulating capital enabled by limited liability securities
+- [[concepts/capital-invested-in-existing-assets|Capital Invested in Existing Assets]] — Capital deployed in current operational assets for quality evaluation
+- [[concepts/capital-market-efficiency|Capital Market Efficiency]] — Market quality where prices are maximally informative
+- [[concepts/capital-market-line|Capital Market Line (CML)]] — Tangency line showing efficient portfolio risk-reward trade-off
+- [[concepts/capital-structure-arbitrage|Capital Structure Arbitrage]] — Hedge fund strategy trading debt-equity valuation discrepancies
+- [[concepts/capital-to-assets-ratio|Capital-to-Assets Ratio]] — Required regulatory bank level eroded by loan defaults
+- [[concepts/capm|CAPM (Capital Asset Pricing Model)]] — Model estimating cost of equity used to value S&P 400 stocks
+- [[concepts/capped-royalty-licensing-mandate|Capped Royalty Licensing Mandate (CRLM)]] — Mechanism achieving innovation and access via mandated generic licensing
+- [[concepts/career-risk|Career Risk]] — Risk incentivizing managers to select short-payback projects
+- [[concepts/caricature-effect|Caricature Effect]] — Identity lock-in accumulating with organization capital over time
+- [[concepts/cash-burning|Cash Burning]] — Inefficient outcome where distributed claims are less than total cash flow
+- [[concepts/cash-flow-based-valuations|Cash Flow Based Valuations]] — Valuation methods considering actual cash inflows and outflows
+- [[concepts/cash-flow|Cash Flow]] — Actual cash inflows minus outflows used for NPV calculations
+- [[concepts/cash-flows|Cash Flows]] — Financial metric basis for economic and investment decisions
+- [[concepts/cash-payment-method|Cash (Payment Method)]] — Physical payment: convenient, private, intuitive, no explicit transaction costs
+- [[concepts/cash-settlement|Cash Settlement]] — Futures settlement exchanging final value in cash rather than delivery
+- [[concepts/cashflow-haircuts|Cashflow Haircuts]] — Subjective approach replacing uncertain cash flows with conservative estimates
+- [[concepts/cashflow|Cashflow]] — Money coming to or going away from an individual or entity
+- [[concepts/catastrophe-hedge|Catastrophe Hedge]] — Small portfolio allocation (e.g., 5% gold) for extreme downside protection
+- [[concepts/centralized-grievance-redressal-system|Centralized Grievance Redressal System]] — Single third-party phone number for registering complaints across providers
+- [[concepts/certainty-equivalent-models|Certainty Equivalent Models]] — DCF variant adjusting expected cash flows for risk instead of discount rate
+- [[concepts/certainty-equivalent|Certainty Equivalent]] — Guaranteed cash flow accepted instead of uncertain cash flow
+- [[concepts/chain-splits|Chain Splits]] — Temporary blockchain split when multiple miners find nonces simultaneously
+- [[concepts/chapter-11|Chapter 11]] — Bankruptcy protection filed by Lehman Brothers
+- [[concepts/cheap-talk|Cheap Talk]] — Non-binding communication not directly affecting payoffs
+- [[concepts/clawback-provisions|Clawback Provisions]] — Contractual terms contingent on signals to lower or eliminate rents
+- [[concepts/co-statistic|C_o Statistic]] — Statistic complementing C_p by detecting symmetric two-sided smoothing
+- [[concepts/collateral|Collateral]] — Money guaranteeing forward contract performance
+- [[concepts/collective-purchase|Collective Purchase]] — Multiple governments jointly funding an innovation, equivalent to Lindahl prize
+- [[concepts/commercial-benchmark|Commercial Firm Benchmark]] — Optimal contract and social attention without impact investor presence
+- [[concepts/commercial-firm-benchmark|Commercial Firm Benchmark]] — Baseline scenario for purely commercial contract and social attention
+- [[concepts/community-targeted-insurance|Community-Targeted Insurance]] — Formal insurance targeted at community/group level rather than individual
+- [[concepts/comparable-companies-analysis|Comparable Companies Analysis]] — Determining cost of capital via publicly-traded company betas
+- [[concepts/comparative-statics|Comparative Statics]] — Analyzing how equilibrium choices change with parameter shifts
+- [[concepts/compensated-royalty-licensing-mandate-crlm|Compensated Royalty Licensing Mandate (CRLM)]] — Policy funding pharma innovation via generic licensing for poor countries
+- [[concepts/competition-between-exchanges|Competition between Exchanges]] — Exchanges as strategic players maximizing trading volume revenue
+- [[concepts/competitive-matching-market|Competitive Matching Market]] — Market matching firms and managers where wages influence strategy
+- [[concepts/competitive-matching-model|Competitive Matching Model]] — Framework for CEO-firm matching with hidden action and information frictions
+- [[concepts/completeness|Completeness]] — Classical proof system property ensuring honest provers always succeed
+- [[concepts/complex-numbers|Complex Numbers]] — Number system solving all polynomial equations including IRR calculations
+- [[concepts/compound-return|Compound Return]] — Multiplicative return process where sequence of returns is critical
+- [[concepts/compounding|Compounding]] — Earning interest on interest and principal with varying frequency
+- [[concepts/compressed-apv-approach|Compressed APV Approach]] — APV variation using capital cash flows including tax benefits
+- [[concepts/compression-statistics|Compression Statistics]] — C-sigma and C-p formalizing how hidden bad news distorts reported series
+- [[concepts/confidential-client-feedback|Confidential Client Feedback]] — One-hour confidential interviews with principal buyers of financial services
+- [[concepts/consensus-protocol|Consensus Protocol]] — Mechanism for distributed system agreement across nodes
+- [[concepts/consolidation|Consolidation]] — Business acquisitions and mergers as normal growth process
+- [[concepts/constrained-royalty-lindahl-mechanism|Constrained Royalty Lindahl Mechanism (CRLM)]] — Mechanism achieving first-best innovation at zero fiscal cost
+- [[concepts/contingency-plan|Contingency Plan]] — Pre-approved crisis action plan for cool-headed decisions
+- [[concepts/continuous-time-stochastic-optimization|Continuous-Time Stochastic Optimization]] — Merton's mathematical methods for individual savings and retirement decisions
+- [[concepts/contractible-social-output|Contractible Social Output]] — Scenario where social output is measurable and contractible
+- [[concepts/contribution-game|Contribution Game]] — Voluntary public good funding model with at most one contributor
+- [[concepts/control-rights|Control Rights]] — Mechanism like call option allowing commitment to higher social attention
+- [[concepts/convenience-yield|Convenience Yield]] — Benefit from holding physical asset before settlement date
+- [[concepts/convexity-cost|Convexity Cost]] — Compound return drag from portfolio volatility deviating from target
+- [[concepts/convexity|Convexity]] — Second derivative of bond price with respect to yield
+- [[concepts/corporate-finance|Corporate Finance]] — Field applying valuation and risk principles to business problems
+- [[concepts/correlation-in-finance|Correlation (in finance)]] — Dynamic variable measuring how assets move together
+- [[concepts/correlation|Correlation]] — Critical securitization assumption; unexpected correlation increases cause crises
+- [[concepts/cost-matters-hypothesis|Cost Matters Hypothesis (CMH)]] — Bogle's principle: investment costs are unfailing return determinants
+- [[concepts/cost-of-capital-approach|Cost of Capital Approach]] — Valuation incorporating leverage effects into the discount rate
+- [[concepts/cost-of-capital|Cost of Capital]] — Required risk-adjusted discount rate composed of dividend yield and growth
+- [[concepts/cost-of-carrying-cash-forward|Cost of Carrying Cash Forward (δ)]] — Cost of retaining cash for future periods affecting optimal disbursement
+- [[concepts/cost-of-carrying-cash|Cost of Carrying Cash]] — Inefficiency of holding surplus cash growing below required rate
+- [[concepts/cost-of-equity|Cost of Equity]] — Rate used to discount expected dividends in valuation models
+- [[concepts/cost-of-storage|Cost of Storage]] — Expense of holding physical commodity determining forward price
+- [[concepts/costly-pivot|Costly Pivot]] — High volatility, high learning archetype with unfavorable signal pivot
+- [[concepts/costs-of-financial-distress|Costs of Financial Distress]] — Additional frictions required to keep troubled companies operating
+- [[concepts/counter-parties|Counter-parties]] — Investors and governments holding complex financial instruments
+- [[concepts/counterparty-risk|Counterparty Risk]] — Risk that a forward contract party will fail to pay
+- [[concepts/coupon-bond-valuation-via-strips|Coupon Bond Valuation via Strips]] — Pricing coupon bonds as packages of pure discount bonds
+- [[concepts/coupon-bond|Coupon Bond]] — Bond paying face value at maturity plus periodic interest coupons
+- [[concepts/covariance-matrix|Covariance Matrix]] — Tool assessing portfolio volatility risk dating to Markowitz
+- [[concepts/covariance|Covariance]] — Key factor in portfolio risk measuring how returns move together
+- [[concepts/cp-statistic|C_p Statistic]] — Primary one-sided manipulation diagnostic falling below 0.5 when compressed
+- [[concepts/cp-test|Cp Test]] — One-sided test detecting misreporting as function of intensity
+- [[concepts/creative-destruction-blocking|Creative Destruction Blocking]] — Rational incumbent resistance to new technology increasing with existing capital
+- [[concepts/creative-destruction|Creative Destruction]] — New innovations systematically replacing older technologies and firms
+- [[concepts/credit-contraction|Credit Contraction]] — Sharp lending curtailment from banks restoring capital ratios
+- [[concepts/credit-crisis|Credit Crisis]] — Liquidity crisis where money/credit availability is the primary problem
+- [[concepts/credit-ratings|Credit Ratings]] — Market mechanism assessing company default risk by rating groups
+- [[concepts/credit-risk|Credit Risk]] — Risk that counterparty cannot fulfill obligations
+- [[concepts/credit-score|Credit Score]] — Creditworthiness measure damaged by mortgage default
+- [[concepts/credit-spread|Credit Spread]] — Yield difference between risky bond and safe treasury
+- [[concepts/crowding-out-of-governance-innovations|Crowding Out of Governance Innovations]] — Competitive market forces entirely crowding out contractual innovations
+- [[concepts/cryptographic-proof|Cryptographic Proof]] — Mechanism replacing trust in electronic payment systems like Bitcoin
+- [[concepts/customary-wealth|Customary Wealth]] — Markowitz's concept of risk appetite relative to customary wealth level
+- [[concepts/daily-settlement|Daily Settlement]] — Futures process settling gains/losses each day between counterparties
+- [[concepts/debt-as-a-short-put-position|Debt as a Short Put Position]] — Firm debt equivalent to risk-free bond plus short put on firm assets
+- [[concepts/debt-overhang|Debt Overhang]] — Existing unpaid debt restraining ability to secure fresh financing
+- [[concepts/debt-rating|Debt Rating]] — Rating agency classification indicating bond default risk level
+- [[concepts/debtors-cartel|Debtors' Cartel]] — Theoretical borrower group defaulting simultaneously
+- [[concepts/decentralized-autonomous-organization|Decentralized Autonomous Organization (DAO)]] — System operating without central leadership with permissionless participation
+- [[concepts/decision-support-system|Decision Support System]] — System like robo-advisor helping users make financial decisions
+- [[concepts/decumulation-phase|Decumulation Phase]] — Post-retirement period of allocating and spending savings
+- [[concepts/dedicated-retirement-assets|Dedicated Retirement Assets]] — Specific assets including Social Security and defined benefit plans
+- [[concepts/default-option|Default Option]] — Investment strategy auto-assigned to non-choosing plan participants
+- [[concepts/default-rate|Default Rate]] — Probability a bond fails to make payments
+- [[concepts/default-risk-pricing|Default Risk Pricing]] — Valuing risky bonds by expected payoff using default probabilities
+- [[concepts/default-risk|Default Risk]] — Risk of borrower payment failure; nonexistent for Treasury bills
+- [[concepts/defined-contribution-plan|Defined Contribution (DC) Plan]] — Retirement plan requiring individual employee investment decisions
+- [[concepts/delta-method|Delta Method]] — Analytic asymptotic approximation for Cp test statistic
+- [[concepts/democratization-of-finance|Democratization of Finance]] — Bogle's impact placing investment power in non-expert hands
+- [[concepts/depreciation|Depreciation]] — Accounting technique for capital asset value decline
+- [[concepts/derivative-pricing-theory|Derivative Pricing Theory]] — Merton's Nobel Prize field determining fair derivative prices
+- [[concepts/derivative-security|Derivative Security]] — Security whose value derives from an underlying asset
+- [[concepts/derivatives|Derivatives]] — Financial instruments enabling individualization, flexibility, and leverage
+- [[concepts/digital-and-financial-literacy|Digital and Financial Literacy]] — Skills required to use digital tools for financial transactions
+- [[concepts/digital-didi-model|Digital Didi Model]] — One-on-one learning model for improving digital literacy
+- [[concepts/digital-didi-system|Digital Didi System]] — Local trusted woman facilitating digital financial transactions
+- [[concepts/digital-didis-and-bcs-network|Digital Didis and BCs Network]] — Competitive local agent network helping BOP with digital finance
+- [[concepts/digital-financial-services|Digital Financial Services]] — Electronic financial services whose adoption improves with human touch
+- [[concepts/digital-literacy|Digital Literacy]] — Knowledge and skills for using digital services like banking apps
+- [[concepts/digital-signature|Digital Signature]] — Cryptographic method confirming sender identity via private key
+- [[concepts/diminishing-marginal-utility|Diminishing Marginal Utility]]

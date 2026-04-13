@@ -11,3 +11,6 @@ Authors cited for a simple formulation of firm value in terms of the value of as
 
 ---
 *Extracted from: Valuation Damodaran Content*
+
+---
+*Also referenced in: Mit15 401F08 Ses18 300K.Srt*

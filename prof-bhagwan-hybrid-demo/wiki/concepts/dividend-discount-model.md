@@ -27,3 +27,6 @@ A valuation model that calculates the value of equity as the present value of ex
 
 ---
 *Extracted from: Valuation Damodaran Content*
+
+---
+*Also referenced in: Mit15 401F08 Ses08 300K.Srt*

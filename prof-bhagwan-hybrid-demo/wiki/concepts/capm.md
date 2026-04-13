@@ -21,3 +21,9 @@ A model used to estimate the cost of equity. It was employed in a study to value
 
 ---
 *Extracted from: Valuation Damodaran Content*
+
+---
+*Also referenced in: In Pursuit Of The Perfect Portfolio Harry M Markowitz Wdeoipcftdu*
+
+---
+*Also referenced in: Mit15 401F08 Ses16 300K.Srt*
