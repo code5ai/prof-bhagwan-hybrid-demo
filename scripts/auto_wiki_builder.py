@@ -43,7 +43,7 @@ from typing import Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-# prof-bhagwan-hybrid-demo name: set WIKI_VAULT_NAME in .env to override (useful for new avatar clones)
+# Vault name: set WIKI_VAULT_NAME in .env to override (useful for new avatar clones)
 # Default matches the renamed vault folder
 _vault_name = os.environ.get("WIKI_VAULT_NAME", "prof-bhagwan-hybrid-demo")
 VAULT = PROJECT_ROOT / _vault_name
